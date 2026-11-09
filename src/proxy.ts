@@ -2,9 +2,13 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 /**
- * Keeps the Supabase login session fresh on every page request.
- * Step 3 (auth) will add route protection here, e.g. sending
- * sellers without 2FA to the 2FA setup page before /sell.
+ * Runs before every page request:
+ *  1. Keeps the Supabase login session fresh.
+ *  2. Protects pages:
+ *     /account/*  → must be signed in (and enter their 2FA code if they have 2FA)
+ *     /sell/*     → must be signed in WITH a 2FA-confirmed session
+ * The database enforces the same seller 2FA rule, so this is the
+ * friendly front door, not the only lock.
  */
 export async function proxy(request: NextRequest) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -29,7 +33,34 @@ export async function proxy(request: NextRequest) {
   });
 
   // Refreshes the session token if it has expired. Do not remove.
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const path = request.nextUrl.pathname;
+  const isAccount = path === "/account" || path.startsWith("/account/");
+  const isSell = path === "/sell" || path.startsWith("/sell/");
+  if (!isAccount && !isSell) return response;
+
+  // Sends the visitor elsewhere while keeping any refreshed login cookies.
+  const goTo = (pathname: string) => {
+    const target = new URL(pathname, request.url);
+    const redirect = NextResponse.redirect(target);
+    response.cookies.getAll().forEach((c) => redirect.cookies.set(c));
+    return redirect;
+  };
+  const next = encodeURIComponent(path + request.nextUrl.search);
+
+  if (!user) return goTo(`/login?next=${next}`);
+
+  const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  const confirmed = aal?.currentLevel === "aal2";
+
+  // Has 2FA but hasn't typed the code in this session yet.
+  if (aal?.nextLevel === "aal2" && !confirmed) return goTo(`/login/verify?next=${next}`);
+
+  // Seller pages need 2FA. No 2FA yet → set it up first.
+  if (isSell && !confirmed) return goTo(`/account/security?next=${next}`);
 
   return response;
 }
