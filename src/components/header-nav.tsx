@@ -33,10 +33,11 @@ export function HeaderNav({ username, isSeller }: { username: string; isSeller: 
     <nav className="-mx-1 flex max-w-full items-center gap-1 overflow-x-auto px-1 text-sm sm:gap-2">
       {items.map((i) => (
         <Link
+          // On phones the bottom menu has these links, so keep the header short.
           key={i.href}
           href={i.href}
           aria-current={isActive(i) ? "page" : undefined}
-          className={`shrink-0 rounded-full px-3 py-1.5 font-medium ${
+          className={`hidden shrink-0 rounded-full px-3 py-1.5 font-medium sm:inline-block ${
             isActive(i) ? "bg-brand text-white" : "text-brand hover:bg-brand-soft"
           }`}
         >

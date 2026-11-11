@@ -37,7 +37,7 @@ export type StoryFormInitial = {
 };
 
 const inputClass =
-  "mt-1 block w-full rounded-xl border border-border bg-white px-3 py-2.5 outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft";
+  "mt-1 block w-full rounded-xl border border-border bg-card px-3 py-2.5 outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft";
 
 export function StoryForm({
   userId,
@@ -185,7 +185,7 @@ export function StoryForm({
     <form onSubmit={(e) => e.preventDefault()} className="grid gap-6 md:grid-cols-[240px_1fr]">
       {/* Preview, phone-shaped like it will look to buyers */}
       <div>
-        <div className="relative mx-auto aspect-[9/16] w-full max-w-[240px] overflow-hidden rounded-3xl bg-brand-strong">
+        <div className="relative mx-auto aspect-[9/16] w-full max-w-[240px] overflow-hidden rounded-3xl bg-panel">
           {previewUrl ? (
             <video key={previewUrl} src={previewUrl} poster={coverUrl ?? undefined} controls playsInline
               className="h-full w-full object-cover" />
@@ -270,7 +270,7 @@ export function StoryForm({
               {listings.map((l) => (
                 <label key={l.id}
                   className={`flex cursor-pointer items-center gap-2 rounded-xl border p-2 text-sm ${
-                    productIds.includes(l.id) ? "border-brand bg-brand-soft" : "border-border bg-white"
+                    productIds.includes(l.id) ? "border-brand bg-brand-soft" : "border-border bg-card"
                   }`}>
                   <input type="checkbox" checked={productIds.includes(l.id)} onChange={() => toggleProduct(l.id)}
                     className="accent-[var(--brand)]" />

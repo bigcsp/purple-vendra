@@ -44,7 +44,7 @@ async function Category({
     <div className="mt-8 space-y-8">
       <div>
         <Link href="/" className="text-sm text-muted hover:text-brand">← All marketplaces</Link>
-        <p className="mt-1 text-xs font-semibold uppercase tracking-widest text-accent">{category.section}</p>
+        <p className="mt-1 text-xs font-semibold text-accent">{category.section}</p>
         <h1 className="text-3xl font-bold text-brand-strong">{category.name}</h1>
       </div>
 

@@ -4,7 +4,7 @@ import type { Category } from "@/lib/catalog";
 import { NIGERIAN_STATES } from "@/lib/nigeria";
 import { PAGE_SIZE, SORTS, logSearch, searchListings, searchSellers, type SearchFilters } from "@/lib/search";
 
-const selectClass = "rounded-xl border border-border bg-white px-3 py-2 text-sm outline-none focus:border-brand";
+const selectClass = "rounded-xl border border-border bg-card px-3 py-2 text-sm outline-none focus:border-brand";
 
 /**
  * Filters + results for /search and /c/[slug]. Filters are a plain GET form,
@@ -77,7 +77,7 @@ export async function SearchResults({
         <select name="sort" defaultValue={filters.sort} className={selectClass} aria-label="Sort">
           {Object.entries(SORTS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
         </select>
-        <button className="rounded-xl bg-brand px-4 py-2 text-sm font-medium text-white hover:bg-brand-strong">Apply</button>
+        <button className="rounded-xl bg-brand px-4 py-2 text-sm font-medium text-white hover:bg-brand-deep">Apply</button>
         {anyFilter && (
           <Link href={filters.q && !lockedCategory ? `${basePath}?q=${encodeURIComponent(filters.q)}` : basePath}
             className="px-2 py-2 text-sm text-muted hover:text-brand">Clear filters</Link>
@@ -86,7 +86,7 @@ export async function SearchResults({
 
       {sellers.length > 0 && (
         <section>
-          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted">Shops</h2>
+          <h2 className="mb-2 text-sm font-semibold text-muted">Shops</h2>
           <ul className="flex gap-3 overflow-x-auto pb-1">
             {sellers.map((s) => (
               <li key={s.id} className="shrink-0">

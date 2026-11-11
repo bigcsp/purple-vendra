@@ -29,7 +29,7 @@ export function AddToCartButton({ listingId, className = "" }: { listingId: stri
             setState(r.error ?? "added");
           })
         }
-        className="inline-flex w-full items-center justify-center rounded-xl bg-brand px-4 py-2.5 font-medium text-white hover:bg-brand-strong disabled:opacity-60"
+        className="inline-flex w-full items-center justify-center rounded-xl bg-brand px-4 py-2.5 font-medium text-white hover:bg-brand-deep disabled:opacity-60"
       >
         {pending ? "Adding…" : "Add to cart"}
       </button>
@@ -74,7 +74,7 @@ export function FollowButton({
         })
       }
       className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
-        following ? "border border-border bg-white text-brand" : "bg-accent text-brand-strong hover:brightness-95"
+        following ? "border border-border bg-card text-brand" : "bg-accent text-brand-strong hover:brightness-95"
       }`}
     >
       {following ? "Following" : "Follow"}

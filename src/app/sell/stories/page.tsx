@@ -71,7 +71,7 @@ async function MyStories({ searchParams }: { searchParams: PageProps<"/sell/stor
             const poster = publicFileUrl("story-media", s.thumbnail_path);
             return (
               <li key={s.id} className="overflow-hidden rounded-2xl border border-border bg-card">
-                <Link href={`/sell/stories/${s.id}`} className="relative block aspect-[9/16] bg-brand-strong">
+                <Link href={`/sell/stories/${s.id}`} className="relative block aspect-[9/16] bg-panel">
                   {poster && (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={poster} alt="" className="h-full w-full object-cover" loading="lazy" />

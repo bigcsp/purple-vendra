@@ -54,7 +54,7 @@ export function ReportButton({
   }
 
   return (
-    <form onSubmit={send} className="space-y-3 rounded-2xl border border-border bg-white p-4">
+    <form onSubmit={send} className="space-y-3 rounded-2xl border border-border bg-card p-4">
       <p className="text-sm font-medium text-brand-strong">What&apos;s wrong?</p>
       <div className="space-y-1.5">
         {(Object.keys(REPORT_REASONS) as ReportReason[]).map((key) => (

@@ -34,7 +34,7 @@ async function SellerHub() {
   return (
     <div className="space-y-6">
       <Card>
-        <p className="text-sm font-medium uppercase tracking-widest text-accent">Seller hub</p>
+        <p className="text-sm font-medium text-accent">Seller hub</p>
         <h1 className="mt-2 text-2xl font-bold text-brand-strong">Welcome, {user.displayName}</h1>
         <p className="mt-2 text-sm text-green-700">✓ Signed in with two-factor authentication</p>
       </Card>
@@ -87,7 +87,7 @@ async function SellerHub() {
         <Link href="/sell/orders" className={`${buttonClass} mt-4 sm:w-auto`}>View orders</Link>
       </Card>
       <Card>
-        <p className="text-xs font-semibold uppercase tracking-widest text-accent">New</p>
+        <p className="text-xs font-semibold text-accent">New</p>
         <h2 className="text-lg font-semibold text-brand-strong">Vendra Stories</h2>
         <p className="mt-1 text-sm text-muted">
           Post short videos to your shop page, tag your products so buyers can shop while they watch, promote your best

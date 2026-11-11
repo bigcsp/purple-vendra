@@ -16,7 +16,7 @@ import { DAYS, NIGERIAN_STATES } from "@/lib/nigeria";
 import { uploadProfileLogo } from "@/lib/upload";
 
 const inputClass =
-  "mt-1 block w-full rounded-xl border border-border bg-white px-3 py-2.5 outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft";
+  "mt-1 block w-full rounded-xl border border-border bg-card px-3 py-2.5 outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft";
 
 type Area = { state: string; city: string };
 
@@ -132,7 +132,7 @@ function DetailsCard({ userId, initial, logoUrl }: { userId: string; initial: Pr
             <input className={inputClass} inputMode="numeric" value={v.yearsExperience} onChange={(e) => set("yearsExperience", e.target.value)} placeholder="5" />
           </label>
         </div>
-        <label className="flex items-center gap-3 rounded-xl border border-border bg-white p-3">
+        <label className="flex items-center gap-3 rounded-xl border border-border bg-card p-3">
           <input type="checkbox" checked={v.isAvailable} onChange={(e) => set("isAvailable", e.target.checked)} className="h-5 w-5 accent-[var(--brand)]" />
           <span>
             <span className="block text-sm font-medium">Taking new orders and bookings</span>
@@ -251,12 +251,12 @@ function AreasCard({ initial }: { initial: Area[] }) {
           });
         }}
       >
-        <select value={state} onChange={(e) => setState(e.target.value)} className="rounded-xl border border-border bg-white px-3 py-2 text-sm" aria-label="State">
+        <select value={state} onChange={(e) => setState(e.target.value)} className="rounded-xl border border-border bg-card px-3 py-2 text-sm" aria-label="State">
           <option value="">State…</option>
           {NIGERIAN_STATES.map((s) => <option key={s} value={s}>{s}</option>)}
         </select>
         <input value={city} onChange={(e) => setCity(e.target.value)} maxLength={80} placeholder="Area (optional, e.g. Lekki)"
-          className="rounded-xl border border-border bg-white px-3 py-2 text-sm" aria-label="City or area" />
+          className="rounded-xl border border-border bg-card px-3 py-2 text-sm" aria-label="City or area" />
         <button disabled={pending || !state} className="rounded-xl bg-brand px-4 py-2 text-sm font-medium text-white disabled:opacity-50">
           Add area
         </button>

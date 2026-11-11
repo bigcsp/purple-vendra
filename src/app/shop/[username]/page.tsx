@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { AdireField } from "@/components/adire";
 import { ReportButton } from "@/components/report-button";
 import { FollowButton } from "@/components/shop-buttons";
 import { SiteHeader } from "@/components/site-header";
@@ -67,7 +68,9 @@ async function Shop({
   return (
     <div className="mt-8 space-y-10">
       {/* Shop header */}
-      <section className="rounded-3xl bg-brand px-6 py-8 text-white sm:px-10">
+      <section className="relative overflow-hidden rounded-3xl bg-panel px-6 py-8 text-white sm:px-10">
+        <AdireField className="pointer-events-none absolute -right-16 -top-10 h-[130%] w-80 opacity-50" />
+        <div className="relative">
         <div className="flex flex-wrap items-center gap-4">
           {seller.avatar_url ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -106,18 +109,19 @@ async function Shop({
         </div>
         {isSelf && (
           <div className="mt-4 flex flex-wrap gap-2 text-sm">
-            <Link href="/sell/stories/new" className="rounded-full bg-white px-4 py-1.5 font-medium text-brand">+ Post a story</Link>
+            <Link href="/sell/stories/new" className="rounded-full bg-[#ffffff] px-4 py-1.5 font-medium text-[#3b0f6e]">+ Post a story</Link>
             <Link href="/sell/listings/new" className="rounded-full bg-white/15 px-4 py-1.5 font-medium">+ New listing</Link>
             <Link href="/sell/profile" className="rounded-full bg-white/15 px-4 py-1.5 font-medium">Edit profile</Link>
           </div>
         )}
+        </div>
       </section>
 
       {/* Vendra Stories */}
       <section id="stories">
         <div className="mb-4 flex items-end justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-accent">Vendra Stories</p>
+            <p className="text-xs font-semibold text-accent">Vendra Stories</p>
             <h2 className="text-xl font-semibold text-brand-strong">Watch {name} at work</h2>
           </div>
           {stories.length > 0 && <span className="text-sm text-muted">{stories.length} videos</span>}

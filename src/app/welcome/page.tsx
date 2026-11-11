@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { BecomeSellerButton } from "@/app/account/become-seller";
+import { AdireField } from "@/components/adire";
 import { PageShell } from "@/components/page-shell";
 import { Card, buttonClass } from "@/components/ui";
 import { getCurrentUser, type CurrentUser } from "@/lib/auth";
@@ -29,14 +30,17 @@ async function Welcome() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-3xl bg-brand px-6 py-8 text-white">
-        <p className="text-sm font-medium uppercase tracking-widest text-accent">Welcome</p>
+      <div className="relative overflow-hidden rounded-3xl bg-panel px-6 py-8 text-white">
+        <AdireField className="pointer-events-none absolute -right-10 top-0 h-full w-72 opacity-60" />
+        <div className="relative">
+        <p className="text-sm font-medium text-accent">Welcome</p>
         <h1 className="mt-1 text-2xl font-bold">You&apos;re in, {firstName}! 🎉</h1>
         <p className="mt-1 text-white/85">
           {wantsToSell
             ? "Let's open your shop. Follow the steps below. Each one takes a minute or two."
             : "Explore Nigerian makers, freelancers and pros. Your money is held safely until you receive what you paid for."}
         </p>
+        </div>
       </div>
 
       {wantsToSell && <SellerChecklist user={user} />}
@@ -142,7 +146,7 @@ async function SellerChecklist({ user }: { user: CurrentUser }) {
           <li key={s.title}
             className={`rounded-2xl border p-4 ${i === nextIndex ? "border-brand bg-brand-soft/50" : "border-border"} ${s.done ? "opacity-70" : ""}`}>
             <div className="flex items-start gap-3">
-              <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-bold ${s.done ? "bg-green-600 text-white" : "bg-white text-brand ring-1 ring-border"}`}>
+              <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-bold ${s.done ? "bg-green-600 text-white" : "bg-card text-brand ring-1 ring-border"}`}>
                 {s.done ? "✓" : i + 1}
               </span>
               <div className="min-w-0 flex-1">

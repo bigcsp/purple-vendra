@@ -39,7 +39,7 @@ export function DeleteAccount({
               else router.refresh();
             })
           }
-          className="rounded-xl bg-brand px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-strong disabled:opacity-60"
+          className="rounded-xl bg-brand px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-deep disabled:opacity-60"
         >
           {pending ? "Cancelling…" : "Cancel deletion and keep my account"}
         </button>
@@ -79,13 +79,13 @@ export function DeleteAccount({
               value={typed}
               onChange={(e) => setTyped(e.target.value)}
               autoComplete="off"
-              className="mt-1 block w-full rounded-xl border border-border bg-white px-3 py-2.5 outline-none focus:border-red-400"
+              className="mt-1 block w-full rounded-xl border border-border bg-card px-3 py-2.5 outline-none focus:border-red-400"
             />
           </label>
           {error && <Notice tone="error">{error}</Notice>}
           <button
             disabled={pending || typed.trim().toLowerCase() !== username.toLowerCase()}
-            className="rounded-xl bg-red-600 px-4 py-2.5 font-medium text-white hover:bg-red-700 disabled:opacity-50"
+            className="rounded-xl bg-[#dc2626] px-4 py-2.5 font-medium text-white hover:bg-[#b91c1c] disabled:opacity-50"
           >
             {pending ? "Sending…" : "Delete my account"}
           </button>

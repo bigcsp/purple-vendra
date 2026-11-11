@@ -31,7 +31,7 @@ export function ListingGrid({ listings }: { listings: GridListing[] }) {
                   <div className="aspect-square bg-brand-soft" />
                 )}
                 {l.featured && (
-                  <span className="absolute left-2 top-2 rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold uppercase text-brand-strong">
+                  <span className="absolute left-2 top-2 rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold text-brand-strong">
                     Featured
                   </span>
                 )}

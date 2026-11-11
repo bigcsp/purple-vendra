@@ -76,7 +76,7 @@ export function Setup2fa({ next }: { next: string }) {
 
   return (
     <form onSubmit={confirm} className="space-y-4">
-      <div className="flex justify-center rounded-2xl border border-border bg-white p-4">
+      <div className="flex justify-center rounded-2xl border border-border bg-card p-4">
         {/* Supabase returns the QR code as an SVG data URL */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={enrollment.qrCode} alt="QR code for your authenticator app" className="h-48 w-48" />

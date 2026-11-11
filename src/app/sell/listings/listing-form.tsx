@@ -21,7 +21,7 @@ type Photo = { id: string; storage_path: string };
 export type ListingFormValues = Omit<ListingInput, "submit"> & { id?: string; status?: string };
 
 const inputClass =
-  "mt-1 block w-full rounded-xl border border-border bg-white px-3 py-2.5 outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft";
+  "mt-1 block w-full rounded-xl border border-border bg-card px-3 py-2.5 outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft";
 
 export function ListingForm({
   userId,
@@ -183,14 +183,14 @@ export function ListingForm({
                 <img src={publicFileUrl("listing-images", p.storage_path) ?? ""} alt=""
                   className="h-20 w-20 rounded-xl object-cover" />
                 <button type="button" onClick={() => removePhoto(p.id)}
-                  className="absolute -right-1 -top-1 rounded-full bg-white px-1.5 text-xs text-red-600 shadow">✕</button>
+                  className="absolute -right-1 -top-1 rounded-full bg-card px-1.5 text-xs text-red-600 shadow">✕</button>
               </div>
             ))}
           </div>
         )}
         <input type="file" multiple accept="image/jpeg,image/png,image/webp"
           onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
-          className="mt-2 block w-full rounded-xl border border-dashed border-border bg-white p-3 text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-brand-soft file:px-3 file:py-1.5 file:font-medium file:text-brand" />
+          className="mt-2 block w-full rounded-xl border border-dashed border-border bg-card p-3 text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-brand-soft file:px-3 file:py-1.5 file:font-medium file:text-brand" />
         <span className="mt-1 block text-xs text-muted">JPG, PNG or WebP. We shrink them for fast loading.</span>
       </div>
 

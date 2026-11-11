@@ -198,7 +198,7 @@ function StoryStage({
         <button onClick={() => setMuted((m) => !m)} aria-label={muted ? "Unmute" : "Mute"}
           className="absolute left-3 top-3 h-9 w-9 rounded-full bg-black/40 text-white">{muted ? "🔇" : "🔊"}</button>
         {story.campaignId && (
-          <span className="absolute left-14 top-4 rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold uppercase text-brand-strong">Promoted</span>
+          <span className="absolute left-14 top-4 rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold text-brand-strong">Promoted</span>
         )}
 
         {/* Action column */}
@@ -275,7 +275,7 @@ function StoryStage({
 
         {toast && (
           <button onClick={() => setToast(undefined)}
-            className="absolute left-1/2 top-16 -translate-x-1/2 rounded-full bg-white px-4 py-1.5 text-sm text-brand-strong shadow">
+            className="absolute left-1/2 top-16 -translate-x-1/2 rounded-full bg-card px-4 py-1.5 text-sm text-brand-strong shadow">
             {toast}
           </button>
         )}
@@ -300,7 +300,7 @@ function ActionButton({ icon, label, name, onClick, active, small }: {
 function Sheet({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
   return (
     <div className="absolute inset-0 z-10 flex flex-col justify-end bg-black/40" onClick={onClose}>
-      <div className="max-h-[70%] overflow-y-auto rounded-t-3xl bg-white p-4 text-foreground" onClick={(e) => e.stopPropagation()}>
+      <div className="max-h-[70%] overflow-y-auto rounded-t-3xl bg-card p-4 text-foreground" onClick={(e) => e.stopPropagation()}>
         <div className="mb-3 flex items-center justify-between">
           <h3 className="font-semibold text-brand-strong">{title}</h3>
           <button onClick={onClose} aria-label="Close" className="text-muted">✕</button>
@@ -346,7 +346,7 @@ function ProductRow({ product, story, isOwn, onSignIn }: {
                 setState(r.error ?? "added");
               })
             }
-            className="rounded-xl bg-brand px-3 py-2 text-xs font-medium text-white hover:bg-brand-strong disabled:opacity-60">
+            className="rounded-xl bg-brand px-3 py-2 text-xs font-medium text-white hover:bg-brand-deep disabled:opacity-60">
             {pending ? "Adding…" : "Add to cart"}
           </button>
         ))}

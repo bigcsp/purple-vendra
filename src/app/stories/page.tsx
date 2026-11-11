@@ -14,7 +14,7 @@ export default function StoriesPage({ searchParams }: PageProps<"/stories">) {
     <main className="mx-auto w-full max-w-5xl flex-1 px-5 py-8">
       <SiteHeader />
       <section className="mt-8">
-        <p className="text-xs font-semibold uppercase tracking-widest text-accent">Vendra Stories</p>
+        <p className="text-xs font-semibold text-accent">Vendra Stories</p>
         <h1 className="text-3xl font-bold text-brand-strong">See it made. Shop it right here.</h1>
         <p className="mt-1 max-w-xl text-muted">Short videos from Nigerian makers and pros. Tap a video, then tap a product to buy.</p>
       </section>
@@ -54,7 +54,7 @@ function Chip({ href, active, children }: { href: string; active: boolean; child
   return (
     <Link href={href}
       className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-medium ${
-        active ? "bg-brand text-white" : "border border-border bg-white text-brand hover:bg-brand-soft"
+        active ? "bg-brand text-white" : "border border-border bg-card text-brand hover:bg-brand-soft"
       }`}>
       {children}
     </Link>

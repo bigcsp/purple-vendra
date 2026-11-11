@@ -60,7 +60,7 @@ function StoryCard({ story, showSeller, onOpen }: { story: StoryItem; showSeller
   return (
     <li ref={ref}>
       <button onClick={onOpen}
-        className="group relative block aspect-[9/16] w-full overflow-hidden rounded-2xl bg-brand-strong text-left shadow-sm ring-brand transition hover:ring-2 focus-visible:ring-2">
+        className="group relative block aspect-[9/16] w-full overflow-hidden rounded-2xl bg-panel text-left shadow-sm ring-brand transition hover:ring-2 focus-visible:ring-2">
         {story.posterUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={story.posterUrl} alt="" loading="lazy" className="h-full w-full object-cover transition group-hover:scale-[1.02]" />
@@ -69,7 +69,7 @@ function StoryCard({ story, showSeller, onOpen }: { story: StoryItem; showSeller
         )}
         <span className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
         {story.campaignId && (
-          <span className="absolute left-2 top-2 rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-strong">
+          <span className="absolute left-2 top-2 rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold text-brand-strong">
             Promoted
           </span>
         )}

@@ -1,34 +1,105 @@
 @import "tailwindcss";
 
-/* Purple Vendra brand colours */
+/*
+ * Purple Vendra colours. Light is the default; dark applies when
+ * <html data-theme="dark"> (set by the theme switch, or by the visitor's
+ * phone/computer setting on their first visit).
+ */
 :root {
-  --background: #faf7fd;
-  --foreground: #1c1427;
-  --brand: #6b21a8;        /* deep purple */
-  --brand-strong: #4c1d95;
-  --brand-soft: #f3e8ff;
-  --accent: #f59e0b;       /* warm gold for highlights and "Featured" */
+  --background: #fbf8ff;   /* lavender paper */
+  --foreground: #1a1024;   /* ink */
+  --brand: #6d28d9;        /* Vendra purple: buttons, links */
+  --brand-deep: #5b21b6;   /* button hover */
+  --brand-strong: #3b0f6e; /* headings */
+  --brand-soft: #efe6ff;   /* tints, chips */
+  --accent: #e8a317;       /* kola gold: highlights, Featured, Follow */
   --muted: #6b6478;
   --card: #ffffff;
-  --border: #e9e1f3;
+  --border: #e6dcf3;
+  --panel: #241045;        /* always-dark panels: hero, video backdrops */
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --background: #120b1c;
+  --foreground: #f2eafb;
+  --brand: #8b5cf6;
+  --brand-deep: #7c3aed;
+  --brand-strong: #ede4ff;
+  --brand-soft: #241739;
+  --accent: #f5b83d;
+  --muted: #a99bbf;
+  --card: #1b1228;
+  --border: #2f2243;
+  --panel: #1d0c3a;
+  color-scheme: dark;
+
+  /* Status colours (notices, badges) re-tuned for dark backgrounds. */
+  --color-red-50: #2a1215;
+  --color-red-100: #3b1519;
+  --color-red-200: #5c1f25;
+  --color-red-600: #f87171;
+  --color-red-700: #fca5a5;
+  --color-red-800: #fecaca;
+  --color-green-50: #0f2a1a;
+  --color-green-100: #123821;
+  --color-green-200: #1d4d2e;
+  --color-green-700: #86efac;
+  --color-green-800: #bbf7d0;
+  --color-amber-50: #2b1f08;
+  --color-amber-100: #3a2a0a;
+  --color-amber-200: #5a420f;
+  --color-amber-800: #fcd34d;
+  --color-amber-900: #fde68a;
+  --color-blue-100: #142445;
+  --color-blue-800: #93c5fd;
+  --color-gray-100: #2a2235;
+  --color-gray-500: #9a90a8;
+  --color-gray-600: #b4aac2;
+  --color-gray-700: #cfc6dc;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-brand: var(--brand);
+  --color-brand-deep: var(--brand-deep);
   --color-brand-strong: var(--brand-strong);
   --color-brand-soft: var(--brand-soft);
   --color-accent: var(--accent);
   --color-muted: var(--muted);
   --color-card: var(--card);
   --color-border: var(--border);
+  --color-panel: var(--panel);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-bricolage), var(--font-geist-sans);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Headings use the display face. */
+h1,
+h2 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
 }

@@ -58,7 +58,7 @@ export function VerifyIdForm({ userId, currentType }: { userId: string; currentT
             <label
               key={key}
               className={`flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-2.5 text-sm ${
-                idType === key ? "border-brand bg-brand-soft" : "border-border bg-white"
+                idType === key ? "border-brand bg-brand-soft" : "border-border bg-card"
               }`}
             >
               <input
@@ -81,7 +81,7 @@ export function VerifyIdForm({ userId, currentType }: { userId: string; currentT
           type="file"
           accept="image/jpeg,image/png,image/webp,application/pdf"
           onChange={onFile}
-          className="mt-2 block w-full rounded-xl border border-dashed border-border bg-white p-3 text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-brand-soft file:px-3 file:py-1.5 file:font-medium file:text-brand"
+          className="mt-2 block w-full rounded-xl border border-dashed border-border bg-card p-3 text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-brand-soft file:px-3 file:py-1.5 file:font-medium file:text-brand"
         />
         <span className="mt-1 block text-xs text-muted">
           Take a clear photo in good light with all four corners showing. JPG, PNG, WebP or PDF, up to 5 MB.

@@ -11,7 +11,7 @@ type Video = { id: string; title: string; poster: string | null };
 type Category = { id: number; name: string };
 
 const inputClass =
-  "mt-1 block w-full rounded-xl border border-border bg-white px-3 py-2.5 outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft";
+  "mt-1 block w-full rounded-xl border border-border bg-card px-3 py-2.5 outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft";
 const DURATIONS = [3, 7, 14, 30];
 
 export function CampaignForm({ videos, categories, initialVideo }: { videos: Video[]; categories: Category[]; initialVideo?: string }) {
@@ -71,7 +71,7 @@ export function CampaignForm({ videos, categories, initialVideo }: { videos: Vid
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={v.poster} alt="" className="aspect-[9/16] w-full object-cover" />
               ) : (
-                <span className="block aspect-[9/16] bg-brand-strong" />
+                <span className="block aspect-[9/16] bg-panel" />
               )}
               <span className="block truncate p-1 text-xs">{v.title}</span>
             </button>
@@ -86,7 +86,7 @@ export function CampaignForm({ videos, categories, initialVideo }: { videos: Vid
         <div className="mt-1 flex flex-wrap gap-2">
           {categories.map((c) => (
             <button type="button" key={c.id} onClick={() => setCategoryIds((l) => toggle(l, c.id))}
-              className={`rounded-full px-3 py-1 text-xs ${categoryIds.includes(c.id) ? "bg-brand text-white" : "border border-border bg-white"}`}>
+              className={`rounded-full px-3 py-1 text-xs ${categoryIds.includes(c.id) ? "bg-brand text-white" : "border border-border bg-card"}`}>
               {c.name}
             </button>
           ))}
@@ -95,7 +95,7 @@ export function CampaignForm({ videos, categories, initialVideo }: { videos: Vid
         <div className="mt-1 flex max-h-28 flex-wrap gap-1.5 overflow-y-auto">
           {NIGERIAN_STATES.map((s) => (
             <button type="button" key={s} onClick={() => setStates((l) => toggle(l, s))}
-              className={`rounded-full px-2.5 py-0.5 text-xs ${states.includes(s) ? "bg-brand text-white" : "border border-border bg-white"}`}>
+              className={`rounded-full px-2.5 py-0.5 text-xs ${states.includes(s) ? "bg-brand text-white" : "border border-border bg-card"}`}>
               {s}
             </button>
           ))}
@@ -113,7 +113,7 @@ export function CampaignForm({ videos, categories, initialVideo }: { videos: Vid
           <div className="mt-2 flex gap-2">
             {DURATIONS.map((d) => (
               <button type="button" key={d} onClick={() => setDays(d)}
-                className={`flex-1 rounded-xl px-3 py-2 text-sm ${days === d ? "bg-brand text-white" : "border border-border bg-white"}`}>
+                className={`flex-1 rounded-xl px-3 py-2 text-sm ${days === d ? "bg-brand text-white" : "border border-border bg-card"}`}>
                 {d} days
               </button>
             ))}

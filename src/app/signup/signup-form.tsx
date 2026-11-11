@@ -41,7 +41,7 @@ export function SignupForm({ next, initialIntent }: { next: string; initialInten
             <label
               key={c.value}
               className={`flex cursor-pointer items-center gap-3 rounded-2xl border p-3 transition ${
-                intent === c.value ? "border-brand bg-brand-soft" : "border-border bg-white hover:border-brand/50"
+                intent === c.value ? "border-brand bg-brand-soft" : "border-border bg-card hover:border-brand/50"
               }`}
             >
               <input

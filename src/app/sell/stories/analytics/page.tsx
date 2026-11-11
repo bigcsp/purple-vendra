@@ -83,7 +83,7 @@ async function Analytics({ searchParams }: { searchParams: PageProps<"/sell/stor
           <Link href="/sell/stories" className="text-sm text-muted hover:text-brand">← Vendra Stories</Link>
           <h1 className="text-2xl font-bold text-brand-strong">Story analytics</h1>
         </div>
-        <nav className="flex rounded-xl border border-border bg-white p-1 text-sm" aria-label="Time range">
+        <nav className="flex rounded-xl border border-border bg-card p-1 text-sm" aria-label="Time range">
           {PERIODS.map((p) => (
             <Link key={p} href={`/sell/stories/analytics?days=${p}`}
               className={`rounded-lg px-3 py-1.5 ${p === days ? "bg-brand text-white" : "text-brand hover:bg-brand-soft"}`}>
