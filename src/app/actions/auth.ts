@@ -21,6 +21,11 @@ export async function signUp(_prev: FormState, formData: FormData): Promise<Form
   const password = String(formData.get("password") ?? "");
   const displayName = String(formData.get("display_name") ?? "").trim();
   const username = String(formData.get("username") ?? "").trim().toLowerCase();
+  const intentRaw = String(formData.get("intent") ?? "");
+  const intent = intentRaw === "sell" || intentRaw === "both" ? intentRaw : "shop";
+  const next = safeNext(formData.get("next"), "");
+  // Sellers go to the shop set-up checklist; shoppers back to what they were looking at.
+  const after = intent === "shop" ? next || "/welcome" : "/welcome";
 
   if (!displayName || displayName.length > 80) return { error: "Enter your name (up to 80 characters)." };
   if (!USERNAME.test(username))
@@ -36,14 +41,14 @@ export async function signUp(_prev: FormState, formData: FormData): Promise<Form
     email,
     password,
     options: {
-      data: { username, display_name: displayName },
-      emailRedirectTo: `${await siteOrigin()}/auth/confirm?next=/account`,
+      data: { username, display_name: displayName, intent },
+      emailRedirectTo: `${await siteOrigin()}/auth/confirm?next=${encodeURIComponent(after)}`,
     },
   });
   if (error) return { error: error.message };
 
   // Email confirmation turned off in Supabase: the user is signed in already.
-  if (data.session) redirect("/account");
+  if (data.session) redirect(after);
 
   return { message: `Almost done! We sent a link to ${email}. Open it to confirm your account.` };
 }
@@ -82,5 +87,6 @@ export async function becomeSeller(): Promise<FormState> {
   // The database checks sign-in, 2FA and the 2FA-confirmed session itself.
   const { error } = await supabase.rpc("become_seller");
   if (error) return { error: error.message };
-  redirect("/sell");
+  // Back to the set-up checklist: profile, first listing, first story.
+  redirect("/welcome");
 }

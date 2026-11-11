@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
+import { Suspense } from "react";
+import { MobileNav } from "@/components/mobile-nav";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,7 +17,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${GeistSans.variable} ${GeistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col pb-16 sm:pb-0">
+        {children}
+        <Suspense fallback={null}>
+          <MobileNav />
+        </Suspense>
+      </body>
     </html>
   );
 }

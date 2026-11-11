@@ -22,7 +22,7 @@ export function LoginForm({ next, linkError }: { next: string; linkError: boolea
       </button>
       <p className="text-center text-sm text-muted">
         New here?{" "}
-        <Link href="/signup" className="font-medium text-brand">
+        <Link href={next && next !== "/account" ? `/signup?next=${encodeURIComponent(next)}` : "/signup"} className="font-medium text-brand">
           Create an account
         </Link>
       </p>

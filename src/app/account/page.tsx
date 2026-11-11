@@ -29,6 +29,27 @@ async function Account() {
   return (
     <div className="space-y-6">
       {user.accountStatus !== "active" && <AccountBlocked user={user} />}
+      {user.deletionRequestedAt && (
+        <div className="rounded-3xl border border-amber-200 bg-amber-50 p-5 text-amber-900">
+          <p className="font-semibold">Your account is set to be deleted</p>
+          <p className="mt-1 text-sm">
+            It will be deleted on{" "}
+            {new Date(new Date(user.deletionRequestedAt).getTime() + 30 * 86400000).toLocaleDateString("en-NG", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
+            . Changed your mind?{" "}
+            <Link href="/account/privacy" className="font-medium underline">Cancel the deletion</Link>.
+          </p>
+        </div>
+      )}
+      {user.role === "buyer" && user.intent !== "shop" && (
+        <Link href="/welcome" className="block rounded-3xl border-2 border-brand bg-brand-soft p-5 hover:bg-brand-soft/70">
+          <p className="font-semibold text-brand-strong">Finish opening your shop →</p>
+          <p className="mt-1 text-sm text-muted">A few quick steps: turn on 2FA, open your shop, add your first product.</p>
+        </Link>
+      )}
       <Card>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
@@ -90,6 +111,14 @@ async function Account() {
             </Link>
           </>
         )}
+      </Card>
+
+      <Card>
+        <h2 className="text-lg font-semibold text-brand-strong">Your data & privacy</h2>
+        <p className="mt-1 text-sm text-muted">Download everything we hold about you, or delete your account.</p>
+        <Link href="/account/privacy" className="mt-3 inline-block text-sm font-medium text-brand hover:underline">
+          Privacy settings →
+        </Link>
       </Card>
 
       <form action={signOut}>

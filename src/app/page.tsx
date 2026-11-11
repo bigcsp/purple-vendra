@@ -2,6 +2,12 @@ import { cacheLife } from "next/cache";
 import { createPublicClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import Link from "next/link";
+import { Suspense } from "react";
+import { ListingGrid } from "@/components/listing-grid";
+import { StoryGallery } from "@/components/stories/story-gallery";
+import { getCurrentUser } from "@/lib/auth";
+import { readFilters, searchListings } from "@/lib/search";
+import { getFeedStories } from "@/lib/stories";
 import { SiteHeader } from "@/components/site-header";
 
 type Category = { id: number; slug: string; name: string };
@@ -58,18 +64,15 @@ export default async function Home() {
           Shop from Nigerian creatives, hire freelancers, and book verified pros for
           home repairs. Your money is held safely until the job is done.
         </p>
+        <Suspense fallback={<HeroButtons signedIn={false} isSeller={false} />}>
+          <HeroButtonsForUser />
+        </Suspense>
+        <p className="mt-4 text-xs text-white/70">No account needed to look around.</p>
       </section>
 
-      <Link
-        href="/stories"
-        className="mt-6 flex items-center justify-between gap-4 rounded-3xl border border-border bg-card p-5 transition hover:border-brand"
-      >
-        <span>
-          <span className="block text-xs font-semibold uppercase tracking-widest text-accent">Vendra Stories</span>
-          <span className="block text-lg font-semibold text-brand-strong">Watch makers at work, then shop what you see</span>
-        </span>
-        <span className="shrink-0 rounded-full bg-brand px-4 py-2 text-sm font-medium text-white">Watch →</span>
-      </Link>
+      <Suspense fallback={<p className="mt-10 text-sm text-muted">Loading what&apos;s new…</p>}>
+        <HomeFeed />
+      </Suspense>
 
       {error ? (
         <p className="mt-10 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
@@ -77,18 +80,20 @@ export default async function Home() {
         </p>
       ) : (
         sections.map((s) => (
-          <section key={s.id} className="mt-12">
+          <section key={s.id} className="mt-12" id={s.slug}>
             <h2 className="text-xl font-semibold text-brand-strong">{s.name}</h2>
             <p className="mt-1 text-sm text-muted">{s.tagline}</p>
 
             <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {s.categories.map((c) => (
-                <li
-                  key={c.id}
-                  className="rounded-2xl border border-border bg-card p-5 transition hover:border-brand"
-                >
-                  <p className="font-semibold text-brand-strong">{c.name}</p>
-                  <p className="mt-1 text-sm text-muted">{blurbs[c.slug] ?? ""}</p>
+                <li key={c.id}>
+                  <Link
+                    href={`/c/${c.slug}`}
+                    className="block h-full rounded-2xl border border-border bg-card p-5 transition hover:border-brand"
+                  >
+                    <p className="font-semibold text-brand-strong">{c.name}</p>
+                    <p className="mt-1 text-sm text-muted">{blurbs[c.slug] ?? ""}</p>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -100,5 +105,61 @@ export default async function Home() {
         One account · verified reviews · safe escrow checkout · built-in promotion
       </p>
     </main>
+  );
+}
+
+async function HeroButtonsForUser() {
+  const user = await getCurrentUser();
+  return <HeroButtons signedIn={!!user} isSeller={!!user && user.role !== "buyer"} />;
+}
+
+function HeroButtons({ signedIn, isSeller }: { signedIn: boolean; isSeller: boolean }) {
+  return (
+    <div className="mt-6 flex flex-wrap gap-3">
+      <Link href="/search" className="rounded-full bg-white px-5 py-2.5 font-semibold text-brand hover:bg-brand-soft">
+        Start shopping
+      </Link>
+      <Link
+        href={isSeller ? "/sell" : signedIn ? "/welcome" : "/signup?intent=sell"}
+        className="rounded-full border border-white/40 px-5 py-2.5 font-semibold text-white hover:bg-white/10"
+      >
+        {isSeller ? "Go to my shop" : "Sell on Purple Vendra"}
+      </Link>
+    </div>
+  );
+}
+
+/** Latest stories and products, visible to everyone (no sign-up needed). */
+async function HomeFeed() {
+  const [viewer, stories, { listings }] = await Promise.all([
+    getCurrentUser(),
+    getFeedStories(null),
+    searchListings(readFilters({ sort: "newest" }, null)),
+  ]);
+
+  return (
+    <>
+      {stories.length > 0 && (
+        <section className="mt-12">
+          <div className="mb-4 flex items-end justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-accent">Vendra Stories</p>
+              <h2 className="text-xl font-semibold text-brand-strong">Watch makers at work, then shop what you see</h2>
+            </div>
+            <Link href="/stories" className="shrink-0 text-sm font-medium text-brand hover:underline">See all →</Link>
+          </div>
+          <StoryGallery stories={stories.slice(0, 8)} viewerId={viewer?.id ?? null} showSeller />
+        </section>
+      )}
+      {listings.length > 0 && (
+        <section className="mt-12">
+          <div className="mb-4 flex items-end justify-between">
+            <h2 className="text-xl font-semibold text-brand-strong">New on Purple Vendra</h2>
+            <Link href="/search?sort=newest" className="shrink-0 text-sm font-medium text-brand hover:underline">Browse all →</Link>
+          </div>
+          <ListingGrid listings={listings.slice(0, 8)} />
+        </section>
+      )}
+    </>
   );
 }

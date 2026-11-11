@@ -83,3 +83,17 @@ function friendlyStorageError(message: string) {
   if (/mime|type/i.test(message)) return "That file type isn't allowed. Use JPG, PNG, WebP or PDF.";
   return "Upload failed. Check your connection and try again.";
 }
+
+/**
+ * Uploads a shop logo / profile photo (square-ish, max 600px WebP) to the
+ * public listing-images bucket, in the seller's own folder. Returns the path.
+ */
+export async function uploadProfileLogo(file: File, userId: string): Promise<string> {
+  const body = await compressImage(file, 600, 0.85);
+  const path = `${userId}/profile/logo-${randomName()}.webp`;
+  const { error } = await createClient()
+    .storage.from("listing-images")
+    .upload(path, body, { contentType: "image/webp", cacheControl: "31536000", upsert: false });
+  if (error) throw new Error(friendlyStorageError(error.message));
+  return path;
+}

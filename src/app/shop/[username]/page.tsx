@@ -7,9 +7,9 @@ import { FollowButton } from "@/components/shop-buttons";
 import { SiteHeader } from "@/components/site-header";
 import { StoryGallery } from "@/components/stories/story-gallery";
 import { getCurrentUser } from "@/lib/auth";
+import { ListingGrid } from "@/components/listing-grid";
 import { LISTING_CARD_SELECT, toListingCard } from "@/lib/catalog";
-import { formatNaira } from "@/lib/money";
-import { publicFileUrl } from "@/lib/storage-url";
+import { DAYS } from "@/lib/nigeria";
 import { getShopStories } from "@/lib/stories";
 import { createClient } from "@/lib/supabase/server";
 
@@ -40,14 +40,14 @@ async function Shop({
   // RLS: only active seller profiles are public.
   const { data: seller } = await supabase
     .from("profiles")
-    .select("id, username, display_name, business_name, headline, bio, city, state, is_verified, rating_avg, rating_count, avatar_url")
+    .select("id, username, display_name, business_name, headline, bio, city, state, is_verified, rating_avg, rating_count, avatar_url, years_experience, is_available, created_at")
     .eq("username", decodeURIComponent(username).toLowerCase())
     .eq("role", "seller")
     .maybeSingle();
   if (!seller) notFound();
 
   const name = seller.business_name || seller.display_name;
-  const [viewer, stories, { data: listingRows }, { data: follow }] = await Promise.all([
+  const [viewer, stories, { data: listingRows }, { data: follow }, { data: hours }, { data: areas }] = await Promise.all([
     getCurrentUser(),
     getShopStories({ id: seller.id, username: seller.username, name, verified: seller.is_verified }),
     supabase
@@ -57,6 +57,8 @@ async function Shop({
       .eq("status", "approved")
       .order("created_at", { ascending: false }),
     supabase.rpc("seller_follow_info", { p_seller: seller.id }).single(),
+    supabase.from("working_hours").select("day_of_week, opens_at, closes_at").eq("seller_id", seller.id).order("day_of_week"),
+    supabase.from("service_areas").select("state, city").eq("seller_id", seller.id).order("state"),
   ]);
   const listings = (listingRows ?? []).map(toListingCard);
   const followInfo = (follow ?? { followers: 0, following: false }) as { followers: number; following: boolean };
@@ -89,11 +91,24 @@ async function Shop({
           <FollowButton sellerId={seller.id} initialFollowing={followInfo.following}
             initialCount={Number(followInfo.followers)} isSelf={isSelf} />
         </div>
-        {seller.bio && <p className="mt-4 max-w-2xl text-sm text-white/85">{seller.bio}</p>}
+        {seller.bio && <p className="mt-4 max-w-2xl whitespace-pre-line text-sm text-white/85">{seller.bio}</p>}
+        <div className="mt-4 flex flex-wrap gap-2 text-xs">
+          <span className={`rounded-full px-3 py-1 font-medium ${seller.is_available ? "bg-green-500/20 text-green-50" : "bg-white/15 text-white/80"}`}>
+            {seller.is_available ? "● Taking orders" : "Not taking orders right now"}
+          </span>
+          {seller.years_experience != null && seller.years_experience > 0 && (
+            <span className="rounded-full bg-white/15 px-3 py-1">{seller.years_experience} years experience</span>
+          )}
+          {seller.is_verified && <span className="rounded-full bg-white/15 px-3 py-1">ID verified</span>}
+          <span className="rounded-full bg-white/15 px-3 py-1">
+            On Purple Vendra since {new Date(seller.created_at).toLocaleDateString("en-NG", { month: "short", year: "numeric" })}
+          </span>
+        </div>
         {isSelf && (
           <div className="mt-4 flex flex-wrap gap-2 text-sm">
             <Link href="/sell/stories/new" className="rounded-full bg-white px-4 py-1.5 font-medium text-brand">+ Post a story</Link>
             <Link href="/sell/listings/new" className="rounded-full bg-white/15 px-4 py-1.5 font-medium">+ New listing</Link>
+            <Link href="/sell/profile" className="rounded-full bg-white/15 px-4 py-1.5 font-medium">Edit profile</Link>
           </div>
         )}
       </section>
@@ -123,32 +138,42 @@ async function Shop({
         {listings.length === 0 ? (
           <p className="rounded-2xl border border-dashed border-border p-6 text-center text-sm text-muted">Nothing listed yet.</p>
         ) : (
-          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {listings.map((l) => {
-              const img = publicFileUrl("listing-images", l.image);
-              return (
-                <li key={l.id}>
-                  <Link href={`/l/${l.id}`} className="block overflow-hidden rounded-2xl border border-border bg-card transition hover:border-brand">
-                    {img ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={img} alt="" loading="lazy" className="aspect-square w-full object-cover" />
-                    ) : (
-                      <div className="aspect-square bg-brand-soft" />
-                    )}
-                    <div className="p-3">
-                      <p className="truncate text-sm font-medium">{l.title}</p>
-                      <p className="text-sm text-brand-strong">
-                        {l.price_is_starting && <span className="text-muted">From </span>}
-                        {formatNaira(l.price_kobo)}
-                      </p>
-                    </div>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+          <ListingGrid listings={listings.map((l) => ({ ...l, image_path: l.image }))} />
         )}
       </section>
+
+      {((hours ?? []).length > 0 || (areas ?? []).length > 0) && (
+        <section className="grid gap-4 sm:grid-cols-2">
+          {(hours ?? []).length > 0 && (
+            <div className="rounded-2xl border border-border bg-card p-5">
+              <h2 className="font-semibold text-brand-strong">Working hours</h2>
+              <ul className="mt-2 space-y-1 text-sm">
+                {DAYS.map((d, i) => {
+                  const h = (hours ?? []).find((x) => x.day_of_week === i);
+                  return (
+                    <li key={d} className="flex justify-between">
+                      <span className="text-muted">{d}</span>
+                      <span className="tabular-nums">{h ? `${String(h.opens_at).slice(0, 5)} – ${String(h.closes_at).slice(0, 5)}` : "Closed"}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
+          {(areas ?? []).length > 0 && (
+            <div className="rounded-2xl border border-border bg-card p-5">
+              <h2 className="font-semibold text-brand-strong">Delivers to / works in</h2>
+              <ul className="mt-2 flex flex-wrap gap-2 text-sm">
+                {(areas ?? []).map((a) => (
+                  <li key={`${a.state}-${a.city}`} className="rounded-full bg-brand-soft px-3 py-1 text-brand">
+                    {a.city === "All areas" ? `All of ${a.state}` : `${a.city}, ${a.state}`}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </section>
+      )}
 
       {!isSelf && (
         <div className="max-w-md">

@@ -5,3 +5,6 @@ export const NIGERIAN_STATES = [
   "Katsina", "Kebbi", "Kogi", "Kwara", "Lagos", "Nasarawa", "Niger", "Ogun", "Ondo", "Osun", "Oyo",
   "Plateau", "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara",
 ] as const;
+
+/** day_of_week 0 = Sunday … 6 = Saturday (matches the working_hours table). */
+export const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] as const;

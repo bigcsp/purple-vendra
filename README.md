@@ -115,7 +115,11 @@ To reject, set `status = 'rejected', rejection_reason = 'Photo is blurry'`. To l
 
 ## Vendra Stories (seller videos) · migration 012, live 11 Nov 2026
 
-Sellers post short videos (MP4/WebM/MOV, up to 90 seconds and 50 MB) to their shop page. They can tag up to 6 of
+Sellers post short videos (any phone video, up to 90 seconds) to their shop page. Before upload, the seller's
+browser converts every video to H.264 MP4 at 720p with ffmpeg.wasm, so it plays on every phone and browser. Phones
+often record HEVC/H.265, which shows only sound (no picture) on Windows and many Androids. Conversion also shrinks
+files (a 5 MB clip becomes about 1 MB). The converter files are copied into `public/ffmpeg` by `npm install`
+(`scripts/copy-ffmpeg.mjs`), so run `npm install` after pulling. They can tag up to 6 of
 their own listings in each video, so buyers can shop while they watch.
 
 **Sellers** (Seller hub → Vendra Stories): upload with a progress bar, preview, an automatic or custom cover
@@ -157,6 +161,21 @@ flag. To hide or remove a video yourself:
 campaigns. Deleting an account removes the person's stories, likes and comments, and queues their video files for
 the nightly storage cleanup.
 
+## Search, categories & shop profiles (step 5) · migrations 013–014, live 11 Nov 2026
+
+- **Search** (`/search`, and the search box in the header): finds approved listings by title and description. It
+  tolerates typos ("agbda" finds "agbada"), matches shops by name, and filters by category, state (including the
+  areas a seller serves), type and price, with 5 ways to sort. Featured listings show first. Every search is logged
+  anonymously in `search_queries` for the weekly demand insights.
+- **Category pages** (`/c/fashion-adire`, …): the homepage category cards open them. Each shows that category's
+  Vendra Stories plus all its listings, with the same filters.
+- **Shop profile** (Seller hub → Edit shop profile, `/sell/profile`): logo or photo, business name, headline,
+  about, state/city, years of experience, a "taking orders" switch, working hours and service areas. All of it shows
+  on the shop page.
+- **Privacy pages** (restored): `/account/privacy` lets people download their data and delete or cancel deleting
+  their account. `/privacy` is a draft policy that needs a lawyer's review and a contact email before launch.
+- **Book and Message buttons** come with step 6 (messaging and bookings).
+
 ## Push to GitHub
 
 The folder is already a Git repository with a first commit.
@@ -183,4 +202,4 @@ git push -u origin main
 
 ## Backend roadmap
 
-1. Database design ✅ · 2. Project setup ✅ · 3. Auth, roles, seller 2FA rule ✅ · 4. Storage & ID verification ✅ (live; needs a browser test) · Vendra Stories ✅ (live; needs a browser test) · 5. Listings ✅ (basic create/edit/shop page) & search · 6. Save, cart & alerts · 7. Checkout & escrow · 8. Admin & moderation · 9. Analytics
+1. Database design ✅ · 2. Project setup ✅ · 3. Auth, roles, seller 2FA rule ✅ · 4. Storage & ID verification ✅ (live; needs a browser test) · Vendra Stories ✅ (live; needs a browser test) · 5. Listings, search, categories & profiles ✅ · 6. Save, cart & alerts · 7. Checkout & escrow · 8. Admin & moderation · 9. Analytics

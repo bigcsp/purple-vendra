@@ -25,7 +25,7 @@ export function AddToCartButton({ listingId, className = "" }: { listingId: stri
         onClick={() =>
           start(async () => {
             const r = await addToCart(listingId);
-            if (r.signIn) return router.push(`/login?next=${encodeURIComponent(path)}`);
+            if (r.signIn) return router.push(`/signup?reason=cart&next=${encodeURIComponent(path)}`);
             setState(r.error ?? "added");
           })
         }
@@ -66,7 +66,7 @@ export function FollowButton({
         start(async () => {
           const next = !following;
           const r = await toggleFollow(sellerId, next);
-          if (r.signIn) return router.push(`/login?next=${encodeURIComponent(path)}`);
+          if (r.signIn) return router.push(`/signup?reason=follow&next=${encodeURIComponent(path)}`);
           if (r.ok) {
             setFollowing(next);
             setCount((c) => c + (next ? 1 : -1));

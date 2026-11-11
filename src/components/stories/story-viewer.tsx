@@ -49,9 +49,13 @@ function StoryStage({
   const [panel, setPanel] = useState<"none" | "comments" | "products" | "report">("none");
   const [toast, setToast] = useState<string>();
 
-  const needSignIn = useCallback(() => {
-    router.push(`/login?next=${encodeURIComponent(`${path}?story=${story.id}`)}`);
-  }, [router, path, story.id]);
+  // Visitors can watch everything; joining is only asked for when they act.
+  const needSignIn = useCallback(
+    (reason: "cart" | "like" | "follow" | "comment" | "report" = "like") => {
+      router.push(`/signup?reason=${reason}&next=${encodeURIComponent(`${path}?story=${story.id}`)}`);
+    },
+    [router, path, story.id],
+  );
 
   const go = useCallback(
     (delta: number) => {
@@ -101,7 +105,7 @@ function StoryStage({
   }
 
   async function toggleLike() {
-    if (!viewerId) return needSignIn();
+    if (!viewerId) return needSignIn("like");
     const supabase = createClient();
     const next = !liked;
     setLiked(next);
@@ -131,7 +135,7 @@ function StoryStage({
   }
 
   async function onFollow() {
-    if (!viewerId) return needSignIn();
+    if (!viewerId) return needSignIn("follow");
     if (!follow) return;
     const next = !follow.following;
     const r = await toggleFollow(story.seller.id, next);
@@ -205,7 +209,7 @@ function StoryStage({
           {story.products.length > 0 && (
             <ActionButton label="Shop" onClick={() => setPanel("products")} icon="🛍" name="Products in this video" />
           )}
-          <ActionButton label="Report" onClick={() => (viewerId ? setPanel("report") : needSignIn())} icon="⚑" name="Report" small />
+          <ActionButton label="Report" onClick={() => (viewerId ? setPanel("report") : needSignIn("report"))} icon="⚑" name="Report" small />
         </div>
 
         {/* Caption + seller + products */}
@@ -253,14 +257,14 @@ function StoryStage({
           <Sheet title="Shop this video" onClose={() => setPanel("none")}>
             <ul className="space-y-3">
               {story.products.map((p) => (
-                <ProductRow key={p.id} product={p} story={story} isOwn={isOwn} onSignIn={needSignIn} />
+                <ProductRow key={p.id} product={p} story={story} isOwn={isOwn} onSignIn={() => needSignIn("cart")} />
               ))}
             </ul>
           </Sheet>
         )}
         {panel === "comments" && (
           <Sheet title={`${commentCount} comments`} onClose={() => setPanel("none")}>
-            <Comments story={story} viewerId={viewerId} onSignIn={needSignIn} onCount={setCommentCount} />
+            <Comments story={story} viewerId={viewerId} onSignIn={() => needSignIn("comment")} onCount={setCommentCount} />
           </Sheet>
         )}
         {panel === "report" && (

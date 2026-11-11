@@ -18,6 +18,10 @@ export type CurrentUser = {
   accountStatus: "active" | "suspended" | "banned";
   statusReason: string | null;
   suspendedUntil: string | null;
+  /** what they chose at sign-up: shop, sell or both */
+  intent: "shop" | "sell" | "both";
+  /** set when the person asked to delete their account (30-day grace period) */
+  deletionRequestedAt: string | null;
 };
 
 /**
@@ -41,7 +45,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
   if (!user) return null;
 
   const [{ data: profile }, { data: aal }] = await Promise.all([
-    supabase.from("profiles").select("display_name, username, role, account_status, status_reason, suspended_until").eq("id", user.id).single(),
+    supabase.from("profiles").select("display_name, username, role, account_status, status_reason, suspended_until, deletion_requested_at").eq("id", user.id).single(),
     supabase.auth.mfa.getAuthenticatorAssuranceLevel(),
   ]);
 
@@ -56,6 +60,8 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     accountStatus: effectiveStatus(profile?.account_status, profile?.suspended_until),
     statusReason: profile?.status_reason ?? null,
     suspendedUntil: profile?.suspended_until ?? null,
+    deletionRequestedAt: profile?.deletion_requested_at ?? null,
+    intent: ["sell", "both"].includes(user.user_metadata?.intent) ? user.user_metadata.intent : "shop",
   };
 }
 

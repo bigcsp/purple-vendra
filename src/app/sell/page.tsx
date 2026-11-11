@@ -57,6 +57,19 @@ async function SellerHub() {
         )}
       </Card>
       <Card>
+        <h2 className="text-lg font-semibold text-brand-strong">Your shop profile</h2>
+        <p className="mt-1 text-sm text-muted">
+          Logo, business name, headline, working hours and the areas you serve. A complete profile helps buyers trust you
+          and find you in search.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Link href="/sell/profile" className={`${buttonClass} sm:w-auto`}>Edit shop profile</Link>
+          <Link href={`/shop/${user.username}`} className="rounded-xl border border-border px-4 py-2.5 text-sm font-medium text-brand hover:bg-brand-soft">
+            View my shop
+          </Link>
+        </div>
+      </Card>
+      <Card>
         <h2 className="text-lg font-semibold text-brand-strong">Your listings</h2>
         <p className="mt-1 text-sm text-muted">
           Products, services and talent you sell. New listings are reviewed before they go live.
