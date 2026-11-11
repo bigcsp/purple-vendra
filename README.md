@@ -22,13 +22,16 @@ purple-vendra/
 │   │   ├── auth/confirm/route.ts   # the "confirm your email" link lands here
 │   │   ├── account/                # your account + "Start selling"
 │   │   ├── account/security/       # turn on 2FA (QR code + authenticator app)
-│   │   └── sell/                   # seller hub (2FA-confirmed sellers only)
+│   │   ├── sell/                   # seller hub (2FA-confirmed sellers only)
+│   │   └── sell/verify/            # upload ID for verification (private storage)
 │   ├── components/                 # header, page wrapper, form parts
 │   ├── lib/auth.ts                 # who is signed in, their role and 2FA status
+│   ├── lib/upload.ts               # photo shrinking + uploads to Supabase Storage
+│   ├── lib/verification.ts         # the seller's ID verification status
 │   ├── lib/supabase/               # Supabase clients and keys
 │   └── proxy.ts                    # keeps sessions fresh + guards /account and /sell
 ├── supabase/
-│   ├── migrations/                 # database changes, run in order (001 → 006)
+│   ├── migrations/                 # database changes, run in order (001 → 008)
 │   └── run-in-sql-editor/          # 004 + 005 + 006 in one paste
 ├── .env.example                    # copy to .env.local and add your keys
 └── package.json
@@ -47,10 +50,7 @@ purple-vendra/
    - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` — the publishable (or anon) key
 
    Both are in Supabase → **Connect** button, or Project Settings → API Keys. **Never** use the `service_role` / secret key here.
-5. **Run the database migrations, in order.** 001–003 are already done. For 004, 005 and 006, open Supabase → **SQL Editor** → **New query**, paste **all** of `supabase/run-in-sql-editor/004_005_006_combined.sql`, and click **Run**. It runs as one transaction: if anything fails, nothing changes. (The same three files are in `supabase/migrations/` if you'd rather run them one by one.)
-   - 004: Creative / Freelance / Home Services marketplaces, professional profiles, verified reviews
-   - 005: renames "Fashion & Adé" to "Fashion & Adire"
-   - 006: sign-up profiles, roles, and the seller 2FA rule
+5. **Database:** migrations 001–008 are already applied to the PURPLE VENDRA Supabase project (004–008 on 9 Nov 2026). For a brand-new Supabase project, run every file in `supabase/migrations/` in order in the SQL Editor (`supabase/run-in-sql-editor/004_005_006_combined.sql` bundles 004–006, then run 007 and 008).
 6. **Start the site:**
    ```bash
    npm run dev
@@ -86,6 +86,27 @@ update profiles set role = 'admin' where username = 'your_username';
 ```
 Admin powers only work when you're signed in with 2FA.
 
+## File storage and ID verification (step 4)
+
+Two Supabase Storage buckets, created by migration 008:
+
+| Bucket | Who can see files | What goes in it |
+| --- | --- | --- |
+| `listing-images` | Everyone (public links) | Listing photos, shrunk to max 1600px WebP before upload |
+| `id-documents` | Only the seller and admins | ID photo or PDF, up to 5 MB |
+
+- Files go in a folder named after the owner (`<user id>/...`). Nobody can upload into someone else's folder.
+- Only sellers signed in with their 2FA code can upload.
+- Sellers can't delete a submitted ID, and they can't approve themselves. Every new upload goes back to "Under review".
+- When an ID is approved, the verified badge turns on automatically.
+
+**Approving an ID before the admin screen exists (step 8).** In the SQL Editor, replace the username:
+```sql
+update seller_verifications set status = 'approved'
+where user_id = (select id from profiles where username = 'soseenterprise');
+```
+To reject, set `status = 'rejected', rejection_reason = 'Photo is blurry'`. To look at the file, go to Storage → `id-documents` → the seller's folder.
+
 ## Push to GitHub
 
 The folder is already a Git repository with a first commit.
@@ -112,4 +133,4 @@ git push -u origin main
 
 ## Backend roadmap
 
-1. Database design ✅ · 2. Project setup ✅ · 3. Auth, roles, seller 2FA rule ✅ (built, needs testing) · 4. Storage · 5. Listings & search · 6. Save, cart & alerts · 7. Checkout & escrow · 8. Admin & moderation · 9. Analytics
+1. Database design ✅ · 2. Project setup ✅ · 3. Auth, roles, seller 2FA rule ✅ · 4. Storage & ID verification ✅ (live; needs a browser test) · 5. Listings & search · 6. Save, cart & alerts · 7. Checkout & escrow · 8. Admin & moderation · 9. Analytics
