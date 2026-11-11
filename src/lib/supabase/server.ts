@@ -3,6 +3,7 @@ import "server-only";
 import { createServerClient } from "@supabase/ssr";
 import { createClient as createPlainClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import { supabaseKey, supabaseUrl } from "./env";
 
 /**
@@ -11,6 +12,10 @@ import { supabaseKey, supabaseUrl } from "./env";
  * Reads the request, so components using it must sit behind <Suspense>.
  */
 export async function createClient() {
+  // Supabase checks the login session's expiry time (Date.now()) as soon as
+  // the client is created. Next.js 16 doesn't allow that while pre-rendering,
+  // so make every signed-in database call happen at request time.
+  await connection();
   const cookieStore = await cookies();
 
   return createServerClient(supabaseUrl, supabaseKey, {

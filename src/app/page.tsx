@@ -1,6 +1,7 @@
 import { cacheLife } from "next/cache";
 import { createPublicClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
+import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
 
 type Category = { id: number; slug: string; name: string };
@@ -58,6 +59,17 @@ export default async function Home() {
           home repairs. Your money is held safely until the job is done.
         </p>
       </section>
+
+      <Link
+        href="/stories"
+        className="mt-6 flex items-center justify-between gap-4 rounded-3xl border border-border bg-card p-5 transition hover:border-brand"
+      >
+        <span>
+          <span className="block text-xs font-semibold uppercase tracking-widest text-accent">Vendra Stories</span>
+          <span className="block text-lg font-semibold text-brand-strong">Watch makers at work, then shop what you see</span>
+        </span>
+        <span className="shrink-0 rounded-full bg-brand px-4 py-2 text-sm font-medium text-white">Watch →</span>
+      </Link>
 
       {error ? (
         <p className="mt-10 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">

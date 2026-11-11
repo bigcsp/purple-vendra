@@ -14,6 +14,10 @@ export type CurrentUser = {
   has2fa: boolean;
   /** true when this session was confirmed with an authenticator code */
   is2faConfirmed: boolean;
+  /** "active" unless an admin suspended or banned the account */
+  accountStatus: "active" | "suspended" | "banned";
+  statusReason: string | null;
+  suspendedUntil: string | null;
 };
 
 /**
@@ -37,7 +41,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
   if (!user) return null;
 
   const [{ data: profile }, { data: aal }] = await Promise.all([
-    supabase.from("profiles").select("display_name, username, role").eq("id", user.id).single(),
+    supabase.from("profiles").select("display_name, username, role, account_status, status_reason, suspended_until").eq("id", user.id).single(),
     supabase.auth.mfa.getAuthenticatorAssuranceLevel(),
   ]);
 
@@ -49,5 +53,18 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     role: (profile?.role as Role | undefined) ?? "buyer",
     has2fa: (user.factors ?? []).some((f) => f.status === "verified"),
     is2faConfirmed: aal?.currentLevel === "aal2",
+    accountStatus: effectiveStatus(profile?.account_status, profile?.suspended_until),
+    statusReason: profile?.status_reason ?? null,
+    suspendedUntil: profile?.suspended_until ?? null,
   };
+}
+
+/** A suspension with an end date lifts itself once that date has passed. */
+function effectiveStatus(status: string | undefined, until: string | null | undefined): CurrentUser["accountStatus"] {
+  if (status === "banned") return "banned";
+  if (status === "suspended") {
+    if (until && new Date(until).getTime() <= Date.now()) return "active";
+    return "suspended";
+  }
+  return "active";
 }

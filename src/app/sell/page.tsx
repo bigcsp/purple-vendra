@@ -23,6 +23,7 @@ async function SellerHub() {
   const user = await getCurrentUser();
   if (!user) redirect("/login?next=/sell");
   if (user.role === "buyer") redirect("/account");
+  if (user.accountStatus !== "active") redirect("/account");
   // The proxy already sends sellers without a 2FA-confirmed session away;
   // this is a second check in case the page is reached another way.
   if (!user.is2faConfirmed) redirect("/account/security?next=/sell");
@@ -58,9 +59,34 @@ async function SellerHub() {
       <Card>
         <h2 className="text-lg font-semibold text-brand-strong">Your listings</h2>
         <p className="mt-1 text-sm text-muted">
-          Creating listings, photos and your professional profile is coming next. You&apos;ll
-          manage them all from here.
+          Products, services and talent you sell. New listings are reviewed before they go live.
         </p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Link href="/sell/listings" className={`${buttonClass} sm:w-auto`}>Manage listings</Link>
+          <Link href="/sell/listings/new" className="rounded-xl border border-border px-4 py-2.5 text-sm font-medium text-brand hover:bg-brand-soft">
+            + New listing
+          </Link>
+        </div>
+      </Card>
+      <Card>
+        <h2 className="text-lg font-semibold text-brand-strong">Orders</h2>
+        <p className="mt-1 text-sm text-muted">See what buyers have paid for, and what to ship next.</p>
+        <Link href="/sell/orders" className={`${buttonClass} mt-4 sm:w-auto`}>View orders</Link>
+      </Card>
+      <Card>
+        <p className="text-xs font-semibold uppercase tracking-widest text-accent">New</p>
+        <h2 className="text-lg font-semibold text-brand-strong">Vendra Stories</h2>
+        <p className="mt-1 text-sm text-muted">
+          Post short videos to your shop page, tag your products so buyers can shop while they watch, promote your best
+          videos and track views, engagement and sales.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Link href="/sell/stories/new" className={`${buttonClass} sm:w-auto`}>Post a story</Link>
+          <Link href="/sell/stories" className="rounded-xl border border-border px-4 py-2.5 text-sm font-medium text-brand hover:bg-brand-soft">My stories</Link>
+          <Link href="/sell/stories/analytics" className="rounded-xl border border-border px-4 py-2.5 text-sm font-medium text-brand hover:bg-brand-soft">Analytics</Link>
+          <Link href="/sell/stories/promote" className="rounded-xl border border-border px-4 py-2.5 text-sm font-medium text-brand hover:bg-brand-soft">Promote</Link>
+          <Link href={`/shop/${user.username}`} className="px-2 py-2.5 text-sm text-muted hover:text-brand">View my shop →</Link>
+        </div>
       </Card>
     </div>
   );

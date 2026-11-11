@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { getCurrentUser } from "@/lib/auth";
+import { HeaderNav } from "./header-nav";
 
 export function SiteHeader() {
   return (
-    <header className="flex items-center justify-between">
+    <header className="flex flex-wrap items-center justify-between gap-3">
       <Link href="/" className="text-xl font-bold text-brand">
         Purple Vendra
       </Link>
@@ -21,6 +22,9 @@ async function UserMenu() {
   if (!user) {
     return (
       <nav className="flex items-center gap-2 text-sm">
+        <Link href="/stories" className="rounded-full px-3 py-1.5 font-medium text-brand hover:bg-brand-soft">
+          Stories
+        </Link>
         <Link href="/login" className="rounded-full px-3 py-1.5 font-medium text-brand hover:bg-brand-soft">
           Sign in
         </Link>
@@ -31,16 +35,5 @@ async function UserMenu() {
     );
   }
 
-  return (
-    <nav className="flex items-center gap-2 text-sm">
-      {user.role !== "buyer" && (
-        <Link href="/sell" className="rounded-full px-3 py-1.5 font-medium text-brand hover:bg-brand-soft">
-          Seller hub
-        </Link>
-      )}
-      <Link href="/account" className="rounded-full bg-brand-soft px-4 py-1.5 font-medium text-brand">
-        @{user.username}
-      </Link>
-    </nav>
-  );
+  return <HeaderNav username={user.username} isSeller={user.role !== "buyer"} />;
 }

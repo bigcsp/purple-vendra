@@ -25,6 +25,7 @@ async function Body({ searchParams }: Pick<PageProps<"/sell/verify">, "searchPar
   const [user, params] = await Promise.all([getCurrentUser(), searchParams]);
   if (!user) redirect("/login?next=/sell/verify");
   if (user.role === "buyer") redirect("/account");
+  if (user.accountStatus !== "active") redirect("/account");
   if (!user.is2faConfirmed) redirect("/account/security?next=/sell/verify");
 
   const v = await getMyVerification(user.id);

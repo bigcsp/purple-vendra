@@ -23,7 +23,13 @@ purple-vendra/
 │   │   ├── account/                # your account + "Start selling"
 │   │   ├── account/security/       # turn on 2FA (QR code + authenticator app)
 │   │   ├── sell/                   # seller hub (2FA-confirmed sellers only)
-│   │   └── sell/verify/            # upload ID for verification (private storage)
+│   │   ├── sell/verify/            # upload ID for verification (private storage)
+│   │   ├── sell/listings/          # create, edit, delete listings + photos
+│   │   ├── sell/stories/           # Vendra Stories: upload, edit, publish, analytics, promote
+│   │   ├── shop/[username]/        # public shop page with the Vendra Stories gallery
+│   │   ├── stories/                # Vendra Stories discovery feed (promoted first)
+│   │   ├── l/[id]/                 # public listing page
+│   │   └── cart/                   # the buyer's cart (checkout comes in step 7)
 │   ├── components/                 # header, page wrapper, form parts
 │   ├── lib/auth.ts                 # who is signed in, their role and 2FA status
 │   ├── lib/upload.ts               # photo shrinking + uploads to Supabase Storage
@@ -31,7 +37,7 @@ purple-vendra/
 │   ├── lib/supabase/               # Supabase clients and keys
 │   └── proxy.ts                    # keeps sessions fresh + guards /account and /sell
 ├── supabase/
-│   ├── migrations/                 # database changes, run in order (001 → 008)
+│   ├── migrations/                 # database changes, run in order (001 → 012)
 │   └── run-in-sql-editor/          # 004 + 005 + 006 in one paste
 ├── .env.example                    # copy to .env.local and add your keys
 └── package.json
@@ -107,6 +113,50 @@ where user_id = (select id from profiles where username = 'soseenterprise');
 ```
 To reject, set `status = 'rejected', rejection_reason = 'Photo is blurry'`. To look at the file, go to Storage → `id-documents` → the seller's folder.
 
+## Vendra Stories (seller videos) · migration 012, live 11 Nov 2026
+
+Sellers post short videos (MP4/WebM/MOV, up to 90 seconds and 50 MB) to their shop page. They can tag up to 6 of
+their own listings in each video, so buyers can shop while they watch.
+
+**Sellers** (Seller hub → Vendra Stories): upload with a progress bar, preview, an automatic or custom cover
+picture, title, description, category and tagged products. Save as a draft or publish, edit, replace the video,
+unpublish or delete. 10 new stories a day. **Analytics** shows views, engagement, likes, comments, shares,
+product clicks, shop visits, add-to-carts and sales from videos (7, 30 or 90 days). **Promote** creates a campaign:
+pick a story, an audience (categories and/or states), 1–30 days and a budget (₦1,000–₦1,000,000).
+
+**Buyers**: watch on the shop page or at `/stories`, then play/pause, like, comment, share, follow, tap a product,
+add it to their cart, visit the shop or report the video. Promoted stories show first, with a "Promoted" label,
+to the audience the seller chose.
+
+**Campaign payments (until checkout exists).** New campaigns wait as "Awaiting payment". After the seller pays you,
+activate the campaign in the Supabase SQL Editor:
+```sql
+-- see who's waiting
+select c.id, p.username, c.budget_kobo / 100 as naira, c.duration_days, c.created_at
+from story_campaigns c join profiles p on p.id = c.seller_id where c.status = 'awaiting_payment';
+-- payment received → runs for its full duration from now
+update story_campaigns set status = 'active', payment_reference = 'BANK-REF-123',
+  starts_at = now(), ends_at = now() + make_interval(days => duration_days)
+where id = '<campaign id>' and status = 'awaiting_payment';
+-- or reject it
+update story_campaigns set status = 'rejected', admin_note = 'Reason' where id = '<campaign id>';
+```
+Finished campaigns close themselves every hour (`story-campaigns-complete` cron job).
+
+**Approving a listing (until the admin screen in step 8):**
+```sql
+update listings set status = 'approved' where id = '<listing id>';
+```
+
+**Moderation.** Reports work on videos too. When 3 established users report a video, it's hidden automatically and
+a high-priority flag is raised. Phone numbers or "pay me outside" text in titles, descriptions and comments raise a
+flag. To hide or remove a video yourself:
+`update story_videos set status = 'removed', moderation_note = 'Reason' where id = '<story id>';`
+
+**Privacy.** Analytics events never store who did them. Your data export includes stories, likes, comments and
+campaigns. Deleting an account removes the person's stories, likes and comments, and queues their video files for
+the nightly storage cleanup.
+
 ## Push to GitHub
 
 The folder is already a Git repository with a first commit.
@@ -133,4 +183,4 @@ git push -u origin main
 
 ## Backend roadmap
 
-1. Database design ✅ · 2. Project setup ✅ · 3. Auth, roles, seller 2FA rule ✅ · 4. Storage & ID verification ✅ (live; needs a browser test) · 5. Listings & search · 6. Save, cart & alerts · 7. Checkout & escrow · 8. Admin & moderation · 9. Analytics
+1. Database design ✅ · 2. Project setup ✅ · 3. Auth, roles, seller 2FA rule ✅ · 4. Storage & ID verification ✅ (live; needs a browser test) · Vendra Stories ✅ (live; needs a browser test) · 5. Listings ✅ (basic create/edit/shop page) & search · 6. Save, cart & alerts · 7. Checkout & escrow · 8. Admin & moderation · 9. Analytics

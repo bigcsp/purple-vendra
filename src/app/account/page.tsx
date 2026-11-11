@@ -5,7 +5,7 @@ import { Suspense } from "react";
 import { signOut } from "@/app/actions/auth";
 import { PageShell } from "@/components/page-shell";
 import { Card, buttonClass } from "@/components/ui";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser, type CurrentUser } from "@/lib/auth";
 import { BecomeSellerButton } from "./become-seller";
 
 export const metadata: Metadata = { title: "Your account · Purple Vendra" };
@@ -28,6 +28,7 @@ async function Account() {
 
   return (
     <div className="space-y-6">
+      {user.accountStatus !== "active" && <AccountBlocked user={user} />}
       <Card>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
@@ -94,6 +95,27 @@ async function Account() {
       <form action={signOut}>
         <button className="text-sm font-medium text-muted hover:text-brand">Sign out</button>
       </form>
+    </div>
+  );
+}
+
+function AccountBlocked({ user }: { user: CurrentUser }) {
+  const until = user.suspendedUntil
+    ? new Date(user.suspendedUntil).toLocaleDateString("en-NG", { day: "numeric", month: "long", year: "numeric" })
+    : null;
+  return (
+    <div className="rounded-3xl border border-red-200 bg-red-50 p-6 text-red-800">
+      <h2 className="text-lg font-semibold">
+        {user.accountStatus === "banned" ? "Your account has been closed" : "Your account is suspended"}
+      </h2>
+      {user.statusReason && <p className="mt-1 text-sm">Reason: {user.statusReason}</p>}
+      <p className="mt-1 text-sm">
+        {user.accountStatus === "suspended" && until
+          ? `You can sell and buy again from ${until}. `
+          : ""}
+        Until then you can&apos;t post, edit listings or place orders. If you think this is a
+        mistake, contact Purple Vendra support.
+      </p>
     </div>
   );
 }
