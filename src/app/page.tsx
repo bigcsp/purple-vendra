@@ -1,16 +1,16 @@
 import { cacheLife } from "next/cache";
-import { createPublicClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/server/db/supabase";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import Link from "next/link";
 import { Suspense } from "react";
 import { AdireField } from "@/components/adire";
 import { ListingGrid } from "@/components/listing-grid";
 import { StoryGallery } from "@/components/stories/story-gallery";
-import { getCurrentUser } from "@/lib/auth";
-import { readFilters, searchListings } from "@/lib/search";
+import { getCurrentUser } from "@/server/auth/session";
+import { readFilters, searchListings } from "@/server/queries/search";
 import { SearchBox } from "@/components/search-box";
 import { RecentlyViewed } from "@/components/recently-viewed";
-import { getFeedStories } from "@/lib/stories";
+import { getFeedStories } from "@/server/queries/stories";
 import { SiteHeader } from "@/components/site-header";
 
 type Category = { id: number; slug: string; name: string };

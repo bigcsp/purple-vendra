@@ -3,10 +3,10 @@ import Link from "next/link";
 import { InstallAppCard } from "@/components/install-app";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import { signOut } from "@/app/actions/auth";
+import { signOut } from "@/server/actions/auth";
 import { PageShell } from "@/components/page-shell";
 import { Card, buttonClass } from "@/components/ui";
-import { getCurrentUser, type CurrentUser } from "@/lib/auth";
+import { getCurrentUser, type CurrentUser } from "@/server/auth/session";
 import { BecomeSellerButton } from "./become-seller";
 
 export const metadata: Metadata = { title: "Your account · Purple Shop" };

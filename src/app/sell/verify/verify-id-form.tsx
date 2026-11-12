@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { submitVerification } from "@/app/actions/verification";
+import { submitVerification } from "@/server/actions/verification";
 import { Notice, buttonClass } from "@/components/ui";
 import { ID_TYPES, type IdType } from "@/lib/id-types";
 import { MAX_UPLOAD_BYTES, uploadIdDocument } from "@/lib/upload";

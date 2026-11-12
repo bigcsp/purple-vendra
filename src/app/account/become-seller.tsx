@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { becomeSeller, type FormState } from "@/app/actions/auth";
+import { becomeSeller, type FormState } from "@/server/actions/auth";
 import { Notice, buttonClass } from "@/components/ui";
 
 export function BecomeSellerButton() {

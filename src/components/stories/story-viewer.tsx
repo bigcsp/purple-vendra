@@ -4,11 +4,11 @@ import Link from "next/link";
 import { CONTACT_MESSAGES, contactProblem } from "@/lib/contact-guard";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
-import { toggleFollow } from "@/app/actions/shop";
-import { addStoryProductToCart } from "@/app/actions/stories";
+import { toggleFollow } from "@/server/actions/shop";
+import { addStoryProductToCart } from "@/server/actions/stories";
 import { ReportButton } from "@/components/report-button";
 import { formatNaira } from "@/lib/money";
-import type { StoryItem } from "@/lib/stories";
+import type { StoryItem } from "@/server/queries/stories";
 import { createClient } from "@/lib/supabase/client";
 import { trackStory } from "./track";
 

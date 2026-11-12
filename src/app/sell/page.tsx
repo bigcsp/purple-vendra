@@ -4,8 +4,8 @@ import { Suspense } from "react";
 import { PageShell } from "@/components/page-shell";
 import { Card, buttonClass } from "@/components/ui";
 import Link from "next/link";
-import { getCurrentUser } from "@/lib/auth";
-import { getMyVerification, verificationLabel } from "@/lib/verification";
+import { getCurrentUser } from "@/server/auth/session";
+import { getMyVerification, verificationLabel } from "@/server/queries/verification";
 
 export const metadata: Metadata = { title: "Seller hub · Purple Shop" };
 

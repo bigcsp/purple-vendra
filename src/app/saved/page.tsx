@@ -4,9 +4,9 @@ import { Suspense } from "react";
 import { ListingGrid } from "@/components/listing-grid";
 import { PageShell } from "@/components/page-shell";
 import { RecentlyViewed } from "@/components/recently-viewed";
-import { getCurrentUser } from "@/lib/auth";
-import { LISTING_CARD_SELECT, toListingCard } from "@/lib/catalog";
-import { createClient } from "@/lib/supabase/server";
+import { getCurrentUser } from "@/server/auth/session";
+import { LISTING_CARD_SELECT, toListingCard } from "@/server/queries/catalog";
+import { createClient } from "@/server/db/supabase";
 
 export const metadata: Metadata = { title: "Saved · Purple Shop" };
 

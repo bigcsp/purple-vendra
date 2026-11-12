@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { startConversation } from "@/app/actions/messages";
+import { startConversation } from "@/server/actions/messages";
 
 /** "Message seller" — opens a private Purple Shop chat. */
 export function MessageButton({

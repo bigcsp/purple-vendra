@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { addToCart, toggleFollow } from "@/app/actions/shop";
+import { addToCart, toggleFollow } from "@/server/actions/shop";
 
 export function AddToCartButton({ listingId, className = "" }: { listingId: string; className?: string }) {
   const router = useRouter();

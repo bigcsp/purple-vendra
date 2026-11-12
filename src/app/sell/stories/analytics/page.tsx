@@ -4,9 +4,9 @@ import { Suspense } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { Card } from "@/components/ui";
 import { formatNaira } from "@/lib/money";
-import { requireSeller } from "@/lib/seller";
-import { STORY_STATUS } from "@/lib/stories";
-import { createClient } from "@/lib/supabase/server";
+import { requireSeller } from "@/server/auth/seller";
+import { STORY_STATUS } from "@/server/queries/stories";
+import { createClient } from "@/server/db/supabase";
 
 export const metadata: Metadata = { title: "Story analytics · Purple Shop" };
 

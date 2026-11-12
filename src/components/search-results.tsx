@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { ListingGrid } from "@/components/listing-grid";
-import type { Category } from "@/lib/catalog";
+import type { Category } from "@/server/queries/catalog";
 import { NIGERIAN_STATES } from "@/lib/nigeria";
 import { StoryGallery } from "@/components/stories/story-gallery";
-import { getCurrentUser } from "@/lib/auth";
-import { PAGE_SIZE, SORTS, didYouMean, logSearch, searchListings, searchSellers, type SearchFilters } from "@/lib/search";
-import { searchStories } from "@/lib/stories";
+import { getCurrentUser } from "@/server/auth/session";
+import { PAGE_SIZE, SORTS, didYouMean, logSearch, searchListings, searchSellers, type SearchFilters } from "@/server/queries/search";
+import { searchStories } from "@/server/queries/stories";
 
 const selectClass = "rounded-xl border border-border bg-card px-3 py-2 text-sm outline-none focus:border-brand";
 

@@ -4,9 +4,9 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { PageShell } from "@/components/page-shell";
 import { Card } from "@/components/ui";
-import { getCategories } from "@/lib/catalog";
-import { requireSeller } from "@/lib/seller";
-import { createClient } from "@/lib/supabase/server";
+import { getCategories } from "@/server/queries/catalog";
+import { requireSeller } from "@/server/auth/seller";
+import { createClient } from "@/server/db/supabase";
 import { ListingForm } from "../listing-form";
 
 export const metadata: Metadata = { title: "Edit listing · Purple Shop" };

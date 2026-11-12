@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
-import { signIn, type FormState } from "@/app/actions/auth";
+import { signIn, type FormState } from "@/server/actions/auth";
 import { Field, Notice, buttonClass } from "@/components/ui";
 
 export function LoginForm({ next, linkError }: { next: string; linkError: boolean }) {

@@ -6,9 +6,9 @@ import { BecomeSellerButton } from "@/app/account/become-seller";
 import { AdireField } from "@/components/adire";
 import { PageShell } from "@/components/page-shell";
 import { Card, buttonClass } from "@/components/ui";
-import { getCurrentUser, type CurrentUser } from "@/lib/auth";
-import { createClient } from "@/lib/supabase/server";
-import { getMyVerification } from "@/lib/verification";
+import { getCurrentUser, type CurrentUser } from "@/server/auth/session";
+import { createClient } from "@/server/db/supabase";
+import { getMyVerification } from "@/server/queries/verification";
 
 export const metadata: Metadata = { title: "Welcome · Purple Shop" };
 

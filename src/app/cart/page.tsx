@@ -4,10 +4,10 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { PageShell } from "@/components/page-shell";
 import { Card } from "@/components/ui";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser } from "@/server/auth/session";
 import { formatNaira } from "@/lib/money";
 import { publicFileUrl } from "@/lib/storage-url";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/server/db/supabase";
 import { CartQuantity } from "./cart-quantity";
 
 export const metadata: Metadata = { title: "Your cart · Purple Shop" };

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
-import { archiveConversation, markConversationRead, sendMessage, setBlocked } from "@/app/actions/messages";
+import { archiveConversation, markConversationRead, sendMessage, setBlocked } from "@/server/actions/messages";
 import { ReportButton } from "@/components/report-button";
 import { CONTACT_MESSAGES, contactProblem } from "@/lib/contact-guard";
 

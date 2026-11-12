@@ -3,10 +3,10 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { PageShell } from "@/components/page-shell";
 import { RequestCard } from "@/components/requests/request-card";
-import { getCurrentUser } from "@/lib/auth";
-import { getCategories } from "@/lib/catalog";
+import { getCurrentUser } from "@/server/auth/session";
+import { getCategories } from "@/server/queries/catalog";
 import { NIGERIAN_STATES } from "@/lib/nigeria";
-import { BOARD_PAGE_SIZE, getBoard } from "@/lib/requests";
+import { BOARD_PAGE_SIZE, getBoard } from "@/server/queries/requests";
 
 export const metadata: Metadata = {
   title: "Purple Requests · Purple Shop",

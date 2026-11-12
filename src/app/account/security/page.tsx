@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { PageShell } from "@/components/page-shell";
 import { Card, Notice } from "@/components/ui";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser } from "@/server/auth/session";
 import { safeNext } from "@/lib/safe-next";
 import { Setup2fa } from "./setup-2fa";
 

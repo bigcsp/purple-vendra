@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { setCampaignStatus } from "@/app/actions/campaigns";
+import { setCampaignStatus } from "@/server/actions/campaigns";
 
 export function CampaignActions({ id, status }: { id: string; status: string }) {
   const router = useRouter();

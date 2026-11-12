@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useActionState, useState } from "react";
-import { signUp, type FormState } from "@/app/actions/auth";
+import { signUp, type FormState } from "@/server/actions/auth";
 import { Field, Notice, buttonClass } from "@/components/ui";
 
 type Intent = "shop" | "sell" | "both";

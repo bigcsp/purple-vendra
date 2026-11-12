@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { StoryItem } from "@/lib/stories";
+import type { StoryItem } from "@/server/queries/stories";
 import { StoryViewer } from "./story-viewer";
 import { trackStory } from "./track";
 

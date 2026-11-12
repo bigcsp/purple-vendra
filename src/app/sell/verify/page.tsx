@@ -4,9 +4,9 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { PageShell } from "@/components/page-shell";
 import { Card, Notice } from "@/components/ui";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser } from "@/server/auth/session";
 import { ID_TYPES } from "@/lib/id-types";
-import { getMyVerification, verificationLabel } from "@/lib/verification";
+import { getMyVerification, verificationLabel } from "@/server/queries/verification";
 import { VerifyIdForm } from "./verify-id-form";
 
 export const metadata: Metadata = { title: "Verify your ID · Purple Shop" };

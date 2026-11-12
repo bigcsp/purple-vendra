@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { submitReport } from "@/app/actions/report";
+import { submitReport } from "@/server/actions/report";
 import { Notice, buttonClass } from "@/components/ui";
 import { REPORT_REASONS, type ReportReason } from "@/lib/report-reasons";
 

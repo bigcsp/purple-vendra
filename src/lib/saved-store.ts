@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { setSaved } from "@/app/actions/saves";
+import { setSaved } from "@/server/actions/saves";
 
 /**
  * One shared copy of "which listings have I saved" for the whole page,

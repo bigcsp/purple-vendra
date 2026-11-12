@@ -4,8 +4,8 @@ import { Suspense } from "react";
 import { PageShell } from "@/components/page-shell";
 import { RequestForm } from "@/components/requests/request-form";
 import { Card } from "@/components/ui";
-import { getCurrentUser } from "@/lib/auth";
-import { getCategories } from "@/lib/catalog";
+import { getCurrentUser } from "@/server/auth/session";
+import { getCategories } from "@/server/queries/catalog";
 
 export const metadata: Metadata = { title: "Post a request · Purple Shop" };
 

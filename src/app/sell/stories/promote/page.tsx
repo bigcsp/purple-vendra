@@ -3,12 +3,12 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { PageShell } from "@/components/page-shell";
 import { Card } from "@/components/ui";
-import { getCategories } from "@/lib/catalog";
+import { getCategories } from "@/server/queries/catalog";
 import { formatNaira } from "@/lib/money";
-import { requireSeller } from "@/lib/seller";
+import { requireSeller } from "@/server/auth/seller";
 import { publicFileUrl } from "@/lib/storage-url";
-import { CAMPAIGN_STATUS } from "@/lib/stories";
-import { createClient } from "@/lib/supabase/server";
+import { CAMPAIGN_STATUS } from "@/server/queries/stories";
+import { createClient } from "@/server/db/supabase";
 import { CampaignActions } from "./campaign-actions";
 import { CampaignForm } from "./campaign-form";
 

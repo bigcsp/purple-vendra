@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { createStory, deleteStory, updateStory } from "@/app/actions/stories";
+import { createStory, deleteStory, updateStory } from "@/server/actions/stories";
 import { Notice, buttonClass } from "@/components/ui";
 import { formatNaira } from "@/lib/money";
 import {

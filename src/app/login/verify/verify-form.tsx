@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { signOut } from "@/app/actions/auth";
+import { signOut } from "@/server/actions/auth";
 import { createClient } from "@/lib/supabase/client";
 import { Field, Notice, buttonClass } from "@/components/ui";
 

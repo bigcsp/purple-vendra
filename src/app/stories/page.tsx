@@ -3,9 +3,9 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { StoryGallery } from "@/components/stories/story-gallery";
-import { getCurrentUser } from "@/lib/auth";
-import { getCategories } from "@/lib/catalog";
-import { getFeedStories, getStoryById } from "@/lib/stories";
+import { getCurrentUser } from "@/server/auth/session";
+import { getCategories } from "@/server/queries/catalog";
+import { getFeedStories, getStoryById } from "@/server/queries/stories";
 
 export const metadata: Metadata = { title: "Purple Stories · Purple Shop" };
 

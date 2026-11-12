@@ -3,11 +3,11 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { PageShell } from "@/components/page-shell";
 import { Card, Notice, buttonClass } from "@/components/ui";
-import { LISTING_CARD_SELECT, LISTING_STATUS, toListingCard } from "@/lib/catalog";
+import { LISTING_CARD_SELECT, LISTING_STATUS, toListingCard } from "@/server/queries/catalog";
 import { formatNaira } from "@/lib/money";
-import { requireSeller } from "@/lib/seller";
+import { requireSeller } from "@/server/auth/seller";
 import { publicFileUrl } from "@/lib/storage-url";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/server/db/supabase";
 
 export const metadata: Metadata = { title: "Your listings · Purple Shop" };
 

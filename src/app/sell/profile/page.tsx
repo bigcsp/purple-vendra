@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { PageShell } from "@/components/page-shell";
-import { requireSeller } from "@/lib/seller";
-import { createClient } from "@/lib/supabase/server";
+import { requireSeller } from "@/server/auth/seller";
+import { createClient } from "@/server/db/supabase";
 import { ProfileForm } from "./profile-form";
 
 export const metadata: Metadata = { title: "Shop profile · Seller hub" };

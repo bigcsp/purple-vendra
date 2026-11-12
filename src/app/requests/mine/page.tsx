@@ -3,9 +3,9 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { PageShell } from "@/components/page-shell";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser } from "@/server/auth/session";
 import { formatNaira } from "@/lib/money";
-import { getMine, postedAgo, timeLeft } from "@/lib/requests";
+import { getMine, postedAgo, timeLeft } from "@/server/queries/requests";
 
 export const metadata: Metadata = { title: "My requests & offers · Purple Shop" };
 

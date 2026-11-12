@@ -3,8 +3,8 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { PageShell } from "@/components/page-shell";
 import { Card } from "@/components/ui";
-import { getCategories } from "@/lib/catalog";
-import { requireSeller } from "@/lib/seller";
+import { getCategories } from "@/server/queries/catalog";
+import { requireSeller } from "@/server/auth/seller";
 import { getTaggableListings } from "../data";
 import { StoryForm } from "../story-form";
 

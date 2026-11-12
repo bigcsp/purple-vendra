@@ -1,8 +1,8 @@
 import "server-only";
 
-import { LISTING_CARD_SELECT, toListingCard } from "@/lib/catalog";
+import { LISTING_CARD_SELECT, toListingCard } from "@/server/queries/catalog";
 import { publicFileUrl } from "@/lib/storage-url";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/server/db/supabase";
 
 /** The seller's own listings that can be tagged in a story (not removed/rejected). */
 export async function getTaggableListings(userId: string) {

@@ -8,12 +8,12 @@ import { ReportButton } from "@/components/report-button";
 import { FollowButton } from "@/components/shop-buttons";
 import { SiteHeader } from "@/components/site-header";
 import { StoryGallery } from "@/components/stories/story-gallery";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser } from "@/server/auth/session";
 import { ListingGrid } from "@/components/listing-grid";
-import { LISTING_CARD_SELECT, toListingCard } from "@/lib/catalog";
+import { LISTING_CARD_SELECT, toListingCard } from "@/server/queries/catalog";
 import { DAYS } from "@/lib/nigeria";
-import { getShopStories } from "@/lib/stories";
-import { createClient } from "@/lib/supabase/server";
+import { getShopStories } from "@/server/queries/stories";
+import { createClient } from "@/server/db/supabase";
 
 export const metadata: Metadata = { title: "Shop · Purple Shop" };
 

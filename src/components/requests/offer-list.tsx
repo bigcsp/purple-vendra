@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { acceptOffer, closeRequest, declineOffer } from "@/app/actions/requests";
+import { acceptOffer, closeRequest, declineOffer } from "@/server/actions/requests";
 import { Notice } from "@/components/ui";
 import { formatNaira } from "@/lib/money";
-import type { RequestOffer } from "@/lib/requests";
+import type { RequestOffer } from "@/server/queries/requests";
 
 /** The buyer's view: offers side by side, accept (opens chat) or decline. */
 export function OfferList({ requestId, offers, open }: { requestId: string; offers: RequestOffer[]; open: boolean }) {

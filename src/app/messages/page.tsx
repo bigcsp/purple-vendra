@@ -4,8 +4,8 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { EscrowNote } from "@/components/messages/escrow-note";
 import { PageShell } from "@/components/page-shell";
-import { getCurrentUser } from "@/lib/auth";
-import { getInbox } from "@/lib/messages";
+import { getCurrentUser } from "@/server/auth/session";
+import { getInbox } from "@/server/queries/messages";
 
 export const metadata: Metadata = { title: "Messages · Purple Shop" };
 

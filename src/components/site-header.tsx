@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import { getCurrentUser } from "@/lib/auth";
-import { getUnreadCount } from "@/lib/messages";
+import { getCurrentUser } from "@/server/auth/session";
+import { getUnreadCount } from "@/server/queries/messages";
 import { HeaderNav } from "./header-nav";
 import { ThemeToggle } from "./theme-toggle";
 import { Wordmark } from "./wordmark";

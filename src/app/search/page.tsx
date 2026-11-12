@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { SearchResults } from "@/components/search-results";
 import { SiteHeader } from "@/components/site-header";
-import { getCategories } from "@/lib/catalog";
-import { readFilters } from "@/lib/search";
+import { getCategories } from "@/server/queries/catalog";
+import { readFilters } from "@/server/queries/search";
 
 export const metadata: Metadata = { title: "Search · Purple Shop" };
 

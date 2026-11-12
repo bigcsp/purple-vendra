@@ -5,10 +5,10 @@ import { Suspense } from "react";
 import { SearchResults } from "@/components/search-results";
 import { SiteHeader } from "@/components/site-header";
 import { StoryGallery } from "@/components/stories/story-gallery";
-import { getCurrentUser } from "@/lib/auth";
-import { getCategories } from "@/lib/catalog";
-import { readFilters } from "@/lib/search";
-import { getFeedStories } from "@/lib/stories";
+import { getCurrentUser } from "@/server/auth/session";
+import { getCategories } from "@/server/queries/catalog";
+import { readFilters } from "@/server/queries/search";
+import { getFeedStories } from "@/server/queries/stories";
 
 export const metadata: Metadata = { title: "Category · Purple Shop" };
 

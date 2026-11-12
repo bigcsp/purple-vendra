@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import type { Suggestion } from "@/app/api/suggest/route";
+import type { Suggestion } from "@/server/api/suggest";
 
 const RECENT_KEY = "ps-recent-searches";
 const MAX_RECENT = 6;

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { createCampaign } from "@/app/actions/campaigns";
+import { createCampaign } from "@/server/actions/campaigns";
 import { Notice, buttonClass } from "@/components/ui";
 import { formatNaira, nairaToKobo } from "@/lib/money";
 import { NIGERIAN_STATES } from "@/lib/nigeria";

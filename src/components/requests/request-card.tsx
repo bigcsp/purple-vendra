@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { formatNaira } from "@/lib/money";
-import { postedAgo, timeLeft, type BoardRequest } from "@/lib/requests";
+import { postedAgo, timeLeft, type BoardRequest } from "@/server/queries/requests";
 
 /** One request on the board. The buyer is never named here. */
 export function RequestCard({ r, categoryName }: { r: BoardRequest; categoryName?: string }) {

@@ -8,11 +8,11 @@ import { ReportButton } from "@/components/report-button";
 import { SaveButton } from "@/components/save-button";
 import { AddToCartButton } from "@/components/shop-buttons";
 import { SiteHeader } from "@/components/site-header";
-import { getCurrentUser } from "@/lib/auth";
-import { DELIVERY_MODES } from "@/lib/catalog";
+import { getCurrentUser } from "@/server/auth/session";
+import { DELIVERY_MODES } from "@/server/queries/catalog";
 import { formatNaira } from "@/lib/money";
 import { publicFileUrl } from "@/lib/storage-url";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/server/db/supabase";
 
 export const metadata: Metadata = { title: "Listing · Purple Shop" };
 

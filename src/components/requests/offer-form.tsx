@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { sendOffer, withdrawOffer } from "@/app/actions/requests";
+import { sendOffer, withdrawOffer } from "@/server/actions/requests";
 import { Notice, buttonClass } from "@/components/ui";
 import { CONTACT_MESSAGES, contactProblem } from "@/lib/contact-guard";
 import { formatNaira } from "@/lib/money";

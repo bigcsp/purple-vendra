@@ -5,8 +5,8 @@ import { Suspense } from "react";
 import { EscrowNote } from "@/components/messages/escrow-note";
 import { Thread } from "@/components/messages/thread";
 import { PageShell } from "@/components/page-shell";
-import { getCurrentUser } from "@/lib/auth";
-import { getConversation } from "@/lib/messages";
+import { getCurrentUser } from "@/server/auth/session";
+import { getConversation } from "@/server/queries/messages";
 import { formatNaira } from "@/lib/money";
 
 export const metadata: Metadata = { title: "Chat · Purple Shop" };

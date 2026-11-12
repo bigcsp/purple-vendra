@@ -9,7 +9,7 @@ import {
   removeListingPhoto,
   updateListing,
   type ListingInput,
-} from "@/app/actions/listings";
+} from "@/server/actions/listings";
 import { Notice, buttonClass } from "@/components/ui";
 import { NIGERIAN_STATES } from "@/lib/nigeria";
 import { publicFileUrl } from "@/lib/storage-url";

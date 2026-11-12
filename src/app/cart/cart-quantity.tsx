@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
-import { setCartQuantity } from "@/app/actions/shop";
+import { setCartQuantity } from "@/server/actions/shop";
 
 export function CartQuantity({ listingId, quantity }: { listingId: string; quantity: number }) {
   const router = useRouter();

@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { PageShell } from "@/components/page-shell";
 import { Card } from "@/components/ui";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser } from "@/server/auth/session";
 import { DeleteAccount } from "./delete-account";
 
 export const metadata: Metadata = { title: "Privacy settings · Purple Shop" };

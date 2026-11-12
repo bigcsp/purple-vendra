@@ -4,8 +4,8 @@ import { Suspense } from "react";
 import { PageShell } from "@/components/page-shell";
 import { Card } from "@/components/ui";
 import { formatNaira } from "@/lib/money";
-import { requireSeller } from "@/lib/seller";
-import { createClient } from "@/lib/supabase/server";
+import { requireSeller } from "@/server/auth/seller";
+import { createClient } from "@/server/db/supabase";
 
 export const metadata: Metadata = { title: "Orders · Seller hub" };
 

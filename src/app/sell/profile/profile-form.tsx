@@ -10,7 +10,7 @@ import {
   updateProfile,
   type HoursRow,
   type ProfileInput,
-} from "@/app/actions/profile";
+} from "@/server/actions/profile";
 import { Card, Notice, buttonClass } from "@/components/ui";
 import { DAYS, NIGERIAN_STATES } from "@/lib/nigeria";
 import { uploadProfileLogo } from "@/lib/upload";

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { setStoryPublished } from "@/app/actions/stories";
+import { setStoryPublished } from "@/server/actions/stories";
 
 export function PublishToggle({ id, published }: { id: string; published: boolean }) {
   const router = useRouter();

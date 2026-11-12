@@ -8,11 +8,11 @@ import { OfferForm } from "@/components/requests/offer-form";
 import { OfferList } from "@/components/requests/offer-list";
 import { RequestForm } from "@/components/requests/request-form";
 import { Card, Notice } from "@/components/ui";
-import { getCurrentUser } from "@/lib/auth";
-import { getCategories } from "@/lib/catalog";
+import { getCurrentUser } from "@/server/auth/session";
+import { getCategories } from "@/server/queries/catalog";
 import { formatNaira } from "@/lib/money";
-import { getOffers, getRequest, postedAgo, timeLeft } from "@/lib/requests";
-import { createClient } from "@/lib/supabase/server";
+import { getOffers, getRequest, postedAgo, timeLeft } from "@/server/queries/requests";
+import { createClient } from "@/server/db/supabase";
 
 export const metadata: Metadata = { title: "Request · Purple Shop" };
 

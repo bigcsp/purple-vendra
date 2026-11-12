@@ -1,5 +1,5 @@
-import { getCurrentUser } from "@/lib/auth";
-import { getUnreadCount } from "@/lib/messages";
+import { getCurrentUser } from "@/server/auth/session";
+import { getUnreadCount } from "@/server/queries/messages";
 import { MobileNav } from "./mobile-nav";
 
 /** Loads the unread chat count for the phone menu. */

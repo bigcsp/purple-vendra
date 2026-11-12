@@ -3,10 +3,10 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { Card, Notice, buttonClass } from "@/components/ui";
-import { requireSeller } from "@/lib/seller";
+import { requireSeller } from "@/server/auth/seller";
 import { publicFileUrl } from "@/lib/storage-url";
-import { STORY_STATUS } from "@/lib/stories";
-import { createClient } from "@/lib/supabase/server";
+import { STORY_STATUS } from "@/server/queries/stories";
+import { createClient } from "@/server/db/supabase";
 import { PublishToggle } from "./publish-toggle";
 
 export const metadata: Metadata = { title: "Purple Stories · Seller hub" };

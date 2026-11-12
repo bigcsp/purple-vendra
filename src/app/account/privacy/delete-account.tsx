@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { cancelAccountDeletion, requestAccountDeletion } from "@/app/actions/privacy";
+import { cancelAccountDeletion, requestAccountDeletion } from "@/server/actions/privacy";
 import { Notice } from "@/components/ui";
 
 const fmt = (d: Date) => d.toLocaleDateString("en-NG", { day: "numeric", month: "long", year: "numeric" });

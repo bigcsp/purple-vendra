@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { createRequest, updateRequest, type RequestInput } from "@/app/actions/requests";
+import { createRequest, updateRequest, type RequestInput } from "@/server/actions/requests";
 import { Notice, buttonClass } from "@/components/ui";
 import { CONTACT_MESSAGES, contactProblem } from "@/lib/contact-guard";
 import { NIGERIAN_STATES } from "@/lib/nigeria";
