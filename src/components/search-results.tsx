@@ -2,7 +2,10 @@ import Link from "next/link";
 import { ListingGrid } from "@/components/listing-grid";
 import type { Category } from "@/lib/catalog";
 import { NIGERIAN_STATES } from "@/lib/nigeria";
-import { PAGE_SIZE, SORTS, logSearch, searchListings, searchSellers, type SearchFilters } from "@/lib/search";
+import { StoryGallery } from "@/components/stories/story-gallery";
+import { getCurrentUser } from "@/lib/auth";
+import { PAGE_SIZE, SORTS, didYouMean, logSearch, searchListings, searchSellers, type SearchFilters } from "@/lib/search";
+import { searchStories } from "@/lib/stories";
 
 const selectClass = "rounded-xl border border-border bg-card px-3 py-2 text-sm outline-none focus:border-brand";
 
@@ -21,11 +24,16 @@ export async function SearchResults({
   categories: Category[];
   lockedCategory?: Category;
 }) {
-  const [{ listings, total }, sellers] = await Promise.all([
+  const firstPage = filters.page === 1;
+  const [{ listings, total }, sellers, stories, viewer] = await Promise.all([
     searchListings(filters),
-    filters.page === 1 ? searchSellers(filters.q) : Promise.resolve([]),
+    firstPage ? searchSellers(filters.q) : Promise.resolve([]),
+    firstPage && filters.q ? searchStories(filters.q, 8).catch(() => []) : Promise.resolve([]),
+    getCurrentUser(),
   ]);
-  if (filters.page === 1) await logSearch(filters.q, filters.categoryId, total);
+  const nothing = total === 0 && sellers.length === 0 && stories.length === 0;
+  const suggestion = nothing && filters.q ? await didYouMean(filters.q) : null;
+  if (firstPage) await logSearch(filters.q, filters.categoryId, total + sellers.length + stories.length);
 
   const pages = Math.ceil(total / PAGE_SIZE);
   const linkTo = (page: number) => {
@@ -84,8 +92,36 @@ export async function SearchResults({
         )}
       </form>
 
+      {suggestion && (
+        <p className="rounded-2xl border border-brand/25 bg-brand-soft/60 px-4 py-3 text-sm">
+          Did you mean{" "}
+          <Link href={`${basePath}?q=${encodeURIComponent(suggestion)}`} className="font-semibold text-brand underline">
+            {suggestion}
+          </Link>
+          ?
+        </p>
+      )}
+
+      {filters.q && firstPage && (sellers.length > 0 || stories.length > 0) && (
+        <nav aria-label="Jump to" className="flex flex-wrap gap-2 text-sm">
+          <a href="#results-listings" className="rounded-full border border-border bg-card px-3 py-1 text-brand hover:bg-brand-soft">
+            Products & services · {total}
+          </a>
+          {sellers.length > 0 && (
+            <a href="#results-shops" className="rounded-full border border-border bg-card px-3 py-1 text-brand hover:bg-brand-soft">
+              Shops · {sellers.length}
+            </a>
+          )}
+          {stories.length > 0 && (
+            <a href="#results-stories" className="rounded-full border border-border bg-card px-3 py-1 text-brand hover:bg-brand-soft">
+              Stories · {stories.length}
+            </a>
+          )}
+        </nav>
+      )}
+
       {sellers.length > 0 && (
-        <section>
+        <section id="results-shops" className="scroll-mt-24">
           <h2 className="mb-2 text-sm font-semibold text-muted">Shops</h2>
           <ul className="flex gap-3 overflow-x-auto pb-1">
             {sellers.map((s) => (
@@ -115,7 +151,15 @@ export async function SearchResults({
         </section>
       )}
 
-      <section>
+      {stories.length > 0 && (
+        <section id="results-stories" className="scroll-mt-24">
+          <h2 className="mb-2 text-sm font-semibold text-muted">Purple Stories</h2>
+          <StoryGallery stories={stories} viewerId={viewer?.id ?? null} showSeller />
+        </section>
+      )}
+
+      <section id="results-listings" className="scroll-mt-24">
+        {(sellers.length > 0 || stories.length > 0) && <h2 className="mb-1 text-sm font-semibold text-muted">Products & services</h2>}
         <p className="mb-3 text-sm text-muted">
           {total === 0
             ? "No results"
@@ -123,8 +167,19 @@ export async function SearchResults({
         </p>
         {total === 0 ? (
           <div className="rounded-2xl border border-dashed border-border p-8 text-center text-sm text-muted">
-            <p>Nothing matches yet{filters.q ? ` for “${filters.q}”` : ""}.</p>
+            <p>
+              {sellers.length || stories.length
+                ? `No products or services match${filters.q ? ` “${filters.q}”` : ""} yet, but see the shops and stories above.`
+                : `Nothing matches${filters.q ? ` “${filters.q}”` : ""} yet.`}
+            </p>
             <p className="mt-1">Try fewer words, another spelling, or remove a filter. New sellers join every week.</p>
+            <div className="mt-4 flex flex-wrap justify-center gap-2">
+              {["Aso ebi", "Ankara", "Logo design", "Makeup artist", "Plumber", "Photographer"].map((x) => (
+                <Link key={x} href={`/search?q=${encodeURIComponent(x)}`} className="rounded-full border border-border bg-card px-3 py-1 text-brand hover:bg-brand-soft">
+                  {x}
+                </Link>
+              ))}
+            </div>
           </div>
         ) : (
           <ListingGrid listings={listings} />

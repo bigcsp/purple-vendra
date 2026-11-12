@@ -8,6 +8,7 @@ import { ListingGrid } from "@/components/listing-grid";
 import { StoryGallery } from "@/components/stories/story-gallery";
 import { getCurrentUser } from "@/lib/auth";
 import { readFilters, searchListings } from "@/lib/search";
+import { SearchBox } from "@/components/search-box";
 import { getFeedStories } from "@/lib/stories";
 import { SiteHeader } from "@/components/site-header";
 
@@ -63,9 +64,12 @@ export default async function Home() {
     <main className="mx-auto w-full max-w-5xl flex-1 px-5 py-8">
       <SiteHeader />
 
-      <section className="relative mt-6 overflow-hidden rounded-[2rem] bg-panel text-white">
-        <AdireField className="pointer-events-none absolute inset-y-0 right-0 hidden h-full w-[42%] [mask-image:linear-gradient(to_right,transparent,black_45%)] md:block" />
-        <AdireField className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 opacity-40 md:hidden" />
+      <section className="relative z-10 mt-6 rounded-[2rem] bg-panel text-white">
+        {/* Pattern is clipped in its own layer so the search suggestions can spill below the hero. */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[2rem]" aria-hidden>
+          <AdireField className="absolute inset-y-0 right-0 hidden h-full w-[42%] [mask-image:linear-gradient(to_right,transparent,black_45%)] md:block" />
+          <AdireField className="absolute -bottom-24 -right-24 h-72 w-72 opacity-40 md:hidden" />
+        </div>
         <div className="relative px-6 py-10 sm:px-10 sm:py-14 md:max-w-[60%]">
           <h1 className="font-display text-4xl font-extrabold leading-[1.05] sm:text-5xl">
             Find Nigerian makers, freelancers and pros you can trust.
@@ -74,17 +78,9 @@ export default async function Home() {
             Shop adire and art, hire designers and developers, book a plumber. You pay through Purple Shop and we
             hold your money until you get what you paid for.
           </p>
-          <form action="/search" role="search" className="mt-6 flex max-w-lg gap-2 rounded-full bg-white p-1.5 shadow-lg shadow-black/20">
-            <label className="sr-only" htmlFor="hero-search">What are you looking for?</label>
-            <input
-              id="hero-search"
-              type="search"
-              name="q"
-              placeholder="What are you looking for?"
-              className="min-w-0 flex-1 rounded-full bg-transparent px-4 text-[#1a1024] placeholder:text-[#6b6478] outline-none"
-            />
-            <button className="rounded-full bg-[#6d28d9] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#5b21b6]">Search</button>
-          </form>
+          <div className="mt-6 max-w-lg">
+            <SearchBox variant="hero" placeholder="Search anything…" />
+          </div>
           <div className="mt-4 flex flex-wrap gap-2 text-sm">
             {["Adire", "Aso-ebi", "Logo design", "Makeup artist", "Plumber", "Website"].map((q) => (
               <Link key={q} href={`/search?q=${encodeURIComponent(q)}`}

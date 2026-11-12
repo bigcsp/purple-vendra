@@ -45,7 +45,7 @@ export async function signUp(_prev: FormState, formData: FormData): Promise<Form
       emailRedirectTo: `${await siteOrigin()}/auth/confirm?next=${encodeURIComponent(after)}`,
     },
   });
-  if (error) return { error: error.message };
+  if (error) return { error: friendlySignUpError(error.code, error.message) };
 
   // Email confirmation turned off in Supabase: the user is signed in already.
   if (data.session) redirect(after);
@@ -89,4 +89,25 @@ export async function becomeSeller(): Promise<FormState> {
   if (error) return { error: error.message };
   // Back to the set-up checklist: profile, first listing, first story.
   redirect("/welcome");
+}
+
+/** Turns Supabase sign-up errors into plain words people can act on. */
+function friendlySignUpError(code: string | undefined, message: string) {
+  switch (code) {
+    case "over_email_send_rate_limit":
+    case "over_request_rate_limit":
+      return "Lots of people are joining right now. Please wait a few minutes and try again.";
+    case "user_already_exists":
+    case "email_exists":
+      return "There's already an account with this email. Sign in instead, or reset your password.";
+    case "weak_password":
+      return "That password is too easy to guess. Use at least 8 characters with a mix of letters and numbers.";
+    case "email_address_invalid":
+    case "validation_failed":
+      return "Check your email address and try again.";
+    case "signup_disabled":
+      return "New sign-ups are paused for a moment. Please try again later.";
+    default:
+      return /rate limit/i.test(message) ? "Please wait a few minutes and try again." : message;
+  }
 }

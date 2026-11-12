@@ -67,21 +67,19 @@ export async function getShopStories(
   }));
 }
 
-/** Discovery feed: live promoted stories for this viewer first, then newest. */
-export async function getFeedStories(categoryId: number | null): Promise<StoryItem[]> {
-  const supabase = await createClient();
-  const { data: feed } = await supabase.rpc("get_story_feed", { p_category: categoryId, p_limit: 36 });
-  type FeedRow = {
-    video_id: string;
-    seller_id: string;
-    seller_username: string;
-    seller_name: string;
-    seller_verified: boolean;
-    campaign_id: string | null;
-  };
-  const rows = (feed ?? []) as FeedRow[];
-  if (rows.length === 0) return [];
+type FeedRow = {
+  video_id: string;
+  seller_id: string;
+  seller_username: string;
+  seller_name: string;
+  seller_verified: boolean;
+  campaign_id: string | null;
+};
 
+/** Turns feed/search rows (ids + seller) into full stories, keeping their order. */
+async function loadStories(rows: FeedRow[]): Promise<StoryItem[]> {
+  if (rows.length === 0) return [];
+  const supabase = await createClient();
   const { data: details } = await supabase
     .from("story_videos")
     .select(STORY_SELECT)
@@ -107,6 +105,47 @@ export async function getFeedStories(categoryId: number | null): Promise<StoryIt
       },
     ];
   });
+}
+
+/** Discovery feed: live promoted stories for this viewer first, then newest. */
+export async function getFeedStories(categoryId: number | null): Promise<StoryItem[]> {
+  const supabase = await createClient();
+  const { data: feed } = await supabase.rpc("get_story_feed", { p_category: categoryId, p_limit: 36 });
+  return loadStories((feed ?? []) as FeedRow[]);
+}
+
+/** One published story by id (for links from search suggestions). */
+export async function getStoryById(id: string): Promise<StoryItem | null> {
+  if (!/^[0-9a-f-]{36}$/i.test(id)) return null;
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("story_videos")
+    .select("id, seller_id, profiles!story_videos_seller_id_fkey(username, display_name, business_name, is_verified)")
+    .eq("id", id)
+    .eq("status", "published")
+    .maybeSingle();
+  if (!data) return null;
+  const p = data.profiles as unknown as { username: string; display_name: string; business_name: string | null; is_verified: boolean } | null;
+  if (!p) return null;
+  const [story] = await loadStories([
+    {
+      video_id: data.id,
+      seller_id: data.seller_id,
+      seller_username: p.username,
+      seller_name: p.business_name || p.display_name,
+      seller_verified: p.is_verified,
+      campaign_id: null,
+    },
+  ]);
+  return story ?? null;
+}
+
+/** Stories whose title, description, seller or synonyms match the search. */
+export async function searchStories(q: string, limit = 8): Promise<StoryItem[]> {
+  if (!q) return [];
+  const supabase = await createClient();
+  const { data } = await supabase.rpc("search_stories", { p_query: q, p_limit: limit });
+  return loadStories((data ?? []) as FeedRow[]);
 }
 
 export const STORY_STATUS: Record<string, { text: string; tone: string }> = {

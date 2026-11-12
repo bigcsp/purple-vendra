@@ -97,6 +97,18 @@ export async function searchSellers(q: string): Promise<SellerHit[]> {
   return (data ?? []) as SellerHit[];
 }
 
+/** Closest known word when a search finds nothing ("agbda" → "agbada"). */
+export async function didYouMean(q: string): Promise<string | null> {
+  if (q.length < 3) return null;
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase.rpc("search_did_you_mean", { p_query: q });
+    return typeof data === "string" && data ? data : null;
+  } catch {
+    return null;
+  }
+}
+
 /** Anonymous demand log (what people look for). Never blocks the page. */
 export async function logSearch(q: string, categoryId: number | null, results: number) {
   if (!q) return;

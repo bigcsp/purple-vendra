@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { StoryGallery } from "@/components/stories/story-gallery";
 import { getCurrentUser } from "@/lib/auth";
 import { getCategories } from "@/lib/catalog";
-import { getFeedStories } from "@/lib/stories";
+import { getFeedStories, getStoryById } from "@/lib/stories";
 
 export const metadata: Metadata = { title: "Purple Stories · Purple Shop" };
 
@@ -26,10 +26,16 @@ export default function StoriesPage({ searchParams }: PageProps<"/stories">) {
 }
 
 async function Feed({ searchParams }: { searchParams: PageProps<"/stories">["searchParams"] }) {
-  const { category } = await searchParams;
+  const { category, story } = await searchParams;
+  const storyId = typeof story === "string" ? story : undefined;
   const [categories, viewer] = await Promise.all([getCategories(), getCurrentUser()]);
   const active = categories.find((c) => c.slug === category) ?? null;
-  const stories = await getFeedStories(active?.id ?? null);
+  let stories = await getFeedStories(active?.id ?? null);
+  // A story linked from search that isn't in this feed: put it first.
+  if (storyId && !stories.some((s) => s.id === storyId)) {
+    const linked = await getStoryById(storyId);
+    if (linked) stories = [linked, ...stories];
+  }
 
   return (
     <div className="mt-6 space-y-6">
@@ -44,7 +50,7 @@ async function Feed({ searchParams }: { searchParams: PageProps<"/stories">["sea
           No stories here yet. Sellers: post yours from the Seller hub.
         </p>
       ) : (
-        <StoryGallery stories={stories} viewerId={viewer?.id ?? null} showSeller />
+        <StoryGallery stories={stories} viewerId={viewer?.id ?? null} showSeller initialStoryId={storyId} />
       )}
     </div>
   );
