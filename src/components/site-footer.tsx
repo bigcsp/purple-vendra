@@ -17,6 +17,7 @@ export function SiteFooter() {
         <nav aria-label="Shop">
           <p className="font-semibold text-brand-strong">Shop</p>
           <ul className="mt-2 space-y-1.5 text-muted">
+            <li><Link href="/requests" className="hover:text-brand">Purple Requests</Link></li>
             <li><Link href="/stories" className="hover:text-brand">Purple Stories</Link></li>
             <li><Link href="/search?sort=newest" className="hover:text-brand">New this week</Link></li>
             <li><Link href="/c/fashion-adire" className="hover:text-brand">Fashion & Adire</Link></li>

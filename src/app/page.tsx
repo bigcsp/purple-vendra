@@ -136,6 +136,19 @@ export default async function Home() {
         ))
       )}
 
+      <section className="mt-16 flex flex-col items-start gap-4 rounded-[2rem] border-2 border-dashed border-brand/40 bg-brand-soft/50 p-6 sm:flex-row sm:items-center sm:p-8">
+        <div className="flex-1">
+          <h2 className="text-2xl font-bold text-brand-strong">Can&apos;t find what you need?</h2>
+          <p className="mt-1 text-muted">
+            Post a Purple Request with your budget. Makers, freelancers and pros send you offers, and you pick the best one.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Link href="/requests/new" className="rounded-full bg-brand px-5 py-2.5 font-medium text-white hover:bg-brand-deep">Post a request</Link>
+          <Link href="/requests" className="rounded-full border border-brand px-5 py-2.5 font-medium text-brand hover:bg-card">See requests</Link>
+        </div>
+      </section>
+
       <section className="mt-16 grid gap-4 rounded-[2rem] border border-border bg-card p-6 sm:grid-cols-3 sm:p-8">
         {[
           { icon: "🔒", title: "Your money is protected", text: "We hold payment until you confirm you received your order or the job is done." },

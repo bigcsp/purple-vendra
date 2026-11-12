@@ -34,6 +34,9 @@ async function UserMenu() {
   if (!user) {
     return (
       <nav className="flex items-center gap-1 text-sm sm:gap-2">
+        <Link href="/requests" className="hidden rounded-full px-3 py-1.5 font-medium text-brand hover:bg-brand-soft sm:inline-block">
+          Requests
+        </Link>
         <Link href="/stories" className="hidden rounded-full px-3 py-1.5 font-medium text-brand hover:bg-brand-soft sm:inline-block">
           Stories
         </Link>

@@ -20,9 +20,11 @@ export function HeaderNav({ username, isSeller, unread = 0 }: { username: string
         { href: "/sell/listings", label: "Listings" },
         { href: "/sell/stories", label: "Stories" },
         { href: "/sell/orders", label: "Orders" },
+        { href: "/requests", label: "Requests" },
         { href: "/messages", label: "Messages" },
       ]
     : [
+        { href: "/requests", label: "Requests" },
         { href: "/stories", label: "Stories" },
         { href: "/saved", label: "Saved" },
         { href: "/messages", label: "Messages" },

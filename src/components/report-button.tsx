@@ -13,10 +13,12 @@ export function ReportButton({
   listingId,
   userId,
   videoId,
+  requestId,
   startOpen = false,
   label,
 }: {
   label?: string;
+  requestId?: string;
   listingId?: string;
   userId?: string;
   videoId?: string;
@@ -40,7 +42,7 @@ export function ReportButton({
   if (!open) {
     return (
       <button onClick={() => setOpen(true)} className="text-sm text-muted underline hover:text-brand">
-        {label ?? `Report ${listingId ? "this listing" : videoId ? "this video" : "this seller"}`}
+        {label ?? `Report ${listingId ? "this listing" : videoId ? "this video" : requestId ? "this request" : "this seller"}`}
       </button>
     );
   }
@@ -49,7 +51,7 @@ export function ReportButton({
     e.preventDefault();
     if (!reason) return setError("Choose a reason.");
     startTransition(async () => {
-      const result = await submitReport({ listingId, userId, videoId, reason, details });
+      const result = await submitReport({ listingId, userId, videoId, requestId, reason, details });
       if (result.error) setError(result.error);
       else setDone(true);
     });

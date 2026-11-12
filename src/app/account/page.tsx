@@ -67,8 +67,9 @@ async function Account() {
 
       <InstallAppCard />
 
-      <nav aria-label="Your things" className="grid grid-cols-3 gap-3 text-center text-sm">
+      <nav aria-label="Your things" className="grid grid-cols-2 gap-3 text-center text-sm sm:grid-cols-4">
         {[
+          { href: "/requests/mine", icon: "📣", label: "Requests" },
           { href: "/saved", icon: "♥", label: "Saved" },
           { href: "/messages", icon: "💬", label: "Messages" },
           { href: "/cart", icon: "🛒", label: "Cart" },

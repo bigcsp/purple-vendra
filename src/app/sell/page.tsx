@@ -87,6 +87,17 @@ async function SellerHub() {
         <Link href="/sell/orders" className={`${buttonClass} mt-4 sm:w-auto`}>View orders</Link>
       </Card>
       <Card>
+        <h2 className="text-lg font-semibold text-brand-strong">Buyer requests</h2>
+        <p className="mt-1 text-sm text-muted">
+          Buyers post what they need with a budget. Send an offer with your price and timing; if they accept, a chat
+          opens and they pay through escrow.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Link href="/requests?view=matches" className={`${buttonClass} sm:w-auto`}>See matching requests</Link>
+          <Link href="/requests/mine" className="inline-flex items-center rounded-xl border border-border px-4 py-2.5 font-medium text-brand hover:bg-brand-soft">My offers</Link>
+        </div>
+      </Card>
+      <Card>
         <h2 className="text-lg font-semibold text-brand-strong">Messages</h2>
         <p className="mt-1 text-sm text-muted">
           Answer buyers&apos; questions here. Keep every deal on Purple Shop: phone numbers, social handles and bank

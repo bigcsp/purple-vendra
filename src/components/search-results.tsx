@@ -173,6 +173,13 @@ export async function SearchResults({
                 : `Nothing matches${filters.q ? ` “${filters.q}”` : ""} yet.`}
             </p>
             <p className="mt-1">Try fewer words, another spelling, or remove a filter. New sellers join every week.</p>
+            <Link
+              href={`/requests/new${filters.q ? `?title=${encodeURIComponent(filters.q)}` : ""}`}
+              className="mt-4 inline-block rounded-full bg-brand px-5 py-2.5 font-medium text-white hover:bg-brand-deep"
+            >
+              Post a request{filters.q ? ` for “${filters.q}”` : ""}
+            </Link>
+            <p className="mt-2 text-xs">Sellers send you offers. You choose, and pay safely through escrow.</p>
             <div className="mt-4 flex flex-wrap justify-center gap-2">
               {["Aso ebi", "Ankara", "Logo design", "Makeup artist", "Plumber", "Photographer"].map((x) => (
                 <Link key={x} href={`/search?q=${encodeURIComponent(x)}`} className="rounded-full border border-border bg-card px-3 py-1 text-brand hover:bg-brand-soft">

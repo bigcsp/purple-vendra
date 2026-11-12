@@ -15,11 +15,12 @@ export async function submitReport(input: {
   listingId?: string;
   userId?: string;
   videoId?: string;
+  requestId?: string;
   reason: string;
   details?: string;
 }): Promise<ReportResult> {
   if (!(input.reason in REPORT_REASONS)) return { error: "Choose a reason." };
-  if (!input.listingId && !input.userId && !input.videoId) return { error: "Nothing to report." };
+  if (!input.listingId && !input.userId && !input.videoId && !input.requestId) return { error: "Nothing to report." };
 
   const supabase = await createClient();
   const {
@@ -31,8 +32,10 @@ export async function submitReport(input: {
     reporter_id: user.id,
     listing_id: input.listingId ?? null,
     video_id: input.listingId ? null : (input.videoId ?? null),
-    // The database fills in the seller for listing and video reports.
-    reported_user_id: input.listingId || input.videoId ? null : input.userId,
+    request_id: input.listingId || input.videoId ? null : (input.requestId ?? null),
+    // The database fills in the seller for listing and video reports, and
+    // keeps request posters anonymous.
+    reported_user_id: input.listingId || input.videoId || input.requestId ? null : input.userId,
     reason: input.reason,
     details: input.details?.trim().slice(0, 2000) || null,
   });
