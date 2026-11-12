@@ -6,6 +6,8 @@ import { Card, buttonClass } from "@/components/ui";
 import Link from "next/link";
 import { getCurrentUser } from "@/server/auth/session";
 import { getMyVerification, verificationLabel } from "@/server/queries/verification";
+import { getMySellerProgress } from "@/server/queries/seller-progress";
+import { SellerProgressCard } from "@/components/seller-progress";
 
 export const metadata: Metadata = { title: "Seller hub · Purple Shop" };
 
@@ -28,7 +30,7 @@ async function SellerHub() {
   // this is a second check in case the page is reached another way.
   if (!user.is2faConfirmed) redirect("/account/security?next=/sell");
 
-  const verification = await getMyVerification(user.id);
+  const [verification, progress] = await Promise.all([getMyVerification(user.id), getMySellerProgress()]);
   const label = verificationLabel[verification.status];
 
   return (
@@ -38,6 +40,8 @@ async function SellerHub() {
         <h1 className="mt-2 text-2xl font-bold text-brand-strong">Welcome, {user.displayName}</h1>
         <p className="mt-2 text-sm text-green-700">✓ Signed in with two-factor authentication</p>
       </Card>
+
+      {progress && <SellerProgressCard progress={progress} />}
       <Card>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <h2 className="text-lg font-semibold text-brand-strong">ID verification</h2>
