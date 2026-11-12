@@ -5,7 +5,8 @@ import localFont from "next/font/local";
 import { SiteFooter } from "@/components/site-footer";
 import { themeScript } from "@/lib/theme-script";
 import { Suspense } from "react";
-import { MobileNavWithCounts } from "@/components/mobile-nav-server";
+import { MobileNavWithCounts, SidebarWithData } from "@/components/mobile-nav-server";
+import { SidebarSkeleton } from "@/components/nav/sidebar-skeleton";
 import { InstallAppBanner, RegisterServiceWorker } from "@/components/install-app";
 import "./globals.css";
 
@@ -46,9 +47,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="min-h-full flex flex-col pb-16 sm:pb-0">
-        {children}
-        <SiteFooter />
+      <body className="min-h-full pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">
+        <Suspense fallback={<SidebarSkeleton />}>
+          <SidebarWithData />
+        </Suspense>
+        <div className="app-main flex min-h-dvh flex-col">
+          {children}
+          <SiteFooter />
+        </div>
         <Suspense fallback={null}>
           <MobileNavWithCounts />
         </Suspense>

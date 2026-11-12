@@ -1,5 +1,6 @@
 "use client";
 
+import { Heart, Play, ShoppingBag } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { StoryItem } from "@/server/queries/stories";
 import { StoryViewer } from "./story-viewer";
@@ -74,8 +75,10 @@ function StoryCard({ story, showSeller, onOpen }: { story: StoryItem; showSeller
           </span>
         )}
         {story.products.length > 0 && (
-          <span className="absolute right-2 top-2 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-semibold text-brand-strong">
-            🛍 {story.products.length}
+          <span className="absolute right-2 top-2 inline-flex items-center gap-1 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-semibold text-[#3b0f6e]">
+            <ShoppingBag className="h-3 w-3" strokeWidth={2.25} aria-hidden />
+            {story.products.length}
+            <span className="sr-only"> products</span>
           </span>
         )}
         <span className="absolute inset-x-0 bottom-0 p-3 text-white">
@@ -85,7 +88,10 @@ function StoryCard({ story, showSeller, onOpen }: { story: StoryItem; showSeller
             </span>
           )}
           <span className="line-clamp-2 text-sm font-semibold leading-tight">{story.title}</span>
-          <span className="mt-1 block text-xs text-white/80">▶ {story.viewCount.toLocaleString()} · ♥ {story.likeCount.toLocaleString()}</span>
+          <span className="mt-1 flex items-center gap-2.5 text-xs text-white/80">
+            <span className="inline-flex items-center gap-1"><Play className="h-3 w-3" aria-hidden /><span className="sr-only">Views</span>{story.viewCount.toLocaleString()}</span>
+            <span className="inline-flex items-center gap-1"><Heart className="h-3 w-3" aria-hidden /><span className="sr-only">Likes</span>{story.likeCount.toLocaleString()}</span>
+          </span>
         </span>
       </button>
     </li>

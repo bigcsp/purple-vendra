@@ -1,5 +1,6 @@
 "use client";
 
+import { ShoppingBag, Sparkles, Store, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { useActionState, useState } from "react";
 import { signUp, type FormState } from "@/server/actions/auth";
@@ -7,10 +8,10 @@ import { Field, Notice, buttonClass } from "@/components/ui";
 
 type Intent = "shop" | "sell" | "both";
 
-const CHOICES: { value: Intent; title: string; text: string; icon: string }[] = [
-  { value: "shop", title: "I want to shop or hire", text: "Buy from makers, book pros and freelancers", icon: "🛍️" },
-  { value: "sell", title: "I want to sell", text: "Open a shop for your products, skills or services", icon: "🏪" },
-  { value: "both", title: "Both", text: "Shop on Purple Shop and run my own shop", icon: "✨" },
+const CHOICES: { value: Intent; title: string; text: string; icon: LucideIcon }[] = [
+  { value: "shop", title: "I want to shop or hire", text: "Buy from makers, book pros and freelancers", icon: ShoppingBag },
+  { value: "sell", title: "I want to sell", text: "Open a shop for your products, skills or services", icon: Store },
+  { value: "both", title: "Both", text: "Shop on Purple Shop and run my own shop", icon: Sparkles },
 ];
 
 export function SignupForm({ next, initialIntent }: { next: string; initialIntent: Intent }) {
@@ -52,7 +53,7 @@ export function SignupForm({ next, initialIntent }: { next: string; initialInten
                 onChange={() => setIntent(c.value)}
                 className="sr-only"
               />
-              <span className="text-2xl" aria-hidden>{c.icon}</span>
+              <c.icon className="h-6 w-6 text-brand" strokeWidth={1.75} aria-hidden />
               <span>
                 <span className="block text-sm font-semibold text-brand-strong">{c.title}</span>
                 <span className="block text-xs text-muted">{c.text}</span>

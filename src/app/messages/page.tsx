@@ -78,7 +78,7 @@ async function Inbox({ searchParams }: { searchParams: PageProps<"/messages">["s
                   </span>
                   {c.listing_title && <span className="block truncate text-xs text-brand">About: {c.listing_title}</span>}
                   <span className={`block truncate text-sm ${c.unread ? "text-foreground" : "text-muted"}`}>
-                    {c.blocked ? "Chat closed" : c.last_message ? `${c.last_from_you ? "You: " : ""}${c.last_message}` : "Say hello 👋"}
+                    {c.blocked ? "Chat closed" : c.last_message ? `${c.last_from_you ? "You: " : ""}${c.last_message}` : "Say hello"}
                   </span>
                 </span>
                 {c.unread > 0 && (

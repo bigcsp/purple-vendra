@@ -1,3 +1,4 @@
+import { Lock } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -84,7 +85,7 @@ async function Detail({
       ) : (
         <Card>
           <h2 className="text-lg font-semibold text-brand-strong">
-            {r.my_offer_status === "accepted" ? "Your offer was accepted 🎉" : r.my_offer_id ? "Your offer" : "Send an offer"}
+            {r.my_offer_status === "accepted" ? "Your offer was accepted" : r.my_offer_id ? "Your offer" : "Send an offer"}
           </h2>
           <div className="mt-4">
             {r.my_offer_status === "accepted" ? (
@@ -121,9 +122,10 @@ async function Detail({
 
       {!r.is_owner && open && (
         <div className="space-y-3">
-          <p className="rounded-2xl bg-brand-soft/60 px-4 py-3 text-xs text-brand-strong">
-            🔒 Offers and chats stay on Purple Shop. Contact details are blocked and the buyer pays through escrow, so
-            you&apos;re paid once the job is confirmed.
+          <p className="flex gap-2 rounded-2xl bg-brand-soft/60 px-4 py-3 text-xs text-brand-strong">
+            <Lock className="mt-px h-3.5 w-3.5 shrink-0" strokeWidth={2} aria-hidden />
+            <span>Offers and chats stay on Purple Shop. Contact details are blocked and the buyer pays through escrow, so
+            you&apos;re paid once the job is confirmed.</span>
           </p>
           {user && <ReportButton requestId={r.id} />}
         </div>

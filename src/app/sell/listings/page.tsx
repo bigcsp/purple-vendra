@@ -1,3 +1,4 @@
+import { Heart } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -68,8 +69,8 @@ async function MyListings({ searchParams }: { searchParams: PageProps<"/sell/lis
                   <p className="text-sm">
                     {formatNaira(l.price_kobo)}
                     {(saveCounts.get(l.id) ?? 0) > 0 && (
-                      <span className="ml-2 text-xs text-muted" title="People who saved this (we never show who)">
-                        ♥ {saveCounts.get(l.id)} saved
+                      <span className="ml-2 inline-flex items-center gap-1 text-xs text-muted" title="People who saved this (we never show who)">
+                        <Heart className="h-3 w-3" strokeWidth={2} aria-hidden /> {saveCounts.get(l.id)} saved
                       </span>
                     )}
                   </p>

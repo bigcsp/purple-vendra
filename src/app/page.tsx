@@ -1,3 +1,4 @@
+import { BadgeCheck, Camera, Laptop, Lock, Palette, PenTool, Shirt, Sparkles, Star, Wrench, type LucideIcon } from "lucide-react";
 import { cacheLife } from "next/cache";
 import { createPublicClient } from "@/server/db/supabase";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
@@ -22,13 +23,13 @@ type Section = {
   categories: Category[];
 };
 
-const icons: Record<string, string> = {
-  "fashion-adire": "👗",
-  "art-crafts": "🎨",
-  "digital-design": "🖌️",
-  "photo-video-talent": "📸",
-  "tech-freelance": "💻",
-  "home-services": "🔧",
+const icons: Record<string, LucideIcon> = {
+  "fashion-adire": Shirt,
+  "art-crafts": Palette,
+  "digital-design": PenTool,
+  "photo-video-talent": Camera,
+  "tech-freelance": Laptop,
+  "home-services": Wrench,
 };
 
 const blurbs: Record<string, string> = {
@@ -121,9 +122,7 @@ export default async function Home() {
                     href={`/c/${c.slug}`}
                     className="group flex h-full items-start gap-4 rounded-2xl border border-border bg-card p-5 transition hover:border-brand"
                   >
-                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-soft text-2xl transition group-hover:scale-105" aria-hidden>
-                      {icons[c.slug] ?? "✨"}
-                    </span>
+                    <CategoryIcon slug={c.slug} />
                     <span>
                       <span className="block font-semibold text-brand-strong">{c.name}</span>
                       <span className="mt-0.5 block text-sm text-muted">{blurbs[c.slug] ?? ""}</span>
@@ -151,12 +150,14 @@ export default async function Home() {
 
       <section className="mt-16 grid gap-4 rounded-[2rem] border border-border bg-card p-6 sm:grid-cols-3 sm:p-8">
         {[
-          { icon: "🔒", title: "Your money is protected", text: "We hold payment until you confirm you received your order or the job is done." },
-          { icon: "✅", title: "Verified sellers", text: "Every seller signs in with two-step security, and verified sellers have checked ID." },
-          { icon: "⭐", title: "Honest reviews", text: "Only people who actually bought or booked can leave a review." },
+          { icon: Lock, title: "Your money is protected", text: "We hold payment until you confirm you received your order or the job is done." },
+          { icon: BadgeCheck, title: "Verified sellers", text: "Every seller signs in with two-step security, and verified sellers have checked ID." },
+          { icon: Star, title: "Honest reviews", text: "Only people who actually bought or booked can leave a review." },
         ].map((f) => (
           <div key={f.title}>
-            <span className="text-2xl" aria-hidden>{f.icon}</span>
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-soft text-brand" aria-hidden>
+              <f.icon className="h-5 w-5" strokeWidth={1.75} />
+            </span>
             <h3 className="mt-2 font-semibold text-brand-strong">{f.title}</h3>
             <p className="mt-1 text-sm text-muted">{f.text}</p>
           </div>
@@ -218,5 +219,14 @@ async function HomeFeed() {
         </section>
       )}
     </>
+  );
+}
+
+function CategoryIcon({ slug }: { slug: string }) {
+  const Icon = icons[slug] ?? Sparkles;
+  return (
+    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand transition-transform group-hover:scale-105" aria-hidden>
+      <Icon className="h-6 w-6" strokeWidth={1.75} />
+    </span>
   );
 }

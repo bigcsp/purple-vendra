@@ -1,5 +1,6 @@
 "use client";
 
+import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import {
@@ -230,9 +231,9 @@ function AreasCard({ initial }: { initial: Area[] }) {
                     else router.refresh();
                   })
                 }
-                className="ml-1 text-xs hover:text-red-600"
+                className="ml-1 rounded-full p-0.5 text-muted hover:text-red-600"
               >
-                ✕
+                <X className="h-3.5 w-3.5" strokeWidth={2.25} aria-hidden />
               </button>
             </li>
           ))}

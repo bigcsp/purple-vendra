@@ -1,3 +1,4 @@
+import { ClipboardList, Heart, MessageCircle, ShoppingBag } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { InstallAppCard } from "@/components/install-app";
@@ -69,13 +70,13 @@ async function Account() {
 
       <nav aria-label="Your things" className="grid grid-cols-2 gap-3 text-center text-sm sm:grid-cols-4">
         {[
-          { href: "/requests/mine", icon: "📣", label: "Requests" },
-          { href: "/saved", icon: "♥", label: "Saved" },
-          { href: "/messages", icon: "💬", label: "Messages" },
-          { href: "/cart", icon: "🛒", label: "Cart" },
+          { href: "/requests/mine", icon: ClipboardList, label: "Requests" },
+          { href: "/saved", icon: Heart, label: "Saved" },
+          { href: "/messages", icon: MessageCircle, label: "Messages" },
+          { href: "/cart", icon: ShoppingBag, label: "Cart" },
         ].map((x) => (
-          <Link key={x.href} href={x.href} className="rounded-2xl border border-border bg-card p-4 font-medium text-brand hover:border-brand">
-            <span className="block text-2xl" aria-hidden>{x.icon}</span>
+          <Link key={x.href} href={x.href} className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-card p-4 font-medium text-foreground transition-colors hover:border-brand hover:text-brand">
+            <x.icon className="h-6 w-6 text-brand" strokeWidth={1.75} aria-hidden />
             {x.label}
           </Link>
         ))}

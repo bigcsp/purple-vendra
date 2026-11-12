@@ -1,5 +1,6 @@
 "use client";
 
+import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import {
@@ -183,7 +184,8 @@ export function ListingForm({
                 <img src={publicFileUrl("listing-images", p.storage_path) ?? ""} alt=""
                   className="h-20 w-20 rounded-xl object-cover" />
                 <button type="button" onClick={() => removePhoto(p.id)}
-                  className="absolute -right-1 -top-1 rounded-full bg-card px-1.5 text-xs text-red-600 shadow">✕</button>
+                  aria-label="Remove photo"
+                  className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-card text-red-600 shadow"><X className="h-3.5 w-3.5" strokeWidth={2.25} aria-hidden /></button>
               </div>
             ))}
           </div>

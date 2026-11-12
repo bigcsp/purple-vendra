@@ -103,3 +103,27 @@ h2 {
     animation: none !important;
   }
 }
+
+/*
+ * App shell: sidebar on tablets/desktops, tab bar on phones.
+ *   < 768px      no sidebar (phone tab bar instead)
+ *   768–1023px   icon rail (4.5rem)
+ *   1024px +     full sidebar (16rem), or the rail if the visitor collapsed it
+ */
+.ps-sidebar { width: 4.5rem; transition: width 200ms ease; }
+.ps-full { display: none; }
+.ps-lg-only { display: none; }
+.app-main { transition: padding-left 200ms ease; }
+@media (min-width: 768px) {
+  .app-main { padding-left: 4.5rem; }
+}
+@media (min-width: 1024px) {
+  .ps-lg-only { display: flex; }
+  :root:not([data-sidebar="collapsed"]) .ps-sidebar { width: 16rem; }
+  :root:not([data-sidebar="collapsed"]) .app-main { padding-left: 16rem; }
+  :root:not([data-sidebar="collapsed"]) .ps-full { display: block; }
+  :root:not([data-sidebar="collapsed"]) .ps-rail-only { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ps-sidebar, .app-main { transition: none; }
+}

@@ -36,7 +36,7 @@ async function Saved() {
     return (
       <div className="rounded-3xl border border-border bg-card p-8 text-center">
         <h1 className="text-2xl font-bold text-brand-strong">Saved</h1>
-        <p className="mt-2 text-muted">Tap the ♥ on anything you like to keep it here, on your phone and computer.</p>
+        <p className="mt-2 text-muted">Tap the heart on anything you like to keep it here, on your phone and computer.</p>
         <Link href="/signup?reason=save&next=/saved" className="mt-4 inline-block rounded-full bg-brand px-5 py-2.5 text-sm font-medium text-white hover:bg-brand-deep">
           Create a free account
         </Link>
@@ -77,7 +77,7 @@ async function Saved() {
         </p>
         {live.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-border bg-card p-8 text-center text-sm text-muted">
-            <p>Tap the ♥ on any product or service to save it for later.</p>
+            <p>Tap the heart on any product or service to save it for later.</p>
             <Link href="/search" className="mt-4 inline-block rounded-full bg-brand px-4 py-2 font-medium text-white hover:bg-brand-deep">
               Start browsing
             </Link>

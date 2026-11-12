@@ -18,13 +18,21 @@ export async function GET(request: NextRequest) {
 
   const supabase = await createClient();
 
-  let ok = false;
   if (tokenHash && type) {
-    ok = !(await supabase.auth.verifyOtp({ token_hash: tokenHash, type })).error;
-  } else if (code) {
-    ok = !(await supabase.auth.exchangeCodeForSession(code)).error;
+    const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type });
+    if (!error) return NextResponse.redirect(new URL(next, origin));
+    return NextResponse.redirect(new URL(`/login?error=link&next=${encodeURIComponent(next)}`, origin));
   }
 
-  if (ok) return NextResponse.redirect(new URL(next, origin));
+  if (code) {
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    if (!error) return NextResponse.redirect(new URL(next, origin));
+    // With the default email, Supabase has already confirmed the address before
+    // sending the person here. Signing them in only works in the same browser
+    // they signed up in, so a link opened on another phone, or inside the Gmail
+    // app, lands here. Their email IS confirmed: ask them to sign in.
+    return NextResponse.redirect(new URL(`/login?confirmed=1&next=${encodeURIComponent(next)}`, origin));
+  }
+
   return NextResponse.redirect(new URL("/login?error=link", origin));
 }

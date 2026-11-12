@@ -2,59 +2,56 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { NAV_MOBILE, isActive, type NavItem } from "./nav/nav-config";
 
-type Tab = { href: string; label: string; icon: string; exact?: boolean };
-
-const SHOPPING: Tab[] = [
-  { href: "/", label: "Home", icon: "🏠", exact: true },
-  { href: "/requests", label: "Requests", icon: "📣" },
-  { href: "/stories", label: "Stories", icon: "🎬" },
-  { href: "/messages", label: "Chats", icon: "💬" },
-  { href: "/cart", label: "Cart", icon: "🛒" },
-  { href: "/account", label: "Me", icon: "👤" },
-];
-
-const SELLING: Tab[] = [
-  { href: "/sell", label: "Hub", icon: "🏪", exact: true },
-  { href: "/sell/listings", label: "Listings", icon: "📦" },
-  { href: "/requests", label: "Requests", icon: "📣" },
-  { href: "/messages", label: "Chats", icon: "💬" },
-  { href: "/sell/orders", label: "Orders", icon: "🧾" },
-  { href: "/", label: "Browse", icon: "🛍️", exact: true },
-];
-
-/** Thumb-friendly bottom menu on phones (hidden on wider screens). */
-export function MobileNav({ unread = 0 }: { unread?: number }) {
+/**
+ * Phone tab bar (below 768px). Six destinations, outline icons in grey,
+ * the current page in brand purple with a soft highlight. Sits above the
+ * iPhone home indicator; the page leaves room for it, so it never covers content.
+ */
+export function MobileNav({ unread = 0, cartCount = 0 }: { unread?: number; cartCount?: number }) {
   const path = usePathname();
-  const tabs = path === "/sell" || path.startsWith("/sell/") ? SELLING : SHOPPING;
-  const active = (t: Tab) => (t.exact ? path === t.href : path === t.href || path.startsWith(`${t.href}/`));
+  const badgeFor = (item: NavItem) => (item.badge === "unread" ? unread : item.badge === "cart" ? cartCount : 0);
 
   return (
     <nav
       aria-label="Main menu"
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 pb-[env(safe-area-inset-bottom)] backdrop-blur sm:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-border/80 bg-card pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_16px_rgba(26,16,36,0.05)] md:hidden"
     >
-      <ul className="grid grid-cols-6">
-        {tabs.map((t) => (
-          <li key={t.href + t.label}>
-            <Link
-              href={t.href}
-              aria-current={active(t) ? "page" : undefined}
-              className={`flex flex-col items-center gap-0.5 py-2 text-[10.5px] font-medium ${active(t) ? "text-brand" : "text-muted"}`}
-            >
-              <span className={`relative text-lg leading-none ${active(t) ? "" : "grayscale"}`} aria-hidden>
-                {t.icon}
-                {t.href === "/messages" && unread > 0 && (
-                  <span className="absolute -right-2.5 -top-1.5 min-w-4 rounded-full bg-accent px-1 text-center text-[10px] font-bold leading-4 text-brand-strong">
-                    {unread > 9 ? "9+" : unread}
-                  </span>
-                )}
-              </span>
-              {t.label}
-              {t.href === "/messages" && unread > 0 && <span className="sr-only">, {unread} unread</span>}
-            </Link>
-          </li>
-        ))}
+      <ul className="mx-auto grid h-16 max-w-lg grid-cols-6">
+        {NAV_MOBILE.map((item) => {
+          const active = isActive(path, item);
+          const badge = badgeFor(item);
+          const Icon = item.icon;
+          return (
+            <li key={item.href}>
+              <Link
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={`flex h-full flex-col items-center justify-center gap-1 text-[11px] leading-none transition-colors ${
+                  active ? "font-semibold text-brand" : "font-medium text-muted active:text-foreground"
+                }`}
+              >
+                <span className={`relative flex h-8 w-12 items-center justify-center rounded-full transition-colors ${active ? "bg-brand-soft" : ""}`}>
+                  <Icon
+                    className="h-[22px] w-[22px]"
+                    strokeWidth={active ? 2.1 : 1.6}
+                    fill={active ? "currentColor" : "none"}
+                    fillOpacity={active ? 0.15 : 0}
+                    aria-hidden
+                  />
+                  {badge > 0 && (
+                    <span className="absolute right-1 top-0 min-w-4 rounded-full bg-brand px-1 text-center text-[10px] font-semibold leading-4 text-white ring-2 ring-card">
+                      {badge > 9 ? "9+" : badge}
+                    </span>
+                  )}
+                </span>
+                {item.short ?? item.label}
+                {badge > 0 && <span className="sr-only">, {badge} new</span>}
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </nav>
   );

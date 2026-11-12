@@ -1,5 +1,6 @@
 "use client";
 
+import { Flag, Heart, MessageCircle, Play, Share2, ShoppingBag, Volume2, VolumeX, X } from "lucide-react";
 import Link from "next/link";
 import { CONTACT_MESSAGES, contactProblem } from "@/lib/contact-guard";
 import { usePathname, useRouter } from "next/navigation";
@@ -42,7 +43,7 @@ function StoryStage({
 
   const [playing, setPlaying] = useState(false);
   const [noPicture, setNoPicture] = useState(false);
-  const [muted, setMuted] = useState(false);
+  const [muted, setMuted] = useState(true);
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(story.likeCount);
   const [commentCount, setCommentCount] = useState(story.commentCount);
@@ -148,7 +149,7 @@ function StoryStage({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95" role="dialog" aria-modal="true" aria-label={story.title}>
-      <button onClick={onClose} aria-label="Close" className="absolute right-3 top-3 z-20 h-10 w-10 rounded-full bg-white/15 text-xl text-white hover:bg-white/25">✕</button>
+      <button onClick={onClose} aria-label="Close" className="absolute right-3 top-3 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/25"><X className="h-5 w-5" aria-hidden /></button>
       {index > 0 && (
         <button onClick={() => go(-1)} aria-label="Previous story"
           className="absolute left-3 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 rounded-full bg-white/15 text-white hover:bg-white/25 md:block">↑</button>
@@ -179,7 +180,7 @@ function StoryStage({
           muted={muted}
           preload="auto"
           onClick={togglePlay}
-          onLoadedMetadata={(e) => setNoPicture(e.currentTarget.videoWidth === 0)}
+          onLoadedData={(e) => setNoPicture(e.currentTarget.videoWidth === 0)}
           onError={() => setNoPicture(true)}
           onPlay={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
@@ -194,23 +195,23 @@ function StoryStage({
         )}
         {!playing && !noPicture && (
           <button onClick={togglePlay} aria-label="Play"
-            className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-3xl text-white">▶</button>
+            className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white"><Play className="ml-1 h-7 w-7" fill="currentColor" aria-hidden /></button>
         )}
         <button onClick={() => setMuted((m) => !m)} aria-label={muted ? "Unmute" : "Mute"}
-          className="absolute left-3 top-3 h-9 w-9 rounded-full bg-black/40 text-white">{muted ? "🔇" : "🔊"}</button>
+          className={`absolute left-3 top-3 flex h-9 items-center justify-center gap-1.5 rounded-full bg-black/40 text-white ${muted ? "px-3 text-xs font-medium" : "w-9"}`}>{muted ? <><VolumeX className="h-[18px] w-[18px]" aria-hidden />Tap for sound</> : <Volume2 className="h-[18px] w-[18px]" aria-hidden />}</button>
         {story.campaignId && (
           <span className="absolute left-14 top-4 rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold text-brand-strong">Promoted</span>
         )}
 
         {/* Action column */}
         <div className="absolute bottom-40 right-2 flex flex-col items-center gap-4 text-white">
-          <ActionButton label={likes.toLocaleString()} onClick={toggleLike} active={liked} icon={liked ? "♥" : "♡"} name="Like" />
-          <ActionButton label={commentCount.toLocaleString()} onClick={() => setPanel("comments")} icon="💬" name="Comments" />
-          <ActionButton label="Share" onClick={share} icon="↗" name="Share" />
+          <ActionButton label={likes.toLocaleString()} onClick={toggleLike} active={liked} icon={<Heart className="h-[22px] w-[22px]" fill={liked ? "currentColor" : "none"} strokeWidth={1.9} />} name="Like" />
+          <ActionButton label={commentCount.toLocaleString()} onClick={() => setPanel("comments")} icon={<MessageCircle className="h-[22px] w-[22px]" strokeWidth={1.9} />} name="Comments" />
+          <ActionButton label="Share" onClick={share} icon={<Share2 className="h-[22px] w-[22px]" strokeWidth={1.9} />} name="Share" />
           {story.products.length > 0 && (
-            <ActionButton label="Shop" onClick={() => setPanel("products")} icon="🛍" name="Products in this video" />
+            <ActionButton label="Shop" onClick={() => setPanel("products")} icon={<ShoppingBag className="h-[22px] w-[22px]" strokeWidth={1.9} />} name="Products in this video" />
           )}
-          <ActionButton label="Report" onClick={() => (viewerId ? setPanel("report") : needSignIn("report"))} icon="⚑" name="Report" small />
+          <ActionButton label="Report" onClick={() => (viewerId ? setPanel("report") : needSignIn("report"))} icon={<Flag className="h-4 w-4" strokeWidth={1.9} />} name="Report" small />
         </div>
 
         {/* Caption + seller + products */}
@@ -286,11 +287,11 @@ function StoryStage({
 }
 
 function ActionButton({ icon, label, name, onClick, active, small }: {
-  icon: string; label: string; name: string; onClick: () => void; active?: boolean; small?: boolean;
+  icon: React.ReactNode; label: string; name: string; onClick: () => void; active?: boolean; small?: boolean;
 }) {
   return (
     <button onClick={onClick} aria-label={name} className="flex flex-col items-center gap-0.5">
-      <span className={`flex items-center justify-center rounded-full bg-black/35 ${small ? "h-9 w-9 text-base" : "h-11 w-11 text-xl"} ${active ? "text-pink-400" : ""}`}>
+      <span className={`flex items-center justify-center rounded-full bg-black/35 ${small ? "h-9 w-9" : "h-11 w-11"} ${active ? "text-pink-400" : ""}`}>
         {icon}
       </span>
       <span className="text-[11px] drop-shadow">{label}</span>
@@ -304,7 +305,7 @@ function Sheet({ title, onClose, children }: { title: string; onClose: () => voi
       <div className="max-h-[70%] overflow-y-auto rounded-t-3xl bg-card p-4 text-foreground" onClick={(e) => e.stopPropagation()}>
         <div className="mb-3 flex items-center justify-between">
           <h3 className="font-semibold text-brand-strong">{title}</h3>
-          <button onClick={onClose} aria-label="Close" className="text-muted">✕</button>
+          <button onClick={onClose} aria-label="Close" className="rounded-full p-1 text-muted hover:text-foreground"><X className="h-5 w-5" aria-hidden /></button>
         </div>
         {children}
       </div>

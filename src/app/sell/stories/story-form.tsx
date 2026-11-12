@@ -1,5 +1,6 @@
 "use client";
 
+import { Clapperboard } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -191,7 +192,7 @@ export function StoryForm({
               className="h-full w-full object-cover" />
           ) : (
             <label className="flex h-full cursor-pointer flex-col items-center justify-center gap-2 p-4 text-center text-white/90">
-              <span className="text-4xl">🎬</span>
+              <Clapperboard className="h-10 w-10" strokeWidth={1.5} aria-hidden />
               <span className="text-sm font-medium">Choose a video</span>
               <span className="text-xs text-white/70">Any phone video · up to {MAX_VIDEO_SECONDS}s</span>
               <input type="file" accept="video/*" onChange={onVideo} className="sr-only" disabled={busy} />

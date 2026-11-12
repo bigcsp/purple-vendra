@@ -1,3 +1,4 @@
+import { Lock } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -113,9 +114,10 @@ async function Listing({ params }: { params: PageProps<"/l/[id]">["params"] }) {
             <span className="text-sm font-medium text-brand">Visit shop →</span>
           </Link>
         )}
-        <p className="rounded-xl bg-brand-soft/60 px-3 py-2 text-xs text-brand-strong">
-          🔒 Pay only through Purple Shop escrow. Your money is held until you confirm delivery. Never pay a seller by
-          transfer, cash or another app. <Link href="/safety" className="underline">Stay safe</Link>
+        <p className="flex gap-2 rounded-xl bg-brand-soft/60 px-3 py-2 text-xs text-brand-strong">
+          <Lock className="mt-px h-3.5 w-3.5 shrink-0" strokeWidth={2} aria-hidden />
+          <span>Pay only through Purple Shop escrow. Your money is held until you confirm delivery. Never pay a seller by
+          transfer, cash or another app. <Link href="/safety" className="underline">Stay safe</Link></span>
         </p>
         {live && <ReportButton listingId={l.id} />}
       </div>

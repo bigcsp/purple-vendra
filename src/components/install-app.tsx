@@ -159,7 +159,7 @@ export function InstallAppBanner() {
     <div
       role="region"
       aria-label="Install the app"
-      className="fixed inset-x-3 bottom-[calc(4.25rem+env(safe-area-inset-bottom))] z-40 rounded-2xl border border-border bg-card p-3 shadow-2xl sm:bottom-4 sm:left-auto sm:right-4 sm:w-96"
+      className="fixed inset-x-3 bottom-[calc(4.25rem+env(safe-area-inset-bottom))] z-40 rounded-2xl border border-border bg-card p-3 shadow-2xl md:bottom-4 md:left-auto md:right-4 md:w-96"
     >
       <div className="flex items-center gap-3">
         {/* eslint-disable-next-line @next/next/no-img-element */}

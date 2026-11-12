@@ -1,10 +1,15 @@
-import { getCurrentUser } from "@/server/auth/session";
-import { getUnreadCount } from "@/server/queries/messages";
+import { getNavData } from "@/server/queries/nav";
 import { MobileNav } from "./mobile-nav";
+import { Sidebar } from "./nav/sidebar";
 
-/** Loads the unread chat count for the phone menu. */
+/** Loads unread chats and cart size for the phone tab bar. */
 export async function MobileNavWithCounts() {
-  const user = await getCurrentUser();
-  const unread = user ? await getUnreadCount() : 0;
-  return <MobileNav unread={unread} />;
+  const data = await getNavData();
+  return <MobileNav unread={data.unread} cartCount={data.cartCount} />;
+}
+
+/** Loads who's signed in (and their counts) for the desktop sidebar. */
+export async function SidebarWithData() {
+  const data = await getNavData();
+  return <Sidebar data={data} />;
 }

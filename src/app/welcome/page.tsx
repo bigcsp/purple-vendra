@@ -1,3 +1,4 @@
+import { CirclePlay, Compass, Search } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -34,7 +35,7 @@ async function Welcome() {
         <AdireField className="pointer-events-none absolute -right-10 top-0 h-full w-72 opacity-60" />
         <div className="relative">
         <p className="text-sm font-medium text-accent">Welcome</p>
-        <h1 className="mt-1 text-2xl font-bold">You&apos;re in, {firstName}! 🎉</h1>
+        <h1 className="mt-1 text-2xl font-bold">You&apos;re in, {firstName}!</h1>
         <p className="mt-1 text-white/85">
           {wantsToSell
             ? "Let's open your shop. Follow the steps below. Each one takes a minute or two."
@@ -49,18 +50,18 @@ async function Welcome() {
         <h2 className="text-lg font-semibold text-brand-strong">{wantsToSell ? "Look around while you set up" : "Start exploring"}</h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
           <Link href="/stories" className="rounded-2xl border border-border p-4 hover:border-brand">
-            <span className="text-2xl">🎬</span>
-            <span className="mt-1 block font-medium">Purple Stories</span>
+            <CirclePlay className="h-6 w-6 text-brand" strokeWidth={1.75} aria-hidden />
+            <span className="mt-2 block font-medium">Purple Stories</span>
             <span className="block text-xs text-muted">Watch makers at work, shop what you see</span>
           </Link>
           <Link href="/search" className="rounded-2xl border border-border p-4 hover:border-brand">
-            <span className="text-2xl">🔎</span>
-            <span className="mt-1 block font-medium">Search</span>
+            <Search className="h-6 w-6 text-brand" strokeWidth={1.75} aria-hidden />
+            <span className="mt-2 block font-medium">Search</span>
             <span className="block text-xs text-muted">Adire, logo design, plumbers and more</span>
           </Link>
           <Link href="/" className="rounded-2xl border border-border p-4 hover:border-brand">
-            <span className="text-2xl">🧭</span>
-            <span className="mt-1 block font-medium">Browse categories</span>
+            <Compass className="h-6 w-6 text-brand" strokeWidth={1.75} aria-hidden />
+            <span className="mt-2 block font-medium">Browse categories</span>
             <span className="block text-xs text-muted">Creative, freelance and home services</span>
           </Link>
         </div>

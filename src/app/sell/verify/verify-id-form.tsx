@@ -1,5 +1,6 @@
 "use client";
 
+import { Lock } from "lucide-react";
 import { useState, useTransition } from "react";
 import { submitVerification } from "@/server/actions/verification";
 import { Notice, buttonClass } from "@/components/ui";
@@ -93,8 +94,9 @@ export function VerifyIdForm({ userId, currentType }: { userId: string; currentT
       <button className={buttonClass} disabled={busy}>
         {step === "uploading" ? "Uploading securely…" : step === "saving" ? "Submitting…" : "Submit for review"}
       </button>
-      <p className="text-center text-xs text-muted">
-        🔒 Your ID is stored privately. Only you and the Purple Shop review team can see it.
+      <p className="flex items-center justify-center gap-1.5 text-center text-xs text-muted">
+        <Lock className="h-3.5 w-3.5" strokeWidth={2} aria-hidden />
+        Your ID is stored privately. Only you and the Purple Shop review team can see it.
       </p>
     </form>
   );

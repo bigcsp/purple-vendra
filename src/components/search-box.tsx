@@ -1,5 +1,6 @@
 "use client";
 
+import { CirclePlay, History, LayoutGrid, Search, ShoppingBag, TrendingUp, type LucideIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import type { Suggestion } from "@/server/api/suggest";
@@ -270,12 +271,13 @@ function Thumb({ o }: { o: Option }) {
   if (o.image)
     // eslint-disable-next-line @next/next/no-img-element
     return <img src={o.image} alt="" loading="lazy" className={`h-9 w-9 shrink-0 object-cover ${o.kind === "shop" ? "rounded-full" : "rounded-lg"}`} />;
-  const icon: Record<string, string> = {
-    go: "🔎", search: "🔎", recent: "🕘", popular: "🔥", category: "🗂️", shop: "🏪", listing: "🛍️", story: "🎬",
+  const icons: Record<string, LucideIcon> = {
+    go: Search, search: Search, recent: History, popular: TrendingUp, category: LayoutGrid, listing: ShoppingBag, story: CirclePlay,
   };
+  const Icon = icons[o.kind] ?? Search;
   return (
     <span className={`${box} ${o.kind === "shop" ? "rounded-full" : "rounded-lg"}`} aria-hidden>
-      {o.kind === "shop" ? o.label.slice(0, 1).toUpperCase() : icon[o.kind] ?? "🔎"}
+      {o.kind === "shop" ? o.label.slice(0, 1).toUpperCase() : <Icon className={compact ? "h-3.5 w-3.5" : "h-4 w-4"} strokeWidth={2} />}
     </span>
   );
 }

@@ -1,3 +1,4 @@
+import { Heart, MessageCircle, Play, Share2 } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -77,8 +78,11 @@ async function MyStories({ searchParams }: { searchParams: PageProps<"/sell/stor
                     <img src={poster} alt="" className="h-full w-full object-cover" loading="lazy" />
                   )}
                   <span className={`absolute left-2 top-2 rounded-full px-2 py-0.5 text-xs ${status.tone}`}>{status.text}</span>
-                  <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 p-2 text-xs text-white">
-                    ▶ {s.view_count} · ♥ {s.like_count} · 💬 {s.comment_count} · ↗ {s.share_count}
+                  <span className="absolute inset-x-0 bottom-0 flex flex-wrap items-center gap-x-2.5 gap-y-1 bg-gradient-to-t from-black/70 p-2 text-xs text-white">
+                    <span className="inline-flex items-center gap-1"><Play className="h-3 w-3" aria-hidden /><span className="sr-only">Views</span>{s.view_count}</span>
+                    <span className="inline-flex items-center gap-1"><Heart className="h-3 w-3" aria-hidden /><span className="sr-only">Likes</span>{s.like_count}</span>
+                    <span className="inline-flex items-center gap-1"><MessageCircle className="h-3 w-3" aria-hidden /><span className="sr-only">Comments</span>{s.comment_count}</span>
+                    <span className="inline-flex items-center gap-1"><Share2 className="h-3 w-3" aria-hidden /><span className="sr-only">Shares</span>{s.share_count}</span>
                   </span>
                 </Link>
                 <div className="space-y-2 p-3">

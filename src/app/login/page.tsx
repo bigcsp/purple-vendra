@@ -23,5 +23,5 @@ export default function LoginPage({ searchParams }: PageProps<"/login">) {
 
 async function Form({ searchParams }: Pick<PageProps<"/login">, "searchParams">) {
   const params = await searchParams;
-  return <LoginForm next={safeNext(params.next)} linkError={params.error === "link"} />;
+  return <LoginForm next={safeNext(params.next)} linkError={params.error === "link"} confirmed={params.confirmed === "1"} />;
 }

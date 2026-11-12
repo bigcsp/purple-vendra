@@ -1,10 +1,11 @@
+import { Lock } from "lucide-react";
 import Link from "next/link";
 
 /** The safety rules, shown above every inbox and chat. */
 export function EscrowNote({ compact = false }: { compact?: boolean }) {
   return (
     <div className="rounded-2xl border border-brand/25 bg-brand-soft/60 px-4 py-3 text-sm text-brand-strong">
-      <p className="font-semibold">🔒 Pay only through Purple Shop escrow</p>
+      <p className="flex items-center gap-2 font-semibold"><Lock className="h-4 w-4" strokeWidth={2} aria-hidden /> Pay only through Purple Shop escrow</p>
       {!compact && (
         <p className="mt-0.5 text-brand-strong/85">
           Your money is held safely until you confirm you got what you paid for. Phone numbers, emails, social handles,
