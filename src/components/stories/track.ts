@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 type EventType = "impression" | "view" | "share" | "product_click" | "shop_visit";
 
 /**
- * Anonymous analytics for Vendra Stories. Views and impressions count once
+ * Anonymous analytics for Purple Stories. Views and impressions count once
  * per story per browser session so refreshing doesn't inflate numbers.
  * The database ignores the seller's own views and checks every id.
  */

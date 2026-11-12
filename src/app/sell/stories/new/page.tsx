@@ -8,7 +8,7 @@ import { requireSeller } from "@/lib/seller";
 import { getTaggableListings } from "../data";
 import { StoryForm } from "../story-form";
 
-export const metadata: Metadata = { title: "New story · Purple Vendra" };
+export const metadata: Metadata = { title: "New story · Purple Shop" };
 
 export default function NewStoryPage() {
   return (
@@ -25,7 +25,7 @@ async function NewStory() {
   const [categories, listings] = await Promise.all([getCategories(), getTaggableListings(user.id)]);
   return (
     <Card>
-      <Link href="/sell/stories" className="text-sm text-muted hover:text-brand">← Vendra Stories</Link>
+      <Link href="/sell/stories" className="text-sm text-muted hover:text-brand">← Purple Stories</Link>
       <h1 className="mt-1 mb-6 text-2xl font-bold text-brand-strong">Post a story</h1>
       <StoryForm userId={user.id} categories={categories} listings={listings} />
     </Card>

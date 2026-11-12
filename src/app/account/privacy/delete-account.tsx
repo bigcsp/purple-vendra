@@ -51,7 +51,7 @@ export function DeleteAccount({
     <div className="mt-2 space-y-3 text-sm">
       <p className="text-muted">
         After you ask, you have <strong>30 days</strong> to change your mind. Then we delete your profile, listings,
-        stories, likes, comments, saved items and messages. If you&apos;ve bought or sold through Purple Vendra, we keep
+        stories, likes, comments, saved items and messages. If you&apos;ve bought or sold through Purple Shop, we keep
         an anonymous record of those payments because the law requires it, but it won&apos;t be linked to you.
       </p>
       <p className="text-muted">You can&apos;t delete your account while an order or booking is still in progress.</p>

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
 /**
- * Downloads everything Purple Vendra holds about the signed-in person as a
+ * Downloads everything Purple Shop holds about the signed-in person as a
  * JSON file (NDPA right of access). Limited to 5 downloads a day and logged
  * by the database.
  */
@@ -22,7 +22,7 @@ export async function GET(request: Request) {
   return new NextResponse(JSON.stringify(data, null, 2), {
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "Content-Disposition": `attachment; filename="purple-vendra-my-data-${date}.json"`,
+      "Content-Disposition": `attachment; filename="purple-shop-my-data-${date}.json"`,
       "Cache-Control": "no-store",
     },
   });

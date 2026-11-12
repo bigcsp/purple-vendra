@@ -65,7 +65,7 @@ async function Orders() {
         <Card>
           <h2 className="font-semibold text-brand-strong">No orders yet</h2>
           <p className="mt-1 text-sm text-muted">
-            When a buyer pays for one of your listings, the order appears here. Purple Vendra holds the payment safely
+            When a buyer pays for one of your listings, the order appears here. Purple Shop holds the payment safely
             until the buyer confirms delivery, then releases it to you. Online checkout is being switched on next. Until
             then, buyers can add your products to their cart.
           </p>

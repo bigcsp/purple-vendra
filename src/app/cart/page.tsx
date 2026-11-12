@@ -10,7 +10,7 @@ import { publicFileUrl } from "@/lib/storage-url";
 import { createClient } from "@/lib/supabase/server";
 import { CartQuantity } from "./cart-quantity";
 
-export const metadata: Metadata = { title: "Your cart · Purple Vendra" };
+export const metadata: Metadata = { title: "Your cart · Purple Shop" };
 
 export default function CartPage() {
   return (
@@ -62,7 +62,7 @@ async function Cart() {
       <h1 className="text-2xl font-bold text-brand-strong">Your cart</h1>
       {rows.length === 0 ? (
         <Card>
-          <p className="text-sm text-muted">Your cart is empty. Find something you love in <Link href="/stories" className="text-brand underline">Vendra Stories</Link>.</p>
+          <p className="text-sm text-muted">Your cart is empty. Find something you love in <Link href="/stories" className="text-brand underline">Purple Stories</Link>.</p>
         </Card>
       ) : (
         <>

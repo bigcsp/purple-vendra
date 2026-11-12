@@ -10,7 +10,7 @@ type Intent = "shop" | "sell" | "both";
 const CHOICES: { value: Intent; title: string; text: string; icon: string }[] = [
   { value: "shop", title: "I want to shop or hire", text: "Buy from makers, book pros and freelancers", icon: "🛍️" },
   { value: "sell", title: "I want to sell", text: "Open a shop for your products, skills or services", icon: "🏪" },
-  { value: "both", title: "Both", text: "Shop on Purple Vendra and run my own shop", icon: "✨" },
+  { value: "both", title: "Both", text: "Shop on Purple Shop and run my own shop", icon: "✨" },
 ];
 
 export function SignupForm({ next, initialIntent }: { next: string; initialIntent: Intent }) {
@@ -35,7 +35,7 @@ export function SignupForm({ next, initialIntent }: { next: string; initialInten
       <input type="hidden" name="next" value={next} />
       <input type="hidden" name="intent" value={intent} />
       <fieldset>
-        <legend className="text-sm font-medium text-brand-strong">What brings you to Purple Vendra?</legend>
+        <legend className="text-sm font-medium text-brand-strong">What brings you to Purple Shop?</legend>
         <div className="mt-2 grid gap-2">
           {CHOICES.map((c) => (
             <label

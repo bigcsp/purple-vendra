@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 /*
- * Purple Vendra colours. Light is the default; dark applies when
+ * Purple Shop colours. Light is the default; dark applies when
  * <html data-theme="dark"> (set by the theme switch, or by the visitor's
  * phone/computer setting on their first visit).
  */
 :root {
   --background: #fbf8ff;   /* lavender paper */
   --foreground: #1a1024;   /* ink */
-  --brand: #6d28d9;        /* Vendra purple: buttons, links */
+  --brand: #6d28d9;        /* Brand purple: buttons, links */
   --brand-deep: #5b21b6;   /* button hover */
   --brand-strong: #3b0f6e; /* headings */
   --brand-soft: #efe6ff;   /* tints, chips */

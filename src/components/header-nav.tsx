@@ -9,7 +9,7 @@ type Item = { href: string; label: string; exact?: boolean };
  * Signed-in navigation. Inside the seller area (/sell/...) sellers see their
  * business links; everywhere else everyone sees the shopping links.
  */
-export function HeaderNav({ username, isSeller }: { username: string; isSeller: boolean }) {
+export function HeaderNav({ username, isSeller, unread = 0 }: { username: string; isSeller: boolean; unread?: number }) {
   const path = usePathname();
   const inSellerArea = isSeller && (path === "/sell" || path.startsWith("/sell/"));
 
@@ -20,9 +20,11 @@ export function HeaderNav({ username, isSeller }: { username: string; isSeller: 
         { href: "/sell/listings", label: "Listings" },
         { href: "/sell/stories", label: "Stories" },
         { href: "/sell/orders", label: "Orders" },
+        { href: "/messages", label: "Messages" },
       ]
     : [
         { href: "/stories", label: "Stories" },
+        { href: "/messages", label: "Messages" },
         { href: "/cart", label: "Cart" },
         ...(isSeller ? [{ href: "/sell", label: "Seller hub" }] : []),
       ];
@@ -42,6 +44,12 @@ export function HeaderNav({ username, isSeller }: { username: string; isSeller: 
           }`}
         >
           {i.label}
+          {i.href === "/messages" && unread > 0 && (
+            <span className="ml-1.5 inline-flex min-w-5 items-center justify-center rounded-full bg-accent px-1.5 text-xs font-bold text-brand-strong">
+              {unread > 99 ? "99+" : unread}
+              <span className="sr-only"> unread</span>
+            </span>
+          )}
         </Link>
       ))}
       <Link href="/account" className="shrink-0 rounded-full bg-brand-soft px-4 py-1.5 font-medium text-brand">

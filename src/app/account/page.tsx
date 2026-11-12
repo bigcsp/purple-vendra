@@ -8,7 +8,7 @@ import { Card, buttonClass } from "@/components/ui";
 import { getCurrentUser, type CurrentUser } from "@/lib/auth";
 import { BecomeSellerButton } from "./become-seller";
 
-export const metadata: Metadata = { title: "Your account · Purple Vendra" };
+export const metadata: Metadata = { title: "Your account · Purple Shop" };
 
 const roleLabel = { buyer: "Buyer", seller: "Seller", admin: "Admin" } as const;
 
@@ -81,7 +81,7 @@ async function Account() {
       </Card>
 
       <Card>
-        <h2 className="text-lg font-semibold text-brand-strong">Selling on Purple Vendra</h2>
+        <h2 className="text-lg font-semibold text-brand-strong">Selling on Purple Shop</h2>
         {user.role === "buyer" ? (
           user.has2fa ? (
             <>
@@ -143,7 +143,7 @@ function AccountBlocked({ user }: { user: CurrentUser }) {
           ? `You can sell and buy again from ${until}. `
           : ""}
         Until then you can&apos;t post, edit listings or place orders. If you think this is a
-        mistake, contact Purple Vendra support.
+        mistake, contact Purple Shop support.
       </p>
     </div>
   );

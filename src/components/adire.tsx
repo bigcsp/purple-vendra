@@ -1,6 +1,6 @@
 /**
  * Adire-inspired marks: resist-dye circles with tied "stitch" dots,
- * the visual signature of Purple Vendra. Pure SVG, no images.
+ * the visual signature of Purple Shop. Pure SVG, no images.
  */
 export function LogoMark({ className = "h-8 w-8" }: { className?: string }) {
   return (

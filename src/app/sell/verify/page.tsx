@@ -9,7 +9,7 @@ import { ID_TYPES } from "@/lib/id-types";
 import { getMyVerification, verificationLabel } from "@/lib/verification";
 import { VerifyIdForm } from "./verify-id-form";
 
-export const metadata: Metadata = { title: "Verify your ID · Purple Vendra" };
+export const metadata: Metadata = { title: "Verify your ID · Purple Shop" };
 
 export default function VerifyIdPage({ searchParams }: PageProps<"/sell/verify">) {
   return (

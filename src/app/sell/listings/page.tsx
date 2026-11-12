@@ -9,7 +9,7 @@ import { requireSeller } from "@/lib/seller";
 import { publicFileUrl } from "@/lib/storage-url";
 import { createClient } from "@/lib/supabase/server";
 
-export const metadata: Metadata = { title: "Your listings · Purple Vendra" };
+export const metadata: Metadata = { title: "Your listings · Purple Shop" };
 
 export default function ListingsPage({ searchParams }: PageProps<"/sell/listings">) {
   return (
@@ -45,7 +45,7 @@ async function MyListings({ searchParams }: { searchParams: PageProps<"/sell/lis
       {listings.length === 0 ? (
         <Card>
           <p className="text-sm text-muted">
-            No listings yet. Add your first product or service. You can then tag it in your Vendra Stories videos.
+            No listings yet. Add your first product or service. You can then tag it in your Purple Stories videos.
           </p>
         </Card>
       ) : (

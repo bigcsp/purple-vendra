@@ -28,7 +28,7 @@ export function Setup2fa({ next }: { next: string }) {
     const { data, error } = await supabase.auth.mfa.enroll({
       factorType: "totp",
       friendlyName: "Authenticator app",
-      issuer: "Purple Vendra",
+      issuer: "Purple Shop",
     });
     setPending(false);
     if (error || !data) {

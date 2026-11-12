@@ -4,7 +4,7 @@ import { LISTING_CARD_SELECT, toListingCard } from "@/lib/catalog";
 import { publicFileUrl } from "@/lib/storage-url";
 import { createClient } from "@/lib/supabase/server";
 
-/** Everything the Vendra Stories player needs for one video. */
+/** Everything the Purple Stories player needs for one video. */
 export type StoryItem = {
   id: string;
   title: string;
@@ -113,7 +113,7 @@ export const STORY_STATUS: Record<string, { text: string; tone: string }> = {
   draft: { text: "Draft", tone: "bg-gray-100 text-gray-700" },
   published: { text: "Published", tone: "bg-green-100 text-green-800" },
   hidden: { text: "Hidden for review", tone: "bg-red-100 text-red-700" },
-  removed: { text: "Removed by Purple Vendra", tone: "bg-gray-100 text-gray-500" },
+  removed: { text: "Removed by Purple Shop", tone: "bg-gray-100 text-gray-500" },
 };
 
 export const CAMPAIGN_STATUS: Record<string, { text: string; tone: string }> = {

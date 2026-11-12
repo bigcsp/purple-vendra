@@ -9,7 +9,7 @@ import { STORY_STATUS } from "@/lib/stories";
 import { createClient } from "@/lib/supabase/server";
 import { PublishToggle } from "./publish-toggle";
 
-export const metadata: Metadata = { title: "Vendra Stories · Seller hub" };
+export const metadata: Metadata = { title: "Purple Stories · Seller hub" };
 
 export default function SellerStoriesPage({ searchParams }: PageProps<"/sell/stories">) {
   return (
@@ -38,7 +38,7 @@ async function MyStories({ searchParams }: { searchParams: PageProps<"/sell/stor
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <Link href="/sell" className="text-sm text-muted hover:text-brand">← Seller hub</Link>
-          <h1 className="text-2xl font-bold text-brand-strong">Vendra Stories</h1>
+          <h1 className="text-2xl font-bold text-brand-strong">Purple Stories</h1>
           <p className="text-sm text-muted">Short videos on your shop page. Tag products so buyers can shop while they watch.</p>
         </div>
         <div className="flex flex-wrap gap-2">

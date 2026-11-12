@@ -214,7 +214,7 @@ export function ListingForm({
         )}
       </div>
       <p className="text-xs text-muted">
-        New listings are checked by the Purple Vendra team before they go live. Editing the title, price,
+        New listings are checked by the Purple Shop team before they go live. Editing the title, price,
         description or category of a live listing sends it back for a quick review.
       </p>
     </form>

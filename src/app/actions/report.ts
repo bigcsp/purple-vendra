@@ -6,7 +6,7 @@ import { REPORT_REASONS } from "@/lib/report-reasons";
 export type ReportResult = { ok?: true; error?: string };
 
 /**
- * Sends a report about a listing, a Vendra Stories video or a person. The database fills in the
+ * Sends a report about a listing, a Purple Stories video or a person. The database fills in the
  * seller for listing reports, blocks self-reports and duplicates, limits
  * reports to 10 a day, and hides a listing once 3 established users
  * report it.

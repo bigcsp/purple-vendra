@@ -7,8 +7,8 @@ type Tab = { href: string; label: string; icon: string; exact?: boolean };
 
 const SHOPPING: Tab[] = [
   { href: "/", label: "Home", icon: "🏠", exact: true },
-  { href: "/search", label: "Search", icon: "🔎" },
   { href: "/stories", label: "Stories", icon: "🎬" },
+  { href: "/messages", label: "Chats", icon: "💬" },
   { href: "/cart", label: "Cart", icon: "🛒" },
   { href: "/account", label: "Me", icon: "👤" },
 ];
@@ -16,13 +16,13 @@ const SHOPPING: Tab[] = [
 const SELLING: Tab[] = [
   { href: "/sell", label: "Hub", icon: "🏪", exact: true },
   { href: "/sell/listings", label: "Listings", icon: "📦" },
-  { href: "/sell/stories", label: "Stories", icon: "🎬" },
+  { href: "/messages", label: "Chats", icon: "💬" },
   { href: "/sell/orders", label: "Orders", icon: "🧾" },
   { href: "/", label: "Browse", icon: "🛍️", exact: true },
 ];
 
 /** Thumb-friendly bottom menu on phones (hidden on wider screens). */
-export function MobileNav() {
+export function MobileNav({ unread = 0 }: { unread?: number }) {
   const path = usePathname();
   const tabs = path === "/sell" || path.startsWith("/sell/") ? SELLING : SHOPPING;
   const active = (t: Tab) => (t.exact ? path === t.href : path === t.href || path.startsWith(`${t.href}/`));
@@ -40,8 +40,16 @@ export function MobileNav() {
               aria-current={active(t) ? "page" : undefined}
               className={`flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium ${active(t) ? "text-brand" : "text-muted"}`}
             >
-              <span className={`text-lg leading-none ${active(t) ? "" : "grayscale"}`} aria-hidden>{t.icon}</span>
+              <span className={`relative text-lg leading-none ${active(t) ? "" : "grayscale"}`} aria-hidden>
+                {t.icon}
+                {t.href === "/messages" && unread > 0 && (
+                  <span className="absolute -right-2.5 -top-1.5 min-w-4 rounded-full bg-accent px-1 text-center text-[10px] font-bold leading-4 text-brand-strong">
+                    {unread > 9 ? "9+" : unread}
+                  </span>
+                )}
+              </span>
               {t.label}
+              {t.href === "/messages" && unread > 0 && <span className="sr-only">, {unread} unread</span>}
             </Link>
           </li>
         ))}

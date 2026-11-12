@@ -1,4 +1,4 @@
-# Purple Vendra
+# Purple Shop
 
 Nigeria's creative commerce marketplace: **Discover. Create. Promote. Sell.**
 
@@ -14,7 +14,7 @@ purple-vendra/
 │   ├── app/
 │   │   ├── layout.tsx              # fonts, page title
 │   │   ├── page.tsx                # homepage (loads marketplaces from Supabase)
-│   │   ├── globals.css             # Purple Vendra colours
+│   │   ├── globals.css             # Purple Shop colours
 │   │   ├── actions/auth.ts         # sign up, sign in, sign out, become a seller
 │   │   ├── signup/                 # create an account
 │   │   ├── login/                  # sign in
@@ -25,9 +25,9 @@ purple-vendra/
 │   │   ├── sell/                   # seller hub (2FA-confirmed sellers only)
 │   │   ├── sell/verify/            # upload ID for verification (private storage)
 │   │   ├── sell/listings/          # create, edit, delete listings + photos
-│   │   ├── sell/stories/           # Vendra Stories: upload, edit, publish, analytics, promote
-│   │   ├── shop/[username]/        # public shop page with the Vendra Stories gallery
-│   │   ├── stories/                # Vendra Stories discovery feed (promoted first)
+│   │   ├── sell/stories/           # Purple Stories: upload, edit, publish, analytics, promote
+│   │   ├── shop/[username]/        # public shop page with the Purple Stories gallery
+│   │   ├── stories/                # Purple Stories discovery feed (promoted first)
 │   │   ├── l/[id]/                 # public listing page
 │   │   └── cart/                   # the buyer's cart (checkout comes in step 7)
 │   ├── components/                 # header, page wrapper, form parts
@@ -56,7 +56,7 @@ purple-vendra/
    - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` — the publishable (or anon) key
 
    Both are in Supabase → **Connect** button, or Project Settings → API Keys. **Never** use the `service_role` / secret key here.
-5. **Database:** migrations 001–008 are already applied to the PURPLE VENDRA Supabase project (004–008 on 9 Nov 2026). For a brand-new Supabase project, run every file in `supabase/migrations/` in order in the SQL Editor (`supabase/run-in-sql-editor/004_005_006_combined.sql` bundles 004–006, then run 007 and 008).
+5. **Database:** migrations 001–008 are already applied to the Purple Vendra Supabase project (004–008 on 9 Nov 2026). For a brand-new Supabase project, run every file in `supabase/migrations/` in order in the SQL Editor (`supabase/run-in-sql-editor/004_005_006_combined.sql` bundles 004–006, then run 007 and 008).
 6. **Start the site:**
    ```bash
    npm run dev
@@ -113,7 +113,7 @@ where user_id = (select id from profiles where username = 'soseenterprise');
 ```
 To reject, set `status = 'rejected', rejection_reason = 'Photo is blurry'`. To look at the file, go to Storage → `id-documents` → the seller's folder.
 
-## Vendra Stories (seller videos) · migration 012, live 11 Nov 2026
+## Purple Stories (seller videos) · migration 012, live 11 Nov 2026
 
 Sellers post short videos (any phone video, up to 90 seconds) to their shop page. Before upload, the seller's
 browser converts every video to H.264 MP4 at 720p with ffmpeg.wasm, so it plays on every phone and browser. Phones
@@ -122,7 +122,7 @@ files (a 5 MB clip becomes about 1 MB). The converter files are copied into `pub
 (`scripts/copy-ffmpeg.mjs`), so run `npm install` after pulling. They can tag up to 6 of
 their own listings in each video, so buyers can shop while they watch.
 
-**Sellers** (Seller hub → Vendra Stories): upload with a progress bar, preview, an automatic or custom cover
+**Sellers** (Seller hub → Purple Stories): upload with a progress bar, preview, an automatic or custom cover
 picture, title, description, category and tagged products. Save as a draft or publish, edit, replace the video,
 unpublish or delete. 10 new stories a day. **Analytics** shows views, engagement, likes, comments, shares,
 product clicks, shop visits, add-to-carts and sales from videos (7, 30 or 90 days). **Promote** creates a campaign:
@@ -168,7 +168,7 @@ the nightly storage cleanup.
   areas a seller serves), type and price, with 5 ways to sort. Featured listings show first. Every search is logged
   anonymously in `search_queries` for the weekly demand insights.
 - **Category pages** (`/c/fashion-adire`, …): the homepage category cards open them. Each shows that category's
-  Vendra Stories plus all its listings, with the same filters.
+  Purple Stories plus all its listings, with the same filters.
 - **Shop profile** (Seller hub → Edit shop profile, `/sell/profile`): logo or photo, business name, headline,
   about, state/city, years of experience, a "taking orders" switch, working hours and service areas. All of it shows
   on the shop page.
@@ -202,4 +202,4 @@ git push -u origin main
 
 ## Backend roadmap
 
-1. Database design ✅ · 2. Project setup ✅ · 3. Auth, roles, seller 2FA rule ✅ · 4. Storage & ID verification ✅ (live; needs a browser test) · Vendra Stories ✅ (live; needs a browser test) · 5. Listings, search, categories & profiles ✅ · 6. Save, cart & alerts · 7. Checkout & escrow · 8. Admin & moderation · 9. Analytics
+1. Database design ✅ · 2. Project setup ✅ · 3. Auth, roles, seller 2FA rule ✅ · 4. Storage & ID verification ✅ (live; needs a browser test) · Purple Stories ✅ (live; needs a browser test) · 5. Listings, search, categories & profiles ✅ · 6. Save, cart & alerts · 7. Checkout & escrow · 8. Admin & moderation · 9. Analytics

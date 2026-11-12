@@ -7,7 +7,7 @@ import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth";
 import { getMyVerification, verificationLabel } from "@/lib/verification";
 
-export const metadata: Metadata = { title: "Seller hub · Purple Vendra" };
+export const metadata: Metadata = { title: "Seller hub · Purple Shop" };
 
 export default function SellPage() {
   return (
@@ -87,8 +87,16 @@ async function SellerHub() {
         <Link href="/sell/orders" className={`${buttonClass} mt-4 sm:w-auto`}>View orders</Link>
       </Card>
       <Card>
+        <h2 className="text-lg font-semibold text-brand-strong">Messages</h2>
+        <p className="mt-1 text-sm text-muted">
+          Answer buyers&apos; questions here. Keep every deal on Purple Shop: phone numbers, social handles and bank
+          details are blocked, and buyers pay only through escrow, which is what protects you from fake payment alerts.
+        </p>
+        <Link href="/messages" className={`${buttonClass} mt-4 sm:w-auto`}>Open messages</Link>
+      </Card>
+      <Card>
         <p className="text-xs font-semibold text-accent">New</p>
-        <h2 className="text-lg font-semibold text-brand-strong">Vendra Stories</h2>
+        <h2 className="text-lg font-semibold text-brand-strong">Purple Stories</h2>
         <p className="mt-1 text-sm text-muted">
           Post short videos to your shop page, tag your products so buyers can shop while they watch, promote your best
           videos and track views, engagement and sales.

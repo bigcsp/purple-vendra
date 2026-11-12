@@ -12,7 +12,7 @@ import { createClient } from "@/lib/supabase/server";
 import { CampaignActions } from "./campaign-actions";
 import { CampaignForm } from "./campaign-form";
 
-export const metadata: Metadata = { title: "Promote a story · Purple Vendra" };
+export const metadata: Metadata = { title: "Promote a story · Purple Shop" };
 
 export default function PromotePage({ searchParams }: PageProps<"/sell/stories/promote">) {
   return (
@@ -62,7 +62,7 @@ async function Promote({ searchParams }: { searchParams: PageProps<"/sell/storie
   return (
     <div className="space-y-6">
       <div>
-        <Link href="/sell/stories" className="text-sm text-muted hover:text-brand">← Vendra Stories</Link>
+        <Link href="/sell/stories" className="text-sm text-muted hover:text-brand">← Purple Stories</Link>
         <h1 className="text-2xl font-bold text-brand-strong">Promote a story</h1>
         <p className="text-sm text-muted">Put your best video in front of more buyers.</p>
       </div>

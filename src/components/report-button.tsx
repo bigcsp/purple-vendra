@@ -7,14 +7,16 @@ import { REPORT_REASONS, type ReportReason } from "@/lib/report-reasons";
 
 /**
  * "Report" link that opens a short form. Use on listing pages
- * (listingId), shop/profile pages (userId) and Vendra Stories (videoId).
+ * (listingId), shop/profile pages (userId) and Purple Stories (videoId).
  */
 export function ReportButton({
   listingId,
   userId,
   videoId,
   startOpen = false,
+  label,
 }: {
+  label?: string;
   listingId?: string;
   userId?: string;
   videoId?: string;
@@ -30,7 +32,7 @@ export function ReportButton({
   if (done) {
     return (
       <Notice tone="success">
-        Thanks for telling us. Our team will look into it. Never pay a seller outside Purple Vendra.
+        Thanks for telling us. Our team will look into it. Never pay a seller outside Purple Shop.
       </Notice>
     );
   }
@@ -38,7 +40,7 @@ export function ReportButton({
   if (!open) {
     return (
       <button onClick={() => setOpen(true)} className="text-sm text-muted underline hover:text-brand">
-        Report {listingId ? "this listing" : videoId ? "this video" : "this seller"}
+        {label ?? `Report ${listingId ? "this listing" : videoId ? "this video" : "this seller"}`}
       </button>
     );
   }

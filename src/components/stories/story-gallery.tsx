@@ -6,7 +6,7 @@ import { StoryViewer } from "./story-viewer";
 import { trackStory } from "./track";
 
 /**
- * Vendra Stories grid: 9:16 cards that open a full-screen player.
+ * Purple Stories grid: 9:16 cards that open a full-screen player.
  * Used on shop pages (one seller) and the /stories discovery feed.
  */
 export function StoryGallery({

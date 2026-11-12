@@ -10,7 +10,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getTaggableListings } from "../data";
 import { StoryForm } from "../story-form";
 
-export const metadata: Metadata = { title: "Edit story · Purple Vendra" };
+export const metadata: Metadata = { title: "Edit story · Purple Shop" };
 
 export default function EditStoryPage({ params }: PageProps<"/sell/stories/[id]">) {
   return (
@@ -41,7 +41,7 @@ async function EditStory({ params }: { params: PageProps<"/sell/stories/[id]">["
 
   return (
     <Card>
-      <Link href="/sell/stories" className="text-sm text-muted hover:text-brand">← Vendra Stories</Link>
+      <Link href="/sell/stories" className="text-sm text-muted hover:text-brand">← Purple Stories</Link>
       <h1 className="mt-1 mb-6 text-2xl font-bold text-brand-strong">Edit story</h1>
       {s.moderation_note && (
         <p className="mb-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">{s.moderation_note}</p>

@@ -237,7 +237,7 @@ export function StoryForm({
           </Notice>
         )}
         {locked && (
-          <Notice tone="error">This story is under review by the Purple Vendra team, so it can&apos;t be published right now.</Notice>
+          <Notice tone="error">This story is under review by the Purple Shop team, so it can&apos;t be published right now.</Notice>
         )}
         <label className="block">
           <span className="text-sm font-medium text-brand-strong">Title</span>
@@ -325,7 +325,7 @@ export function StoryForm({
         </div>
         <p className="text-xs text-muted">
           Tip: film vertically (9:16) in good light at 720p. Keep it short and show the making, the finish and the price.
-          Don&apos;t put phone numbers or bank details in videos; buyers pay safely through Purple Vendra.
+          Don&apos;t put phone numbers or bank details in videos; buyers pay safely through Purple Shop.
         </p>
       </div>
     </form>

@@ -8,7 +8,7 @@ import { requireSeller } from "@/lib/seller";
 import { STORY_STATUS } from "@/lib/stories";
 import { createClient } from "@/lib/supabase/server";
 
-export const metadata: Metadata = { title: "Story analytics · Purple Vendra" };
+export const metadata: Metadata = { title: "Story analytics · Purple Shop" };
 
 const PERIODS = [7, 30, 90] as const;
 
@@ -80,7 +80,7 @@ async function Analytics({ searchParams }: { searchParams: PageProps<"/sell/stor
     <div className="mt-10 space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <Link href="/sell/stories" className="text-sm text-muted hover:text-brand">← Vendra Stories</Link>
+          <Link href="/sell/stories" className="text-sm text-muted hover:text-brand">← Purple Stories</Link>
           <h1 className="text-2xl font-bold text-brand-strong">Story analytics</h1>
         </div>
         <nav className="flex rounded-xl border border-border bg-card p-1 text-sm" aria-label="Time range">

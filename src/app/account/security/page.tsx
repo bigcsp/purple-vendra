@@ -8,7 +8,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { safeNext } from "@/lib/safe-next";
 import { Setup2fa } from "./setup-2fa";
 
-export const metadata: Metadata = { title: "Two-factor authentication · Purple Vendra" };
+export const metadata: Metadata = { title: "Two-factor authentication · Purple Shop" };
 
 export default function SecurityPage({ searchParams }: PageProps<"/account/security">) {
   return (

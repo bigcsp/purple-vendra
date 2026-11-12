@@ -5,7 +5,7 @@ import { Card } from "@/components/ui";
 import { safeNext } from "@/lib/safe-next";
 import { SignupForm } from "./signup-form";
 
-export const metadata: Metadata = { title: "Join Purple Vendra" };
+export const metadata: Metadata = { title: "Join Purple Shop" };
 
 /** Why a visitor was sent here (shown as a friendly line at the top). */
 const REASONS: Record<string, string> = {
@@ -14,13 +14,14 @@ const REASONS: Record<string, string> = {
   follow: "Create a free account to follow this shop and see their new work.",
   comment: "Create a free account to join the conversation.",
   report: "Create a free account to report this. It keeps reports honest.",
+  message: "Create a free account to message this seller. Your email and phone number stay private.",
 };
 
 export default function SignupPage({ searchParams }: PageProps<"/signup">) {
   return (
     <PageShell narrow>
       <Card>
-        <h1 className="text-2xl font-bold text-brand-strong">Join Purple Vendra</h1>
+        <h1 className="text-2xl font-bold text-brand-strong">Join Purple Shop</h1>
         <Suspense fallback={<p className="mt-4 text-sm text-muted">Loading…</p>}>
           <Body searchParams={searchParams} />
         </Suspense>

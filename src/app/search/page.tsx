@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { getCategories } from "@/lib/catalog";
 import { readFilters } from "@/lib/search";
 
-export const metadata: Metadata = { title: "Search · Purple Vendra" };
+export const metadata: Metadata = { title: "Search · Purple Shop" };
 
 export default function SearchPage({ searchParams }: PageProps<"/search">) {
   return (

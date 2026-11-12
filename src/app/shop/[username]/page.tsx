@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { AdireField } from "@/components/adire";
+import { MessageButton } from "@/components/messages/message-button";
 import { ReportButton } from "@/components/report-button";
 import { FollowButton } from "@/components/shop-buttons";
 import { SiteHeader } from "@/components/site-header";
@@ -14,7 +15,7 @@ import { DAYS } from "@/lib/nigeria";
 import { getShopStories } from "@/lib/stories";
 import { createClient } from "@/lib/supabase/server";
 
-export const metadata: Metadata = { title: "Shop · Purple Vendra" };
+export const metadata: Metadata = { title: "Shop · Purple Shop" };
 
 export default function ShopPage({ params, searchParams }: PageProps<"/shop/[username]">) {
   return (
@@ -91,8 +92,11 @@ async function Shop({
             </p>
             {seller.headline && <p className="mt-1 text-white/90">{seller.headline}</p>}
           </div>
-          <FollowButton sellerId={seller.id} initialFollowing={followInfo.following}
-            initialCount={Number(followInfo.followers)} isSelf={isSelf} />
+          <div className="flex flex-wrap items-start gap-2">
+            <FollowButton sellerId={seller.id} initialFollowing={followInfo.following}
+              initialCount={Number(followInfo.followers)} isSelf={isSelf} />
+            {!isSelf && <MessageButton sellerId={seller.id} label="Message" variant="light" />}
+          </div>
         </div>
         {seller.bio && <p className="mt-4 max-w-2xl whitespace-pre-line text-sm text-white/85">{seller.bio}</p>}
         <div className="mt-4 flex flex-wrap gap-2 text-xs">
@@ -104,7 +108,7 @@ async function Shop({
           )}
           {seller.is_verified && <span className="rounded-full bg-white/15 px-3 py-1">ID verified</span>}
           <span className="rounded-full bg-white/15 px-3 py-1">
-            On Purple Vendra since {new Date(seller.created_at).toLocaleDateString("en-NG", { month: "short", year: "numeric" })}
+            On Purple Shop since {new Date(seller.created_at).toLocaleDateString("en-NG", { month: "short", year: "numeric" })}
           </span>
         </div>
         {isSelf && (
@@ -117,11 +121,11 @@ async function Shop({
         </div>
       </section>
 
-      {/* Vendra Stories */}
+      {/* Purple Stories */}
       <section id="stories">
         <div className="mb-4 flex items-end justify-between">
           <div>
-            <p className="text-xs font-semibold text-accent">Vendra Stories</p>
+            <p className="text-xs font-semibold text-accent">Purple Stories</p>
             <h2 className="text-xl font-semibold text-brand-strong">Watch {name} at work</h2>
           </div>
           {stories.length > 0 && <span className="text-sm text-muted">{stories.length} videos</span>}

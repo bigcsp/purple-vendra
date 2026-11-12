@@ -71,7 +71,7 @@ export default async function Home() {
             Find Nigerian makers, freelancers and pros you can trust.
           </h1>
           <p className="mt-4 max-w-lg text-base text-white/85">
-            Shop adire and art, hire designers and developers, book a plumber. You pay through Purple Vendra and we
+            Shop adire and art, hire designers and developers, book a plumber. You pay through Purple Shop and we
             hold your money until you get what you paid for.
           </p>
           <form action="/search" role="search" className="mt-6 flex max-w-lg gap-2 rounded-full bg-white p-1.5 shadow-lg shadow-black/20">
@@ -164,7 +164,7 @@ function HeroButtons({ signedIn, isSeller }: { signedIn: boolean; isSeller: bool
         href={isSeller ? "/sell" : signedIn ? "/welcome" : "/signup?intent=sell"}
         className="rounded-full bg-[#e8a317] px-5 py-2.5 font-semibold text-[#241045] hover:brightness-105"
       >
-        {isSeller ? "Go to my shop" : "Sell on Purple Vendra"}
+        {isSeller ? "Go to my shop" : "Sell on Purple Shop"}
       </Link>
       <span className="text-white/70">{isSeller ? "Your shop, stories and orders" : "Free to join. No account needed to look around."}</span>
     </div>
@@ -186,7 +186,7 @@ async function HomeFeed() {
         <section className="mt-12">
           <div className="mb-4 flex items-end justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-brand-strong">Vendra Stories</h2>
+              <h2 className="text-2xl font-bold text-brand-strong">Purple Stories</h2>
               <p className="mt-0.5 text-sm text-muted">Watch makers at work, then shop what you see.</p>
             </div>
             <Link href="/stories" className="shrink-0 text-sm font-medium text-brand hover:underline">See all →</Link>
@@ -197,7 +197,7 @@ async function HomeFeed() {
       {listings.length > 0 && (
         <section className="mt-12">
           <div className="mb-4 flex items-end justify-between">
-            <h2 className="text-2xl font-bold text-brand-strong">New on Purple Vendra</h2>
+            <h2 className="text-2xl font-bold text-brand-strong">New on Purple Shop</h2>
             <Link href="/search?sort=newest" className="shrink-0 text-sm font-medium text-brand hover:underline">Browse all →</Link>
           </div>
           <ListingGrid listings={listings.slice(0, 8)} />

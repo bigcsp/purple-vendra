@@ -7,7 +7,7 @@ import { Card } from "@/components/ui";
 import { getCurrentUser } from "@/lib/auth";
 import { DeleteAccount } from "./delete-account";
 
-export const metadata: Metadata = { title: "Privacy settings · Purple Vendra" };
+export const metadata: Metadata = { title: "Privacy settings · Purple Shop" };
 
 export default function PrivacySettingsPage() {
   return (

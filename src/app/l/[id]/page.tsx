@@ -2,15 +2,17 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { MessageButton } from "@/components/messages/message-button";
 import { ReportButton } from "@/components/report-button";
 import { AddToCartButton } from "@/components/shop-buttons";
 import { SiteHeader } from "@/components/site-header";
+import { getCurrentUser } from "@/lib/auth";
 import { DELIVERY_MODES } from "@/lib/catalog";
 import { formatNaira } from "@/lib/money";
 import { publicFileUrl } from "@/lib/storage-url";
 import { createClient } from "@/lib/supabase/server";
 
-export const metadata: Metadata = { title: "Listing · Purple Vendra" };
+export const metadata: Metadata = { title: "Listing · Purple Shop" };
 
 export default function ListingPage({ params }: PageProps<"/l/[id]">) {
   return (
@@ -27,6 +29,7 @@ async function Listing({ params }: { params: PageProps<"/l/[id]">["params"] }) {
   const { id } = await params;
   if (!/^[0-9a-f-]{36}$/i.test(id)) notFound();
   const supabase = await createClient();
+  const viewer = await getCurrentUser();
   // RLS: everyone sees approved listings; sellers also see their own.
   const { data: l } = await supabase
     .from("listings")
@@ -57,7 +60,7 @@ async function Listing({ params }: { params: PageProps<"/l/[id]">["params"] }) {
       <div className="space-y-4">
         {!live && (
           <p className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
-            Only you can see this. It goes live once the Purple Vendra team approves it.
+            Only you can see this. It goes live once the Purple Shop team approves it.
           </p>
         )}
         <p className="text-sm text-muted">{l.categories?.name}</p>
@@ -71,7 +74,12 @@ async function Listing({ params }: { params: PageProps<"/l/[id]">["params"] }) {
           {l.city || l.state ? ` · ${[l.city, l.state].filter(Boolean).join(", ")}` : ""}
           {l.stock === 0 ? " · Out of stock" : ""}
         </p>
-        {live && l.stock !== 0 && <AddToCartButton listingId={l.id} />}
+        {live && (l.stock !== 0 || viewer?.id !== l.seller_id) && (
+          <div className="grid gap-2 sm:grid-cols-2">
+            {l.stock !== 0 && <AddToCartButton listingId={l.id} />}
+            {viewer?.id !== l.seller_id && <MessageButton sellerId={l.seller_id} listingId={l.id} label="Ask the seller" />}
+          </div>
+        )}
         <p className="whitespace-pre-line text-foreground/90">{l.description}</p>
         {seller && (
           <Link href={`/shop/${seller.username}`}
@@ -85,7 +93,10 @@ async function Listing({ params }: { params: PageProps<"/l/[id]">["params"] }) {
             <span className="text-sm font-medium text-brand">Visit shop →</span>
           </Link>
         )}
-        <p className="text-xs text-muted">🔒 Pay only through Purple Vendra. Your money is held until you confirm delivery.</p>
+        <p className="rounded-xl bg-brand-soft/60 px-3 py-2 text-xs text-brand-strong">
+          🔒 Pay only through Purple Shop escrow. Your money is held until you confirm delivery. Never pay a seller by
+          transfer, cash or another app. <Link href="/safety" className="underline">Stay safe</Link>
+        </p>
         {live && <ReportButton listingId={l.id} />}
       </div>
     </div>

@@ -9,7 +9,7 @@ import { requireSeller } from "@/lib/seller";
 import { createClient } from "@/lib/supabase/server";
 import { ListingForm } from "../listing-form";
 
-export const metadata: Metadata = { title: "Edit listing · Purple Vendra" };
+export const metadata: Metadata = { title: "Edit listing · Purple Shop" };
 
 export default function EditListingPage({ params }: PageProps<"/sell/listings/[id]">) {
   return (

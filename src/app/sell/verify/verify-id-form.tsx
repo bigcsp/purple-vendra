@@ -94,7 +94,7 @@ export function VerifyIdForm({ userId, currentType }: { userId: string; currentT
         {step === "uploading" ? "Uploading securely…" : step === "saving" ? "Submitting…" : "Submit for review"}
       </button>
       <p className="text-center text-xs text-muted">
-        🔒 Your ID is stored privately. Only you and the Purple Vendra review team can see it.
+        🔒 Your ID is stored privately. Only you and the Purple Shop review team can see it.
       </p>
     </form>
   );

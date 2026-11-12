@@ -141,7 +141,7 @@ function DetailsCard({ userId, initial, logoUrl }: { userId: string; initial: Pr
         </label>
         {msg && <Notice tone={msg.tone}>{msg.text}</Notice>}
         <button className={`${buttonClass} sm:w-auto`} disabled={pending}>{pending ? "Saving…" : "Save shop details"}</button>
-        <p className="text-xs text-muted">Don&apos;t add phone numbers, WhatsApp or bank details. Buyers contact and pay you safely through Purple Vendra.</p>
+        <p className="text-xs text-muted">Don&apos;t add phone numbers, WhatsApp or bank details. Buyers contact and pay you safely through Purple Shop.</p>
       </form>
     </Card>
   );

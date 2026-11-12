@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { CONTACT_MESSAGES, contactProblem } from "@/lib/contact-guard";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { toggleFollow } from "@/app/actions/shop";
@@ -123,7 +124,7 @@ function StoryStage({
   async function share() {
     const url = `${window.location.origin}/shop/${story.seller.username}?story=${story.id}`;
     try {
-      if (navigator.share) await navigator.share({ title: story.title, text: `${story.title} on Purple Vendra`, url });
+      if (navigator.share) await navigator.share({ title: story.title, text: `${story.title} on Purple Shop`, url });
       else {
         await navigator.clipboard.writeText(url);
         setToast("Link copied");
@@ -381,11 +382,14 @@ function Comments({ story, viewerId, onSignIn, onCount }: {
     if (!viewerId) return onSignIn();
     const text = body.trim();
     if (!text) return;
+    const problem = contactProblem(text);
+    if (problem) return setError(CONTACT_MESSAGES[problem]);
     setSending(true);
     setError(undefined);
     const { error } = await createClient().from("story_comments").insert({ video_id: story.id, user_id: viewerId, body: text });
     setSending(false);
-    if (error) return setError(/fast/.test(error.message) ? error.message : "Couldn't post your comment.");
+    if (error)
+      return setError(/fast|can't be shared|Purple Shop escrow/.test(error.message) ? error.message : "Couldn't post your comment.");
     setBody("");
     onCount((n) => n + 1);
     void fetchComments();
@@ -407,7 +411,7 @@ function Comments({ story, viewerId, onSignIn, onCount }: {
         <button disabled={sending || !body.trim()} className="rounded-full bg-brand px-4 text-sm font-medium text-white disabled:opacity-50">Post</button>
       </form>
       {error && <p className="text-xs text-red-700">{error}</p>}
-      <p className="text-[11px] text-muted">Keep it kind. Never share phone numbers or pay outside Purple Vendra.</p>
+      <p className="text-[11px] text-muted">Keep it kind. Never share phone numbers or pay outside Purple Shop.</p>
       {comments === null ? (
         <p className="text-sm text-muted">Loading…</p>
       ) : comments.length === 0 ? (

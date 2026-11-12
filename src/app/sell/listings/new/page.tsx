@@ -7,7 +7,7 @@ import { getCategories } from "@/lib/catalog";
 import { requireSeller } from "@/lib/seller";
 import { ListingForm } from "../listing-form";
 
-export const metadata: Metadata = { title: "New listing · Purple Vendra" };
+export const metadata: Metadata = { title: "New listing · Purple Shop" };
 
 export default function NewListingPage() {
   return (

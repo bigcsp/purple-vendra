@@ -5,7 +5,7 @@ import localFont from "next/font/local";
 import { SiteFooter } from "@/components/site-footer";
 import { themeScript } from "@/lib/theme-script";
 import { Suspense } from "react";
-import { MobileNav } from "@/components/mobile-nav";
+import { MobileNavWithCounts } from "@/components/mobile-nav-server";
 import "./globals.css";
 
 /** Display face for headings (self-hosted from @fontsource, no Google request). */
@@ -17,7 +17,7 @@ const bricolage = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Purple Vendra — Discover. Create. Promote. Sell.",
+  title: "Purple Shop — Discover. Create. Promote. Sell.",
   description:
     "Nigeria's creative marketplace: fashion, art, design, photo & video talent, and tech freelancers, with safe escrow checkout.",
 };
@@ -37,7 +37,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         {children}
         <SiteFooter />
         <Suspense fallback={null}>
-          <MobileNav />
+          <MobileNavWithCounts />
         </Suspense>
       </body>
     </html>

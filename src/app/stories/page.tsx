@@ -7,14 +7,14 @@ import { getCurrentUser } from "@/lib/auth";
 import { getCategories } from "@/lib/catalog";
 import { getFeedStories } from "@/lib/stories";
 
-export const metadata: Metadata = { title: "Vendra Stories · Purple Vendra" };
+export const metadata: Metadata = { title: "Purple Stories · Purple Shop" };
 
 export default function StoriesPage({ searchParams }: PageProps<"/stories">) {
   return (
     <main className="mx-auto w-full max-w-5xl flex-1 px-5 py-8">
       <SiteHeader />
       <section className="mt-8">
-        <p className="text-xs font-semibold text-accent">Vendra Stories</p>
+        <p className="text-xs font-semibold text-accent">Purple Stories</p>
         <h1 className="text-3xl font-bold text-brand-strong">See it made. Shop it right here.</h1>
         <p className="mt-1 max-w-xl text-muted">Short videos from Nigerian makers and pros. Tap a video, then tap a product to buy.</p>
       </section>

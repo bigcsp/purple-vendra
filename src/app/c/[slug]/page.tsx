@@ -10,7 +10,7 @@ import { getCategories } from "@/lib/catalog";
 import { readFilters } from "@/lib/search";
 import { getFeedStories } from "@/lib/stories";
 
-export const metadata: Metadata = { title: "Category · Purple Vendra" };
+export const metadata: Metadata = { title: "Category · Purple Shop" };
 
 export default function CategoryPage({ params, searchParams }: PageProps<"/c/[slug]">) {
   return (
@@ -51,7 +51,7 @@ async function Category({
       {categoryStories.length > 0 && (
         <section>
           <div className="mb-3 flex items-end justify-between">
-            <h2 className="text-lg font-semibold text-brand-strong">Vendra Stories</h2>
+            <h2 className="text-lg font-semibold text-brand-strong">Purple Stories</h2>
             <Link href={`/stories?category=${category.slug}`} className="text-sm text-brand hover:underline">See all →</Link>
           </div>
           <StoryGallery stories={categoryStories} viewerId={viewer?.id ?? null} showSeller />

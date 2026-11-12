@@ -10,7 +10,7 @@ import { getCurrentUser, type CurrentUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { getMyVerification } from "@/lib/verification";
 
-export const metadata: Metadata = { title: "Welcome · Purple Vendra" };
+export const metadata: Metadata = { title: "Welcome · Purple Shop" };
 
 export default function WelcomePage() {
   return (
@@ -50,7 +50,7 @@ async function Welcome() {
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
           <Link href="/stories" className="rounded-2xl border border-border p-4 hover:border-brand">
             <span className="text-2xl">🎬</span>
-            <span className="mt-1 block font-medium">Vendra Stories</span>
+            <span className="mt-1 block font-medium">Purple Stories</span>
             <span className="block text-xs text-muted">Watch makers at work, shop what you see</span>
           </Link>
           <Link href="/search" className="rounded-2xl border border-border p-4 hover:border-brand">
@@ -117,7 +117,7 @@ async function SellerChecklist({ user }: { user: CurrentUser }) {
     },
     {
       done: (stories ?? 0) > 0,
-      title: "Post a Vendra Story",
+      title: "Post a Purple Story",
       text: "A short video of you at work. Tag your products so buyers can shop while they watch.",
       action: isSeller ? <Link href="/sell/stories/new" className={`${buttonClass} sm:w-auto`}>Post a story</Link> : undefined,
     },

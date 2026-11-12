@@ -37,7 +37,7 @@ export function CampaignForm({ videos, categories, initialVideo }: { videos: Vid
     return (
       <div className="space-y-3">
         <Notice tone="success">
-          Campaign created. It&apos;s <strong>awaiting payment</strong>. The Purple Vendra team will send you payment details,
+          Campaign created. It&apos;s <strong>awaiting payment</strong>. The Purple Shop team will send you payment details,
           and your campaign starts the moment payment is confirmed. You&apos;ll see it change to &quot;Running&quot; below.
         </Notice>
         <button onClick={() => setDone(false)} className="text-sm font-medium text-brand hover:underline">Create another</button>
@@ -81,7 +81,7 @@ export function CampaignForm({ videos, categories, initialVideo }: { videos: Vid
 
       <fieldset>
         <legend className="text-sm font-medium text-brand-strong">2. Who should see it?</legend>
-        <p className="text-xs text-muted">Leave both empty to reach everyone browsing Vendra Stories.</p>
+        <p className="text-xs text-muted">Leave both empty to reach everyone browsing Purple Stories.</p>
         <p className="mt-2 text-xs font-medium">Buyers browsing these categories</p>
         <div className="mt-1 flex flex-wrap gap-2">
           {categories.map((c) => (
@@ -133,7 +133,7 @@ export function CampaignForm({ videos, categories, initialVideo }: { videos: Vid
         {pending ? "Creating…" : `Create campaign${kobo ? ` · ${formatNaira(kobo)}` : ""}`}
       </button>
       <p className="text-xs text-muted">
-        Promoted stories appear first in Vendra Stories for the buyers you chose, with a &quot;Promoted&quot; label. You only pay
+        Promoted stories appear first in Purple Stories for the buyers you chose, with a &quot;Promoted&quot; label. You only pay
         once the team confirms your campaign. Online payment is coming with checkout.
       </p>
     </form>
