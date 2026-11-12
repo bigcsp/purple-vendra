@@ -146,7 +146,7 @@ async function Shop({
         {listings.length === 0 ? (
           <p className="rounded-2xl border border-dashed border-border p-6 text-center text-sm text-muted">Nothing listed yet.</p>
         ) : (
-          <ListingGrid listings={listings.map((l) => ({ ...l, image_path: l.image }))} />
+          <ListingGrid listings={listings.map((l) => ({ ...l, image_path: l.image }))} saveable={!isSelf} />
         )}
       </section>
 

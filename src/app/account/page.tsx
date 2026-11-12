@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { InstallAppCard } from "@/components/install-app";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { signOut } from "@/app/actions/auth";
@@ -63,6 +64,21 @@ async function Account() {
           </span>
         </div>
       </Card>
+
+      <InstallAppCard />
+
+      <nav aria-label="Your things" className="grid grid-cols-3 gap-3 text-center text-sm">
+        {[
+          { href: "/saved", icon: "♥", label: "Saved" },
+          { href: "/messages", icon: "💬", label: "Messages" },
+          { href: "/cart", icon: "🛒", label: "Cart" },
+        ].map((x) => (
+          <Link key={x.href} href={x.href} className="rounded-2xl border border-border bg-card p-4 font-medium text-brand hover:border-brand">
+            <span className="block text-2xl" aria-hidden>{x.icon}</span>
+            {x.label}
+          </Link>
+        ))}
+      </nav>
 
       <Card>
         <h2 className="text-lg font-semibold text-brand-strong">Two-factor authentication</h2>

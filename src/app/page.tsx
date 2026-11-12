@@ -9,6 +9,7 @@ import { StoryGallery } from "@/components/stories/story-gallery";
 import { getCurrentUser } from "@/lib/auth";
 import { readFilters, searchListings } from "@/lib/search";
 import { SearchBox } from "@/components/search-box";
+import { RecentlyViewed } from "@/components/recently-viewed";
 import { getFeedStories } from "@/lib/stories";
 import { SiteHeader } from "@/components/site-header";
 
@@ -94,6 +95,10 @@ export default async function Home() {
           </Suspense>
         </div>
       </section>
+
+      <div className="mt-12 empty:hidden">
+        <RecentlyViewed title="Pick up where you left off" />
+      </div>
 
       <Suspense fallback={<p className="mt-10 text-sm text-muted">Loading what&apos;s new…</p>}>
         <HomeFeed />

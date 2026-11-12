@@ -24,6 +24,7 @@ export function HeaderNav({ username, isSeller, unread = 0 }: { username: string
       ]
     : [
         { href: "/stories", label: "Stories" },
+        { href: "/saved", label: "Saved" },
         { href: "/messages", label: "Messages" },
         { href: "/cart", label: "Cart" },
         ...(isSeller ? [{ href: "/sell", label: "Seller hub" }] : []),

@@ -14,6 +14,7 @@ const REASONS: Record<string, string> = {
   follow: "Create a free account to follow this shop and see their new work.",
   comment: "Create a free account to join the conversation.",
   report: "Create a free account to report this. It keeps reports honest.",
+  save: "Create a free account to save this and find it again on any device.",
   message: "Create a free account to message this seller. Your email and phone number stay private.",
 };
 

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { formatNaira } from "@/lib/money";
 import { publicFileUrl } from "@/lib/storage-url";
+import { SaveHeart } from "./save-button";
 
 export type GridListing = {
   id: string;
@@ -15,13 +16,14 @@ export type GridListing = {
 };
 
 /** Listing cards used on search, category and shop pages. */
-export function ListingGrid({ listings }: { listings: GridListing[] }) {
+export function ListingGrid({ listings, saveable = true }: { listings: GridListing[]; saveable?: boolean }) {
   return (
     <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
       {listings.map((l) => {
         const img = publicFileUrl("listing-images", l.image_path);
         return (
-          <li key={l.id}>
+          <li key={l.id} className="relative">
+            {saveable && <SaveHeart listingId={l.id} title={l.title} />}
             <Link href={`/l/${l.id}`} className="block h-full overflow-hidden rounded-2xl border border-border bg-card transition hover:border-brand">
               <div className="relative">
                 {img ? (

@@ -3,7 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { MessageButton } from "@/components/messages/message-button";
+import { RecentlyViewed, RememberView } from "@/components/recently-viewed";
 import { ReportButton } from "@/components/report-button";
+import { SaveButton } from "@/components/save-button";
 import { AddToCartButton } from "@/components/shop-buttons";
 import { SiteHeader } from "@/components/site-header";
 import { getCurrentUser } from "@/lib/auth";
@@ -45,6 +47,7 @@ async function Listing({ params }: { params: PageProps<"/l/[id]">["params"] }) {
   const live = l.status === "approved";
 
   return (
+    <>
     <div className="mt-8 grid gap-8 md:grid-cols-2">
       <div className="space-y-2">
         {photos.length === 0 ? (
@@ -74,11 +77,28 @@ async function Listing({ params }: { params: PageProps<"/l/[id]">["params"] }) {
           {l.city || l.state ? ` · ${[l.city, l.state].filter(Boolean).join(", ")}` : ""}
           {l.stock === 0 ? " · Out of stock" : ""}
         </p>
-        {live && (l.stock !== 0 || viewer?.id !== l.seller_id) && (
-          <div className="grid gap-2 sm:grid-cols-2">
-            {l.stock !== 0 && <AddToCartButton listingId={l.id} />}
-            {viewer?.id !== l.seller_id && <MessageButton sellerId={l.seller_id} listingId={l.id} label="Ask the seller" />}
+        {live && (
+          <div className="grid grid-cols-2 gap-2">
+            {l.stock !== 0 && <AddToCartButton listingId={l.id} className="col-span-2" />}
+            {viewer?.id !== l.seller_id && (
+              <>
+                <MessageButton sellerId={l.seller_id} listingId={l.id} label="Ask the seller" />
+                <SaveButton listingId={l.id} />
+              </>
+            )}
           </div>
+        )}
+        {live && (
+          <RememberView
+            item={{
+              id: l.id,
+              title: l.title,
+              priceKobo: l.price_kobo,
+              priceIsStarting: l.price_is_starting,
+              image: photos[0] ? publicFileUrl("listing-images", photos[0].storage_path) : null,
+              seller: seller ? seller.business_name || seller.display_name : null,
+            }}
+          />
         )}
         <p className="whitespace-pre-line text-foreground/90">{l.description}</p>
         {seller && (
@@ -100,5 +120,9 @@ async function Listing({ params }: { params: PageProps<"/l/[id]">["params"] }) {
         {live && <ReportButton listingId={l.id} />}
       </div>
     </div>
+    <div className="mt-12">
+      <RecentlyViewed excludeId={l.id} title="You looked at these too" />
+    </div>
+    </>
   );
 }

@@ -48,6 +48,10 @@ export default function PrivacyPolicyPage() {
               <li>Only you and our review team can see your ID document.</li>
               <li>Alerts to sellers about saves and carts never say who you are.</li>
               <li>
+                Your saved items are private. Sellers only see how many people saved a listing. &quot;Recently viewed&quot;
+                and recent searches are kept only on your own phone or computer, not on our servers.
+              </li>
+              <li>
                 Your email address and phone number are never shown to other people. In chats, buyers see a seller&apos;s
                 shop name and sellers see a buyer&apos;s username only.
               </li>

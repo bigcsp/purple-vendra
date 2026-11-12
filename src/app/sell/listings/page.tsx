@@ -30,6 +30,8 @@ async function MyListings({ searchParams }: { searchParams: PageProps<"/sell/lis
     .select(`${LISTING_CARD_SELECT}, rejection_reason`)
     .eq("seller_id", user.id)
     .order("created_at", { ascending: false });
+  const { data: saveRows } = await supabase.rpc("my_listing_save_counts");
+  const saveCounts = new Map(((saveRows ?? []) as { listing_id: string; saves: number }[]).map((r) => [r.listing_id, Number(r.saves)]));
   const listings = (data ?? []).map((l) => ({ ...toListingCard(l), rejection: l.rejection_reason as string | null }));
 
   return (
@@ -63,7 +65,14 @@ async function MyListings({ searchParams }: { searchParams: PageProps<"/sell/lis
                 )}
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-medium text-brand-strong">{l.title}</p>
-                  <p className="text-sm">{formatNaira(l.price_kobo)}</p>
+                  <p className="text-sm">
+                    {formatNaira(l.price_kobo)}
+                    {(saveCounts.get(l.id) ?? 0) > 0 && (
+                      <span className="ml-2 text-xs text-muted" title="People who saved this (we never show who)">
+                        ♥ {saveCounts.get(l.id)} saved
+                      </span>
+                    )}
+                  </p>
                   <div className="mt-1 flex flex-wrap items-center gap-2">
                     <span className={`rounded-full px-2 py-0.5 text-xs ${status.tone}`}>{status.text}</span>
                     <Link href={`/sell/listings/${l.id}`} className="text-xs font-medium text-brand hover:underline">Edit</Link>

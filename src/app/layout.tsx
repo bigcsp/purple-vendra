@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import localFont from "next/font/local";
@@ -6,6 +6,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { themeScript } from "@/lib/theme-script";
 import { Suspense } from "react";
 import { MobileNavWithCounts } from "@/components/mobile-nav-server";
+import { InstallAppBanner, RegisterServiceWorker } from "@/components/install-app";
 import "./globals.css";
 
 /** Display face for headings (self-hosted from @fontsource, no Google request). */
@@ -20,6 +21,19 @@ export const metadata: Metadata = {
   title: "Purple Shop — Discover. Create. Promote. Sell.",
   description:
     "Nigeria's creative marketplace: fashion, art, design, photo & video talent, and tech freelancers, with safe escrow checkout.",
+  applicationName: "Purple Shop",
+  appleWebApp: { capable: true, title: "Purple Shop", statusBarStyle: "default" },
+  formatDetection: { telephone: false },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#6d28d9" },
+    { media: "(prefers-color-scheme: dark)", color: "#120b1c" },
+  ],
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -31,7 +45,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-        <meta name="theme-color" content="#6d28d9" />
       </head>
       <body className="min-h-full flex flex-col pb-16 sm:pb-0">
         {children}
@@ -39,6 +52,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Suspense fallback={null}>
           <MobileNavWithCounts />
         </Suspense>
+        <RegisterServiceWorker />
+        <InstallAppBanner />
       </body>
     </html>
   );
