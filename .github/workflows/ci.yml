@@ -16,8 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      # Public values (they already ship to every browser). Set them under
-      # GitHub → Settings → Secrets and variables → Actions → Variables.
       NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
       NEXT_TELEMETRY_DISABLED: "1"
@@ -36,7 +34,7 @@ jobs:
         run: npm run lint
 
       - name: Type check
-        run: npx tsc --noEmit
+        run: npx next typegen && npx tsc --noEmit
 
       - name: Build
         run: npm run build

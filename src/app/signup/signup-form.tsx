@@ -70,6 +70,10 @@ export function SignupForm({ next, initialIntent }: { next: string; initialInten
         name="username"
         required
         pattern="[a-z0-9_]{3,30}"
+        // Phones capitalise the first letter by default, which breaks this pattern.
+        autoCapitalize="none"
+        autoCorrect="off"
+        spellCheck={false}
         hint={intent === "shop" ? "Lowercase letters, numbers and _" : "Lowercase letters, numbers and _. It becomes your shop link: /shop/username"}
         autoComplete="username"
       />
