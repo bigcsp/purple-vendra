@@ -32,10 +32,11 @@ export async function proxy(request: NextRequest) {
     },
   });
 
-  // Refreshes the session token if it has expired. Do not remove.
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Refreshes the session token if it has expired and checks its signature.
+  // Do not remove. getClaims() verifies the token on this server when the
+  // project uses Supabase signing keys, so most visits skip a network call.
+  const { data: claimsData } = await supabase.auth.getClaims();
+  const user = claimsData?.claims?.sub ? { id: claimsData.claims.sub } : null;
 
   const path = request.nextUrl.pathname;
   const isAccount = path === "/account" || path.startsWith("/account/");

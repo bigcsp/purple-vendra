@@ -1,5 +1,6 @@
 import "server-only";
 
+import { cache } from "react";
 import { connection } from "next/server";
 import { createClient } from "@/server/db/supabase";
 
@@ -29,7 +30,7 @@ export type CurrentUser = {
  * Returns null when nobody is signed in. Reads the request, so call it
  * from a component that sits behind <Suspense>.
  */
-export async function getCurrentUser(): Promise<CurrentUser | null> {
+export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
   // Who is signed in must be worked out for each real visit, never
   // pre-rendered ahead of time (Supabase checks the session's expiry
   // time, which Next.js 16 doesn't allow during pre-rendering).
@@ -37,33 +38,38 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
 
   const supabase = await createClient();
 
-  // getUser() checks the token with Supabase, so it can't be faked by
-  // editing the cookie.
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return null;
+  // getClaims() checks the login token's signature, so it can't be faked by
+  // editing the cookie. With Supabase's signing keys it does this on our
+  // server, without a round trip to Supabase on every page.
+  const { data: claimsData } = await supabase.auth.getClaims();
+  const claims = claimsData?.claims;
+  if (!claims?.sub) return null;
+  const userId = claims.sub;
+  const email = typeof claims.email === "string" ? claims.email : "";
+  const metadata = (claims.user_metadata ?? {}) as { intent?: string };
 
   const [{ data: profile }, { data: aal }] = await Promise.all([
-    supabase.from("profiles").select("display_name, username, role, account_status, status_reason, suspended_until, deletion_requested_at").eq("id", user.id).single(),
+    supabase.from("profiles").select("display_name, username, role, account_status, status_reason, suspended_until, deletion_requested_at").eq("id", userId).single(),
     supabase.auth.mfa.getAuthenticatorAssuranceLevel(),
   ]);
 
   return {
-    id: user.id,
-    email: user.email ?? "",
-    displayName: profile?.display_name ?? user.email ?? "Member",
+    id: userId,
+    email,
+    displayName: profile?.display_name ?? (email || "Member"),
     username: profile?.username ?? "",
     role: (profile?.role as Role | undefined) ?? "buyer",
-    has2fa: (user.factors ?? []).some((f) => f.status === "verified"),
+    // Someone with a verified authenticator either used it this session
+    // (aal2) or will be asked for it (next level aal2).
+    has2fa: aal?.currentLevel === "aal2" || aal?.nextLevel === "aal2",
     is2faConfirmed: aal?.currentLevel === "aal2",
     accountStatus: effectiveStatus(profile?.account_status, profile?.suspended_until),
     statusReason: profile?.status_reason ?? null,
     suspendedUntil: profile?.suspended_until ?? null,
     deletionRequestedAt: profile?.deletion_requested_at ?? null,
-    intent: ["sell", "both"].includes(user.user_metadata?.intent) ? user.user_metadata.intent : "shop",
+    intent: metadata.intent === "sell" || metadata.intent === "both" ? metadata.intent : "shop",
   };
-}
+});
 
 /** A suspension with an end date lifts itself once that date has passed. */
 function effectiveStatus(status: string | undefined, until: string | null | undefined): CurrentUser["accountStatus"] {
