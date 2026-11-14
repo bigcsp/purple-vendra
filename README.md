@@ -176,6 +176,23 @@ the nightly storage cleanup.
   their account. `/privacy` is a draft policy that needs a lawyer's review and a contact email before launch.
 - **Book and Message buttons** come with step 6 (messaging and bookings).
 
+## Professional pages (Purple Pro, step 1) · migration 022
+
+Sellers get a shareable page at `/pro/<username>`, set up from Seller hub → **Professional page** (`/sell/pro`).
+
+- **Two page types:** *Professional Profile* (career profile) or *My Creative Space* (visual, cover-led). Sellers can switch at any time without losing anything.
+- **What it shows:** cover image, photo, name, headline, about, location, availability, skills, languages, experience,
+  education, certifications, achievements, live service listings, working hours, service areas and trust details.
+  Photo, name, headline, about, location, hours and areas are shared with the shop profile, so they're edited once.
+- **Private by default.** The owner can preview a private page; everyone else gets "not found" until it's made public.
+- **Rules in the database:** only 2FA sellers can edit, phone numbers / "pay me outside" text is refused, 25 items per
+  section, 20 skills, 10 languages, covers must be the seller's own upload, and nobody can give themselves Premium.
+- **Plans:** every page is free. Premium (extra themes, unlimited projects, personal website links, badge) is switched on
+  by hand until payments go live:
+  ```sql
+  update profiles set plan = 'premium', plan_expires_at = now() + interval '30 days' where username = 'their_username';
+  ```
+
 ## Push to GitHub
 
 The folder is already a Git repository with a first commit.

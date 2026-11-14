@@ -1,4 +1,5 @@
 import {
+  BriefcaseBusiness,
   CirclePlay,
   CircleUser,
   Clapperboard,
@@ -57,6 +58,7 @@ export function sellerNav(username: string): NavItem[] {
   return [
     { href: "/sell", label: "Seller hub", short: "Hub", icon: LayoutDashboard, exact: true },
     { href: `/shop/${username}`, label: "My shop", short: "Shop", icon: Store },
+    { href: "/sell/pro", label: "Professional page", short: "Pro page", icon: BriefcaseBusiness },
     { href: "/sell/listings", label: "Listings", icon: Package },
     { href: "/sell/stories", label: "My stories", short: "Stories", icon: Clapperboard },
     { href: "/sell/orders", label: "Orders", icon: Receipt },
