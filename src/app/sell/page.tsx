@@ -74,6 +74,17 @@ async function SellerHub() {
         </div>
       </Card>
       <Card>
+        <p className="text-xs font-semibold uppercase tracking-wide text-accent">New</p>
+        <h2 className="mt-1 text-lg font-semibold text-brand-strong">Your professional page</h2>
+        <p className="mt-1 text-sm text-muted">
+          A shareable page at <span className="font-medium text-foreground">/pro/{user.username}</span> with your skills,
+          experience, credentials and services, so customers can see who you are and hire you.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Link href="/sell/pro" className={`${buttonClass} sm:w-auto`}>Set up or edit</Link>
+        </div>
+      </Card>
+      <Card>
         <h2 className="text-lg font-semibold text-brand-strong">Your listings</h2>
         <p className="mt-1 text-sm text-muted">
           Products, services and talent you sell. New listings are reviewed before they go live.

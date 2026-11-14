@@ -97,3 +97,17 @@ export async function uploadProfileLogo(file: File, userId: string): Promise<str
   if (error) throw new Error(friendlyStorageError(error.message));
   return path;
 }
+
+/**
+ * Uploads a professional page cover / banner (wide, max 1920px WebP) to the
+ * public listing-images bucket, in the seller's own profile folder. Returns the path.
+ */
+export async function uploadProfileCover(file: File, userId: string): Promise<string> {
+  const body = await compressImage(file, 1920, 0.84);
+  const path = `${userId}/profile/cover-${randomName()}.webp`;
+  const { error } = await createClient()
+    .storage.from("listing-images")
+    .upload(path, body, { contentType: "image/webp", cacheControl: "31536000", upsert: false });
+  if (error) throw new Error(friendlyStorageError(error.message));
+  return path;
+}

@@ -42,7 +42,7 @@ async function Shop({
   // RLS: only active seller profiles are public.
   const { data: seller } = await supabase
     .from("profiles")
-    .select("id, username, display_name, business_name, headline, bio, city, state, is_verified, rating_avg, rating_count, avatar_url, years_experience, is_available, created_at")
+    .select("id, username, display_name, business_name, headline, bio, city, state, is_verified, rating_avg, rating_count, avatar_url, years_experience, is_available, created_at, pro_mode, pro_public")
     .eq("username", decodeURIComponent(username).toLowerCase())
     .eq("role", "seller")
     .maybeSingle();
@@ -96,6 +96,11 @@ async function Shop({
             <FollowButton sellerId={seller.id} initialFollowing={followInfo.following}
               initialCount={Number(followInfo.followers)} isSelf={isSelf} />
             {!isSelf && <MessageButton sellerId={seller.id} label="Message" variant="light" />}
+            {seller.pro_public && seller.pro_mode && (
+              <Link href={`/pro/${seller.username}`} className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-4 py-1.5 text-sm font-medium text-white hover:bg-white/25">
+                Professional profile
+              </Link>
+            )}
           </div>
         </div>
         {seller.bio && <p className="mt-4 max-w-2xl whitespace-pre-line text-sm text-white/85">{seller.bio}</p>}
