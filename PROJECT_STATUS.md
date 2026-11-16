@@ -9,17 +9,17 @@ Approvals and conditions: [`docs/decisions/ADR-002-phase-1b-approvals.md`](docs/
 Production change freeze: [`docs/decisions/ADR-001-production-change-freeze.md`](docs/decisions/ADR-001-production-change-freeze.md).
 
 ## Next approved task
-W1 → W2 → W3/W4 → W5, then **stop at checkpoint C1** (migration mapping + schema diff) for owner review.
+**Stopped at checkpoint C1.** Evidence: `docs/MIGRATION-MAPPING.md`, `docs/SCHEMA-DIFF-REPORT.md`. Nothing proceeds until the owner approves C1.
 
 ## Workstream tracker (Phase 1b)
 | # | Workstream | Status |
 |---|---|---|
-| W1 | Change control & records | In progress |
-| W2 | Production schema capture (read-only) | Not started |
-| W3 | Content-level mapping, reconstruct 011 | Not started |
-| W4 | Staging environment | Not started |
-| W5 | Clean rebuild + schema diff | Not started |
-| **C1** | **Owner review of mapping + diff** | — |
+| W1 | Change control & records | ✅ Done |
+| W2 | Production schema capture (read-only) | ✅ Done (470 objects, md5 verified) |
+| W3 | Content-level mapping, reconstruct 011 | ✅ Done; mapping final for C1 |
+| W4 | Staging environment | ◐ Staging DB project created; Vercel/GitHub settings pending (owner) |
+| W5 | Clean rebuild + schema diff | ✅ Done: 446/470 identical, 23 allowed, 1 real gap |
+| **C1** | **Owner review of mapping + diff** | **⏸ WAITING FOR OWNER** |
 | W6 | Synthetic seed + anonymizer | Blocked by C1 |
 | W7 | Test harness | Blocked by C1 |
 | W8 | CI/CD pipeline | Blocked by W7 |
@@ -61,6 +61,8 @@ None applied anywhere in Phase 1b so far. Log: [`docs/DB-CHANGELOG.md`](docs/DB-
 None exist yet. CI runs lint, type check, build and npm audit only.
 
 ## Known issues
+- `escalate_report()` request branch exists in production but not in the repo (fixed by C1 Option A).
+- Staging Vault still holds the one-time runner token (deletion needs owner confirmation in the connector).
 - Migration 011 is missing from the repo, so a clean rebuild fails at 012. The 4 production-only history rows are folded into repo files 014/016/020.
 - `storage-cleanup` Edge Function is publicly callable (`verify_jwt: false`); low risk; P4 (Phase 2).
 - Leaked-password protection requires Supabase Pro.
