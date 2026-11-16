@@ -1,0 +1,472 @@
+# kind	ident	fingerprint
+# captured 2026-11-16 23:32 UTC, PostgreSQL 17.11, project nozxxxldfthbwhjwbsmy, query: supabase/tools/schema-manifest.sql
+bucket	id-documents	4d122b0e0baf
+bucket	listing-images	ed6e3c6001e8
+bucket	story-media	8396a23711e8
+cron	privacy-retention	7342a306e3da
+cron	requests-expire	686bbc85e91d
+cron	storage-cleanup	1eeaf0cff155
+cron	story-campaigns-complete	075a4b2dcaf7
+ext_trigger	auth.users.on_auth_user_created	786e53a33077
+extension	pg_cron	pg_catalog
+extension	pg_net	extensions
+extension	pg_stat_statements	extensions
+extension	pg_trgm	public
+extension	pgcrypto	extensions
+extension	plpgsql	pg_catalog
+extension	supabase_vault	vault
+extension	uuid-ossp	extensions
+extension_version	pg_cron	1.6.4
+extension_version	pg_net	0.20.4
+extension_version	pg_stat_statements	1.11
+extension_version	pg_trgm	1.6
+extension_version	pgcrypto	1.3
+extension_version	plpgsql	1.0
+extension_version	supabase_vault	0.3.1
+extension_version	uuid-ossp	1.1
+function	private.add_milestone(p_seller uuid, p_milestone seller_milestone, p_at timestamp with time zone, p_source text)	0730a11fc3ea/21204a
+function	private.ensure_seller_register(p_seller uuid)	5ced99f795f1/21204a
+function	private.register_status_of(p profiles)	0696ce5955be/21204a
+function	private.request_owner(p_request uuid)	4a400373935d/1e88fb
+function	private.track_first_listing()	5c77ba47e1e5/21204a
+function	private.track_first_payout()	53fbce79a888/21204a
+function	private.track_first_sale()	1beaeb1cc3d1/21204a
+function	private.track_seller_deleted()	540aa0934be8/21204a
+function	private.track_seller_profile()	3f4b00392374/21204a
+function	private.track_verification()	85ec3d25a6d4/21204a
+function	public.accept_offer(p_offer uuid)	173f23db3c36/f440cb
+function	public.account_ok(uid uuid)	b298eb192b2a/59a9d6
+function	public.add_story_product_to_cart(p_video uuid, p_listing uuid, p_campaign uuid)	419d4c1b11e2/f440cb
+function	public.admin_activate_campaign(p_campaign uuid, p_payment_reference text)	675221d014ad/f440cb
+function	public.admin_log_id_view(seller uuid)	49ebc132ceda/f440cb
+function	public.admin_moderate_story(p_video uuid, p_status story_status, p_note text)	3e81d1802a63/f440cb
+function	public.admin_reject_campaign(p_campaign uuid, p_note text)	96099d8c79ae/f440cb
+function	public.admin_resolve_report(p_report uuid, p_outcome report_status, p_note text)	a0198be132b5/f440cb
+function	public.admin_review_flag(p_flag uuid, p_outcome text, p_note text)	dea9f1711e4a/f440cb
+function	public.admin_review_queue()	30c3c3396297/f440cb
+function	public.admin_seller_register()	b3f7a14b8cb4/f440cb
+function	public.admin_set_account_status(target uuid, new_status account_status, reason text, until timestamp with time zone)	9451e56ea8bb/f440cb
+function	public.archive_conversation(p_conversation uuid, p_archived boolean)	19a07523f9ae/f440cb
+function	public.become_seller()	294c10fbfd2e/f440cb
+function	public.block_contact_details()	6e4bd9abddb2/59a9d6
+function	public.block_security_event_changes()	580d39e6b6cb/59a9d6
+function	public.can_post()	6c763a71b3dc/59a9d6
+function	public.cancel_account_deletion()	bd879fd60219/f440cb
+function	public.check_dispute_risk()	cdfa05f1eff6/8dd177
+function	public.check_listing_risk()	fd0c994e7709/8dd177
+function	public.check_message_risk()	ba2a738a021d/8dd177
+function	public.check_pro_entry()	72a7c08b3b2a/8dd177
+function	public.check_profile_risk()	d0d035700dfd/8dd177
+function	public.check_story_comment_risk()	e1d2e21d061f/8dd177
+function	public.check_story_risk()	78c40ed3a4f7/8dd177
+function	public.close_request(p_request uuid)	94731d15a811/f440cb
+function	public.complete_finished_campaigns()	ceac79d17481/8dd177
+function	public.contact_message(kind text)	8cbb87c19103/59a9d6
+function	public.contact_problem(t text)	b6df2460a7cc/59a9d6
+function	public.create_request(p_title text, p_description text, p_category smallint, p_budget_kobo bigint, p_state text, p_city text, p_deadline date)	f56a20527269/f440cb
+function	public.current_role_is(wanted user_role[])	a9730e96e3f3/59a9d6
+function	public.decline_offer(p_offer uuid)	5f386dd80795/f440cb
+function	public.enforce_home_service_verification()	1a6ec560f12d/8dd177
+function	public.enforce_listing_rate()	8cb349e08ee1/8dd177
+function	public.escalate_report()	9d960c29e66d/8dd177
+function	public.expire_requests()	3edb8383fcff/8dd177
+function	public.export_my_data()	654f52cadbe2/f440cb
+function	public.forbid_contact(t text)	dbc30216564b/59a9d6
+function	public.forbid_history_change()	8617094dc6b1/59a9d6
+function	public.get_booking_address(p_booking uuid)	49c656f88054/f440cb
+function	public.get_campaign_analytics()	5f34047a3e88/f440cb
+function	public.get_conversation(p_conversation uuid)	3a8e58b35774/f440cb
+function	public.get_inbox(p_archived boolean)	f56ec2ef2283/f440cb
+function	public.get_order_delivery(p_order uuid)	fe4fe0ac02d1/f440cb
+function	public.get_request(p_request uuid)	e5a223d2ba4f/d78174
+function	public.get_request_board(p_query text, p_category smallint, p_state text, p_matches boolean, p_limit integer, p_offset integer)	a9f71c884431/d78174
+function	public.get_request_offers(p_request uuid)	bf0d0b19b24d/f440cb
+function	public.get_story_analytics(p_days integer)	69cb3e0a3073/f440cb
+function	public.get_story_comments(p_video uuid, p_limit integer)	3c35abb80d39/59a9d6
+function	public.get_story_feed(p_category smallint, p_limit integer)	8053169fb7fd/59a9d6
+function	public.guard_pro_fields()	4618a15e2369/8dd177
+function	public.handle_new_user()	efc49afed1db/8dd177
+function	public.has_aal2()	66dcfca36d5b/59a9d6
+function	public.is_admin()	c621b472a658/59a9d6
+function	public.is_blocked_between(a uuid, b uuid)	3d2d4860f56a/8dd177
+function	public.is_premium(uid uuid)	b48f86f6e702/59a9d6
+function	public.limit_saves()	6d7d1e054105/59a9d6
+function	public.limit_story_products()	57ea55f77aa4/8dd177
+function	public.listing_seller(p_listing uuid)	fad06e139acf/f440cb
+function	public.log_listing_moderation()	5ca1b1ebe181/8dd177
+function	public.log_profile_changes()	375f7fe60c04/8dd177
+function	public.log_search(p_query text, p_category smallint, p_results integer)	ba60f2785354/d78174
+function	public.log_security_event(p_action text, p_target_user uuid, p_target_type text, p_target_id text, p_details jsonb)	257486b1b9fd/8dd177
+function	public.log_verification_changes()	3f4113a42e3c/8dd177
+function	public.looks_like_off_platform(t text)	73402e4df83c/59a9d6
+function	public.mark_conversation_read(p_conversation uuid)	18612ea3f42f/f440cb
+function	public.my_listing_save_counts()	3b8127bce700/f440cb
+function	public.my_offers()	ac8a67cef1ca/f440cb
+function	public.my_requests()	212c0447b967/f440cb
+function	public.my_seller_progress()	406355bcbdc5/f440cb
+function	public.popular_searches(p_prefix text, p_limit integer)	a97712bfb86d/d78174
+function	public.pro_page_public(uid uuid)	68fa39f381ff/59a9d6
+function	public.process_account_deletion(uid uuid)	4d08b8dff37c/8dd177
+function	public.protect_listing_fields()	e53db1a67c40/59a9d6
+function	public.protect_message()	ab78c9c58253/59a9d6
+function	public.protect_profile_fields()	48fdef113b14/59a9d6
+function	public.protect_report()	2c4176347f90/8dd177
+function	public.protect_review()	09b93e887c64/59a9d6
+function	public.protect_seller_verification()	214ab2186575/59a9d6
+function	public.protect_story_campaign()	9260154a7003/8dd177
+function	public.protect_story_comment()	03a1b231c921/8dd177
+function	public.protect_story_video()	6e73bc9e1df1/8dd177
+function	public.purge_stories_on_account_deletion()	a4795592c5ac/8dd177
+function	public.queue_file_deletion(p_bucket text, p_name text, p_reason text)	4eba5e7c5ad5/8dd177
+function	public.queue_story_files()	b0f7dc4d11d6/8dd177
+function	public.raise_flag(p_kind text, p_severity text, p_user uuid, p_listing uuid, p_ref_type text, p_ref_id text, p_details jsonb)	b7f7b3f456d7/8dd177
+function	public.record_story_event(p_video uuid, p_type story_event_type, p_listing uuid, p_campaign uuid)	605b95ce8be5/59a9d6
+function	public.refresh_offer_count(p_request uuid)	9cd4504d0d46/8dd177
+function	public.refresh_seller_rating()	6657881f5574/8dd177
+function	public.reports_sent_today()	95d0f41b5cc0/f440cb
+function	public.request_account_deletion(confirm_username text)	99e53fbd7ade/f440cb
+function	public.run_privacy_retention()	3b9a9746fed6/8dd177
+function	public.search_did_you_mean(p_query text)	0ebbffe05c97/d78174
+function	public.search_listings(p_query text, p_category smallint, p_state text, p_type listing_type, p_min_kobo bigint, p_max_kobo bigint, p_sort text, p_limit integer, p_offset integer)	591831cab3e6/59a9d6
+function	public.search_norm(t text)	eb8d1ae8361c/59a9d6
+function	public.search_sellers(p_query text, p_limit integer)	d2a0ec344b77/59a9d6
+function	public.search_stories(p_query text, p_limit integer)	06f7d5293395/d78174
+function	public.search_suggest(p_query text, p_limit integer)	632073ca4ae8/d78174
+function	public.search_terms_for(q text)	e9813ad64065/59a9d6
+function	public.seller_follow_info(p_seller uuid)	0c3aa72b3801/59a9d6
+function	public.send_message(p_conversation uuid, p_body text)	fe517af7b206/f440cb
+function	public.send_offer(p_request uuid, p_price_kobo bigint, p_delivery_days integer, p_message text, p_listing uuid)	2be142ccff02/f440cb
+function	public.set_updated_at()	d237ee3f0136/59a9d6
+function	public.set_user_block(p_user uuid, p_blocked boolean)	09abae3b5d6b/f440cb
+function	public.start_conversation(p_seller uuid, p_listing uuid)	1cb73c1c6e32/f440cb
+function	public.story_is_public(p_video uuid)	8572628472a9/59a9d6
+function	public.story_owner(p_video uuid)	ff09ee28e868/59a9d6
+function	public.sync_story_counters()	b009b60d99e4/8dd177
+function	public.sync_verified_badge()	2d68c1321dc1/8dd177
+function	public.tags_ok(arr text[], max_items integer, max_len integer)	c0fbc87f095c/59a9d6
+function	public.unread_message_count()	a54625394b97/f440cb
+function	public.update_request(p_request uuid, p_title text, p_description text, p_category smallint, p_budget_kobo bigint, p_state text, p_city text, p_deadline date)	cbb9f3fc3da8/f440cb
+function	public.username_available(wanted text)	1f6fc3a48772/59a9d6
+function	public.validate_review()	ca95082a405e/8dd177
+function	public.withdraw_offer(p_offer uuid)	a18708349da8/f440cb
+policy	public.bookings.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.bookings.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.bookings.Blocked accounts cannot update	38fd048bf211
+policy	public.bookings.Buyers see their own bookings	59924d0acd98
+policy	public.buyer_requests.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.buyer_requests.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.buyer_requests.Blocked accounts cannot update	38fd048bf211
+policy	public.buyer_requests.Buyers see their own requests	59924d0acd98
+policy	public.cart_items.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.cart_items.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.cart_items.Blocked accounts cannot update	38fd048bf211
+policy	public.cart_items.People add approved listings to their cart	27dbaf280b76
+policy	public.cart_items.People change quantities in their cart	b3a36098ba34
+policy	public.cart_items.People remove items from their cart	38c0a4e43726
+policy	public.cart_items.People see their own cart	3aa9d58d24d2
+policy	public.categories.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.categories.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.categories.Blocked accounts cannot update	38fd048bf211
+policy	public.categories.Categories are public	07b751e22e98
+policy	public.checkouts.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.checkouts.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.checkouts.Blocked accounts cannot update	38fd048bf211
+policy	public.checkouts.Buyers see their own checkouts	59924d0acd98
+policy	public.content_features.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.content_features.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.content_features.Blocked accounts cannot update	38fd048bf211
+policy	public.conversations.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.conversations.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.conversations.Blocked accounts cannot update	38fd048bf211
+policy	public.conversations.People in a conversation can see it	74c6685d71a7
+policy	public.disputes.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.disputes.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.disputes.Blocked accounts cannot update	38fd048bf211
+policy	public.featured_purchases.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.featured_purchases.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.featured_purchases.Blocked accounts cannot update	38fd048bf211
+policy	public.follows.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.follows.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.follows.Blocked accounts cannot update	38fd048bf211
+policy	public.follows.People follow active sellers	015f1b992459
+policy	public.follows.People see who they follow	91ec7f74ad0c
+policy	public.follows.People unfollow	9914f7a9086c
+policy	public.listing_events.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.listing_events.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.listing_events.Blocked accounts cannot update	38fd048bf211
+policy	public.listing_images.Admins manage all listing photos	94a4028271ee
+policy	public.listing_images.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.listing_images.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.listing_images.Blocked accounts cannot update	38fd048bf211
+policy	public.listing_images.Photos of approved listings are public	2c49dd8241ca
+policy	public.listing_images.Sellers add photos to their own listings	cd096baf0ccd
+policy	public.listing_images.Sellers must use 2FA to delete	16e2c5e961c6
+policy	public.listing_images.Sellers must use 2FA to insert	0b1eccf2c4c2
+policy	public.listing_images.Sellers must use 2FA to update	5d1e50e4c8ee
+policy	public.listing_images.Sellers remove photos from their own listings	1292c8bdd64b
+policy	public.listing_images.Sellers reorder photos of their own listings	6071ee36d818
+policy	public.listing_images.Sellers see photos of their own listings	0cb4989ead6e
+policy	public.listings.Admins can see and moderate all listings	94a4028271ee
+policy	public.listings.Approved listings are public	2e4376474dcd
+policy	public.listings.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.listings.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.listings.Blocked accounts cannot update	38fd048bf211
+policy	public.listings.Sellers can create their own listings	3c64cdf07c7e
+policy	public.listings.Sellers can edit their own listings	a87a14dd77b1
+policy	public.listings.Sellers can see their own listings	279bd72147b1
+policy	public.listings.Sellers must use 2FA to delete	16e2c5e961c6
+policy	public.listings.Sellers must use 2FA to insert	0b1eccf2c4c2
+policy	public.listings.Sellers must use 2FA to update	5d1e50e4c8ee
+policy	public.messages.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.messages.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.messages.Blocked accounts cannot update	38fd048bf211
+policy	public.messages.People in a conversation can read its messages	b91353372b21
+policy	public.notifications.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.notifications.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.notifications.Blocked accounts cannot update	38fd048bf211
+policy	public.order_items.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.order_items.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.order_items.Blocked accounts cannot update	38fd048bf211
+policy	public.order_items.Order items follow their order	b00986aa685f
+policy	public.orders.Admins see all orders	bb931e01762a
+policy	public.orders.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.orders.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.orders.Blocked accounts cannot update	38fd048bf211
+policy	public.orders.Buyers see their own orders	59924d0acd98
+policy	public.orders.Sellers see their own orders	279bd72147b1
+policy	public.payouts.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.payouts.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.payouts.Blocked accounts cannot update	38fd048bf211
+policy	public.pro_entries.2FA sellers add their own entries	06c72bbd1294
+policy	public.pro_entries.2FA sellers edit their own entries	ee33c4eb925f
+policy	public.pro_entries.2FA sellers remove their own entries	54875664673d
+policy	public.pro_entries.Admins remove any entry	d394dcad76c8
+policy	public.pro_entries.Admins see all entries	bb931e01762a
+policy	public.pro_entries.Entries of public pro pages are public	cd73d8f46711
+policy	public.pro_entries.Owners see their own entries	059d4c156a25
+policy	public.profiles.Admins can edit any profile	67bde1c67d54
+policy	public.profiles.Admins can see all profiles	bb931e01762a
+policy	public.profiles.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.profiles.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.profiles.Blocked accounts cannot update	38fd048bf211
+policy	public.profiles.Seller profiles are public	c40a0ef4a3af
+policy	public.profiles.Users can edit their own profile	2d7b011a9340
+policy	public.profiles.Users can see their own profile	d0dea7378827
+policy	public.referrals.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.referrals.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.referrals.Blocked accounts cannot update	38fd048bf211
+policy	public.reports.Admins see all reports	bb931e01762a
+policy	public.reports.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.reports.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.reports.Blocked accounts cannot update	38fd048bf211
+policy	public.reports.Users can send reports	2bb0eba69d50
+policy	public.reports.Users see the reports they sent	e90f64b56d5a
+policy	public.request_offers.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.request_offers.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.request_offers.Blocked accounts cannot update	38fd048bf211
+policy	public.request_offers.Buyers see offers on their requests	d4a19ba78cb3
+policy	public.request_offers.Sellers must use 2FA to send quotes	0b1eccf2c4c2
+policy	public.request_offers.Sellers see their own offers	279bd72147b1
+policy	public.reseller_commissions.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.reseller_commissions.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.reseller_commissions.Blocked accounts cannot update	38fd048bf211
+policy	public.reviews.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.reviews.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.reviews.Blocked accounts cannot update	38fd048bf211
+policy	public.risk_flags.Admins see risk flags	bb931e01762a
+policy	public.saves.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.saves.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.saves.Blocked accounts cannot update	38fd048bf211
+policy	public.saves.You can save live listings	f74992aa2358
+policy	public.saves.You can see your saved items	3aa9d58d24d2
+policy	public.saves.You can unsave your items	38c0a4e43726
+policy	public.search_queries.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.search_queries.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.search_queries.Blocked accounts cannot update	38fd048bf211
+policy	public.search_synonyms.Anyone can read search synonyms	170442d1779a
+policy	public.sections.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.sections.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.sections.Blocked accounts cannot update	38fd048bf211
+policy	public.sections.Sections are public	07b751e22e98
+policy	public.security_events.Admins read the security log	bb931e01762a
+policy	public.seller_milestones.Sellers see their own milestones	7d6778f87197
+policy	public.seller_register.Sellers see their own register entry	b69f2977fa69
+policy	public.seller_status_history.Sellers see their own status history	ef4489539494
+policy	public.seller_verifications.Admins can review verifications	67bde1c67d54
+policy	public.seller_verifications.Admins can see all verifications	bb931e01762a
+policy	public.seller_verifications.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.seller_verifications.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.seller_verifications.Blocked accounts cannot update	38fd048bf211
+policy	public.seller_verifications.Sellers can resubmit their verification	4e6b859b2c07
+policy	public.seller_verifications.Sellers can see their own verification	3aa9d58d24d2
+policy	public.seller_verifications.Sellers can submit their verification	d4934841ee47
+policy	public.service_areas.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.service_areas.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.service_areas.Blocked accounts cannot update	38fd048bf211
+policy	public.service_areas.Sellers add their own service areas	3c64cdf07c7e
+policy	public.service_areas.Sellers must use 2FA to delete	16e2c5e961c6
+policy	public.service_areas.Sellers must use 2FA to insert	0b1eccf2c4c2
+policy	public.service_areas.Sellers must use 2FA to update	5d1e50e4c8ee
+policy	public.service_areas.Sellers remove their own service areas	ec083bcdb114
+policy	public.service_areas.Service areas of active sellers are public	d2a6f547392b
+policy	public.share_links.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.share_links.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.share_links.Blocked accounts cannot update	38fd048bf211
+policy	public.story_campaigns.Admins manage all campaigns	94a4028271ee
+policy	public.story_campaigns.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.story_campaigns.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.story_campaigns.Blocked accounts cannot update	38fd048bf211
+policy	public.story_campaigns.Sellers create campaigns for their own stories	bcd89e8b3f4e
+policy	public.story_campaigns.Sellers must use 2FA to insert	0b1eccf2c4c2
+policy	public.story_campaigns.Sellers must use 2FA to update	5d1e50e4c8ee
+policy	public.story_campaigns.Sellers see their own campaigns	279bd72147b1
+policy	public.story_campaigns.Sellers update their own campaigns	a87a14dd77b1
+policy	public.story_comments.Admins see all comments	bb931e01762a
+policy	public.story_comments.Authors, the story's seller or admins delete comments	84b6eeea1cb3
+policy	public.story_comments.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.story_comments.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.story_comments.Blocked accounts cannot update	38fd048bf211
+policy	public.story_comments.People comment on public stories	d409f8a7afba
+policy	public.story_comments.People see their own comments	3aa9d58d24d2
+policy	public.story_comments.Sellers see comments on their stories	01f2765074b4
+policy	public.story_likes.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.story_likes.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.story_likes.Blocked accounts cannot update	38fd048bf211
+policy	public.story_likes.People like public stories	d409f8a7afba
+policy	public.story_likes.People see their own likes	3aa9d58d24d2
+policy	public.story_likes.People unlike	38c0a4e43726
+policy	public.story_video_products.Admins manage story products	94a4028271ee
+policy	public.story_video_products.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.story_video_products.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.story_video_products.Blocked accounts cannot update	38fd048bf211
+policy	public.story_video_products.Products on public stories are public	88604bb32da7
+policy	public.story_video_products.Sellers must use 2FA to delete	16e2c5e961c6
+policy	public.story_video_products.Sellers must use 2FA to insert	0b1eccf2c4c2
+policy	public.story_video_products.Sellers must use 2FA to update	5d1e50e4c8ee
+policy	public.story_video_products.Sellers reorder products on their own stories	f5a7725e9ef5
+policy	public.story_video_products.Sellers see products on their own stories	01f2765074b4
+policy	public.story_video_products.Sellers tag their own listings on their own stories	3c977759a9ad
+policy	public.story_video_products.Sellers untag products on their own stories	68d5be92eb97
+policy	public.story_videos.Admins manage all stories	94a4028271ee
+policy	public.story_videos.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.story_videos.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.story_videos.Blocked accounts cannot update	38fd048bf211
+policy	public.story_videos.Published stories are public	61e54e0701a4
+policy	public.story_videos.Sellers create their own stories	3c64cdf07c7e
+policy	public.story_videos.Sellers delete their own stories	ec083bcdb114
+policy	public.story_videos.Sellers edit their own stories	a87a14dd77b1
+policy	public.story_videos.Sellers must use 2FA to delete	7380e5efed54
+policy	public.story_videos.Sellers must use 2FA to insert	0b1eccf2c4c2
+policy	public.story_videos.Sellers must use 2FA to update	5d1e50e4c8ee
+policy	public.story_videos.Sellers see their own stories	279bd72147b1
+policy	public.user_blocks.You can see who you blocked	c9add9587254
+policy	public.working_hours.Blocked accounts cannot delete	f973ca6c49b2
+policy	public.working_hours.Blocked accounts cannot insert	0370b4fc3b54
+policy	public.working_hours.Blocked accounts cannot update	38fd048bf211
+policy	public.working_hours.Sellers change their own working hours	a87a14dd77b1
+policy	public.working_hours.Sellers must use 2FA to delete	16e2c5e961c6
+policy	public.working_hours.Sellers must use 2FA to insert	0b1eccf2c4c2
+policy	public.working_hours.Sellers must use 2FA to update	5d1e50e4c8ee
+policy	public.working_hours.Sellers remove their own working hours	ec083bcdb114
+policy	public.working_hours.Sellers set their own working hours	3c64cdf07c7e
+policy	public.working_hours.Working hours of active sellers are public	d2a6f547392b
+policy	storage.objects.Admins see all ID documents	75b5178ea934
+policy	storage.objects.Blocked accounts cannot change files	77b11357feb7
+policy	storage.objects.Blocked accounts cannot delete files	c837d8d0ac18
+policy	storage.objects.Blocked accounts cannot upload	9adb25096430
+policy	storage.objects.Sellers delete their own listing photos	caa2932d3462
+policy	storage.objects.Sellers delete their own story media	61a9d1779880
+policy	storage.objects.Sellers replace their own listing photos	413ec2fd6c1e
+policy	storage.objects.Sellers replace their own story media	f559329b6ec6
+policy	storage.objects.Sellers see their own ID documents	b647a557b15b
+policy	storage.objects.Sellers see their own listing photo files	280e9ada7ff6
+policy	storage.objects.Sellers see their own story media files	569ba15ff641
+policy	storage.objects.Sellers upload listing photos to their own folder	cfc05bb90975
+policy	storage.objects.Sellers upload story media to their own folder	81c69291619c
+policy	storage.objects.Sellers upload their ID to their own folder	3b17c8f5067a
+sequence	public.categories_id_seq	fbd9e778982b
+sequence	public.listing_events_id_seq	0dfc4b7bc2a7
+sequence	public.search_queries_id_seq	0dfc4b7bc2a7
+sequence	public.search_synonyms_id_seq	fbd9e778982b
+sequence	public.sections_id_seq	fbd9e778982b
+sequence	public.security_events_id_seq	0dfc4b7bc2a7
+sequence	public.seller_register_seller_no_seq	0dfc4b7bc2a7
+sequence	public.seller_status_history_id_seq	0dfc4b7bc2a7
+sequence	public.storage_deletion_queue_id_seq	0dfc4b7bc2a7
+sequence	public.story_events_id_seq	0dfc4b7bc2a7
+table	public.bookings	8bd9ab96.2542ad.f70a76.76c731.9ad0.685f91
+table	public.buyer_requests	de180670.59c39a.f19c75.ddd07a.9ad0.dc8863
+table	public.cart_items	3253aa3b.7b7874.532c70.d41d8c.9ad0.685f91
+table	public.categories	e0d1b364.c7b6bc.6af037.d41d8c.9ad0.685f91
+table	public.checkouts	9fb74f84.9e040f.0c5319.d41d8c.9ad0.685f91
+table	public.content_features	cbbd21e3.4f975a.f3d930.d41d8c.9ad0.685f91
+table	public.conversations	3eb68d24.8a622e.20fc9f.d41d8c.9ad0.dc8863
+table	public.disputes	54fbbf66.21407f.6c60bb.c2f671.9ad0.685f91
+table	public.featured_purchases	426d99e5.39401e.07d4c1.d41d8c.9ad0.685f91
+table	public.follows	e027787d.2ef6a2.a2a7b2.d41d8c.9ad0.685f91
+table	public.listing_events	61886b11.6c9128.b356f9.d41d8c.9ad0.685f91
+table	public.listing_images	c675911e.5d8b2c.06cdb2.d41d8c.9ad0.685f91
+table	public.listings	338d4594.becd37.65aaf2.8368d3.9ad0.685f91
+table	public.messages	8fece63b.642c17.3bda2f.11f407.9ad0.dc8863
+table	public.notifications	0e3d0cf7.34ae5e.8dc782.d41d8c.9ad0.685f91
+table	public.order_items	9c6f5f2f.a0c64d.57054a.d41d8c.9ad0.685f91
+table	public.orders	1d0e2e64.027ee7.48e8f8.0d6e0d.9ad0.685f91
+table	public.payouts	3abc60f7.d0f5be.8872e2.e18e81.9ad0.685f91
+table	public.pro_entries	2334650d.481bd1.08c1bd.c21d3f.9ad0.685f91
+table	public.profiles	400940cc.a4a884.e5ba74.64544a.9ad0.685f91
+table	public.referrals	a465f461.87057c.0ba409.d41d8c.9ad0.685f91
+table	public.reports	8f1dff91.581d08.b640f8.f9e5ef.9ad0.685f91
+table	public.request_offers	db65d369.67c856.1799c4.2ea20e.9ad0.dc8863
+table	public.reseller_commissions	1e5b1326.0ee637.d45b82.d41d8c.9ad0.685f91
+table	public.reviews	36eb4849.8540be.933759.a35baa.9ad0.685f91
+table	public.risk_flags	89d84fd9.609864.dd7dad.d41d8c.9ad0.685f91
+table	public.saves	f8b8b92e.a3947d.4d8c01.49fca1.9ad0.3b4edc
+table	public.search_queries	048ab6fa.992623.5c13ab.d41d8c.9ad0.685f91
+table	public.search_synonyms	934c55de.d01c00.c4f413.d41d8c.9ad0.df4fbb
+table	public.sections	3067af75.285082.96a644.d41d8c.9ad0.685f91
+table	public.security_events	6c8da723.b265ee.2968c2.179f45.9ad0.685f91
+table	public.seller_milestones	44783117.9a88cd.45fc81.eaef92.9ad0.dc8863
+table	public.seller_register	0656910b.5feaf3.898452.45df3c.9ad0.dc8863
+table	public.seller_status_history	5386f3b1.d31e0d.19cee6.2d75c7.9ad0.dc8863
+table	public.seller_verifications	397e3b63.c7e7b7.3f46b4.d77316.9ad0.685f91
+table	public.service_areas	6783a8d6.bbdc2e.d8fa6a.da2813.9ad0.685f91
+table	public.share_links	0168947c.34d3ca.111bce.d41d8c.9ad0.685f91
+table	public.storage_deletion_queue	809dd078.a3f031.8c7e21.d41d8c.9ad0.685f91
+table	public.story_campaigns	f8ab56fa.f85f5d.27ecb2.3696d8.9ad0.685f91
+table	public.story_cart_attributions	4d55d02b.de6fdf.5ee9c2.d41d8c.9ad0.685f91
+table	public.story_comments	6374e71f.f2923b.e865de.5651d7.9ad0.685f91
+table	public.story_events	39ebb0d6.a3de15.102ef7.d41d8c.9ad0.685f91
+table	public.story_likes	72d49a19.0bf0bd.22b6f0.c6e83e.9ad0.685f91
+table	public.story_video_products	dd9b9ae1.56ce0e.197601.4b05a4.9ad0.685f91
+table	public.story_videos	4d221d07.4238f9.e92612.9732b2.9ad0.685f91
+table	public.user_blocks	49fc8216.0ce174.341fa0.d41d8c.9ad0.dc8863
+table	public.working_hours	ced8c646.5a97c0.5b4885.d41d8c.9ad0.685f91
+type	public.account_status	7dd5c8b7f162
+type	public.booking_status	3965d4b18982
+type	public.campaign_status	e34bc7bfb552
+type	public.checkout_status	911c5f0a3a70
+type	public.commission_status	4c88e218b1de
+type	public.content_type	31961c4f5e5f
+type	public.delivery_mode	53e452ff0267
+type	public.dispute_status	e2dc65831226
+type	public.featured_status	d146fa1f1c22
+type	public.listing_event_type	980d19b8c52d
+type	public.listing_status	af9a6f010b0e
+type	public.listing_type	50decf640e75
+type	public.notification_type	c036d2719c81
+type	public.offer_status	a7024afe4926
+type	public.order_status	ba32da567c2d
+type	public.payout_status	1422a3f8b3f6
+type	public.pro_entry_kind	b204643171ec
+type	public.pro_mode	7950c38b8ab7
+type	public.pro_plan	873df025c798
+type	public.register_status	1b23b223c804
+type	public.report_status	096466941334
+type	public.request_status	fe4205b98234
+type	public.reward_status	a652cd4109fe
+type	public.seller_milestone	840e54186e28
+type	public.story_event_type	308c30a5de5f
+type	public.story_status	9827d6fb6534
+type	public.time_window	a197ba6e8f30
+type	public.user_role	ebc4c75eff3a
+type	public.verification_status	c926858b221b
