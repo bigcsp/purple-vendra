@@ -37,8 +37,8 @@ purple-vendra/
 │   ├── lib/supabase/               # Supabase clients and keys
 │   └── proxy.ts                    # keeps sessions fresh + guards /account and /sell
 ├── supabase/
-│   ├── migrations/                 # database changes, run in order (001 → 012)
-│   └── run-in-sql-editor/          # 004 + 005 + 006 in one paste
+│   ├── migrations/                 # database changes, run in file-name order (see docs/MIGRATION-MAPPING.md)
+│   └── functions/                  # Supabase Edge Functions (Deno)
 ├── .env.example                    # copy to .env.local and add your keys
 └── package.json
 ```
@@ -56,7 +56,7 @@ purple-vendra/
    - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` — the publishable (or anon) key
 
    Both are in Supabase → **Connect** button, or Project Settings → API Keys. **Never** use the `service_role` / secret key here.
-5. **Database:** migrations 001–008 are already applied to the Purple Vendra Supabase project (004–008 on 9 Nov 2026). For a brand-new Supabase project, run every file in `supabase/migrations/` in order in the SQL Editor (`supabase/run-in-sql-editor/004_005_006_combined.sql` bundles 004–006, then run 007 and 008).
+5. **Database:** production is already up to date. For a brand-new Supabase project, apply every file in `supabase/migrations/` in file-name order. Production changes go only through the approved process in `PROJECT_STATUS.md` (change freeze: ADR-001).
 6. **Start the site:**
    ```bash
    npm run dev
