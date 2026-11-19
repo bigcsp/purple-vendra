@@ -87,3 +87,13 @@ A database built only from the repo plus the reconstructed 011 reproduces produc
 ## 8. Open housekeeping item
 
 The one-time runner token is still in staging's Vault. My delete query needed your confirmation in the Supabase connector and timed out waiting. Risk is low: the runner only works on staging, only runs migration files from a pinned commit, and every call would fail on objects that already exist. I'll delete it on your go-ahead (or you can: Staging → Vault → delete `migration_runner_token`).
+
+## 9. After C1 (2026-11-19)
+
+C1 was approved and Option A applied. Staging was reset and rebuilt from the new 26-file layout (commit `002311a`):
+- **470/470** objects present on both sides
+- **453** identical (was 446)
+- **17** allowed: `supabase_vault` version, plus 16 functions with CRLF or comment-only differences
+- **0 unexplained.** `escalate_report()` is now identical to production.
+
+Details: `docs/schema/STAGING-REBUILD-2026-11-19.md`. The allowed list was reduced to 17 rows. The one-time runner token (§8) is still pending deletion.

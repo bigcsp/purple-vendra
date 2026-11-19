@@ -9,19 +9,19 @@ Approvals and conditions: [`docs/decisions/ADR-002-phase-1b-approvals.md`](docs/
 Production change freeze: [`docs/decisions/ADR-001-production-change-freeze.md`](docs/decisions/ADR-001-production-change-freeze.md).
 
 ## Next approved task
-**Stopped at checkpoint C1.** Evidence: `docs/MIGRATION-MAPPING.md`, `docs/SCHEMA-DIFF-REPORT.md`. Nothing proceeds until the owner approves C1.
+**C1 approved and applied (19 Nov 2026).** Next: **W6** synthetic seed + anonymizer, then **W7** test harness. Staging is rebuilt from the C1 layout with 0 unexplained differences.
 
 ## Workstream tracker (Phase 1b)
 | # | Workstream | Status |
 |---|---|---|
 | W1 | Change control & records | ✅ Done |
 | W2 | Production schema capture (read-only) | ✅ Done (470 objects, md5 verified) |
-| W3 | Content-level mapping, reconstruct 011 | ✅ Done; mapping final for C1 |
+| W3 | Content-level mapping, reconstruct 011 | ✅ Done; Option A layout applied (`002311a`) |
 | W4 | Staging environment | ◐ Staging DB project created; Vercel/GitHub settings pending (owner) |
-| W5 | Clean rebuild + schema diff | ✅ Done: 446/470 identical, 23 allowed, 1 real gap |
-| **C1** | **Owner review of mapping + diff** | **⏸ WAITING FOR OWNER** |
-| W6 | Synthetic seed + anonymizer | Blocked by C1 |
-| W7 | Test harness | Blocked by C1 |
+| W5 | Clean rebuild + schema diff | ✅ Done. After C1: 453/470 identical, 17 allowed, **0 unexplained** |
+| C1 | Owner review of mapping + diff | ✅ Approved 19 Nov 2026 (Option A) |
+| W6 | Synthetic seed + anonymizer | **Next** |
+| W7 | Test harness | After W6 |
 | W8 | CI/CD pipeline (now includes the Deno check for Edge Functions, see below) | Blocked by W7 |
 | W9 | Staging trial of P2/P3 | Blocked by W7 |
 | W10 | Verifier + storage move demo (staging) | Can start after W4 |
@@ -47,6 +47,7 @@ Production change freeze: [`docs/decisions/ADR-001-production-change-freeze.md`]
 | 16 Nov 2026 | O14 break-glass admin account (design) | Approved |
 | 16 Nov 2026 | O15 prepare repo to go private after secrets review | Approved |
 | 19 Nov 2026 | Exclude `supabase/functions` from the Next.js type check (`tsconfig.json`); add a separate Deno check job in W8 | Approved |
+| 19 Nov 2026 | **C1:** Option A (A1–A9, repo + staging only), the allowed differences, reconstructed 011; P1 stays a separate approval | Approved |
 | 16 Nov 2026 | P1 history alignment, P2 limit_saves revoke, P3 leaked-password protection | **Not approved**; present separately |
 | — | O4–O13 | Before Phase 2/3 |
 
@@ -54,6 +55,7 @@ Production change freeze: [`docs/decisions/ADR-001-production-change-freeze.md`]
 - 16 Nov 2026: Phase 1 audit delivered (`docs/PHASE-1-AUDIT.md`).
 - 16 Nov 2026: Plan v1.1, then v1.2 (`docs/PHASE-1B-PLAN.md`), mapping (`docs/MIGRATION-MAPPING.md`), cost model (`docs/cost-model.py`).
 - 16 Nov 2026: Phase 1b approved with conditions (ADR-002). Freeze in force (ADR-001).
+- 19 Nov 2026: C1 approved; Option A applied (`002311a`); staging rebuilt, 0 unexplained differences; `escalate_report` gap closed in the repo.
 - 18 Nov 2026: CI fixed (`fc3832b`): Edge Functions excluded from the Next.js type check. Approved by owner 19 Nov; Deno check added to W8.
 
 ## CI fix: Edge Functions excluded from the Next.js type check (18 Nov 2026)
@@ -71,15 +73,14 @@ Production change freeze: [`docs/decisions/ADR-001-production-change-freeze.md`]
 This fix does not widen Phase 1b scope and authorises no production change.
 
 ## Migrations
-None applied anywhere in Phase 1b so far. Log: [`docs/DB-CHANGELOG.md`](docs/DB-CHANGELOG.md).
+Production: none applied in Phase 1b. Staging: rebuilt from the 26-file C1 layout on 19 Nov (`docs/schema/STAGING-REBUILD-2026-11-19.md`). Log: [`docs/DB-CHANGELOG.md`](docs/DB-CHANGELOG.md).
 
 ## Tests
 None exist yet. CI runs lint, type check, build and npm audit only (green since `fc3832b`). Edge Functions currently have no CI type check; added in W8.
 
 ## Known issues
-- `escalate_report()` request branch exists in production but not in the repo (fixed by C1 Option A).
 - Staging Vault still holds the one-time runner token (deletion needs owner confirmation in the connector).
-- Migration 011 is missing from the repo, so a clean rebuild fails at 012. The 4 production-only history rows are folded into repo files 014/016/020.
+- Production migration history has no rows for 001–011 (applied by hand). Adding them is **P1**, not approved.
 - `storage-cleanup` Edge Function is publicly callable (`verify_jwt: false`); low risk; P4 (Phase 2).
 - Leaked-password protection requires Supabase Pro.
 - Leftover branch `trial/w8-deno-check` (W8 job trial, not for merge) needs deleting by the owner; the agent proxy can't delete branches.

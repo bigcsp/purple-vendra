@@ -1,7 +1,6 @@
 # Repository ↔ production migration mapping (FINAL for checkpoint C1)
 
-**Status:** content-level, verified 2026-11-16. Presented for owner approval at **C1**.
-**Nothing has been renamed, split or reorganized.** Production history is untouched (P1 not approved).
+**Status:** content-level, verified 2026-11-16. **C1 approved by the owner on 2026-11-19 (Option A). Applied in the repo (commit `002311a`) and verified on staging; see §5.** Production history is untouched (P1 not approved).
 Evidence: `docs/SCHEMA-DIFF-REPORT.md`, `docs/schema/production-manifest-2026-11-16.tsv`, `docs/schema/STAGING-REBUILD-2026-11-16.md`.
 
 ## 1. Current mapping (verified)
@@ -55,3 +54,13 @@ From `docs/schema/allowed-differences.tsv`: `supabase_vault` version (platform),
 2. **Accept the 23 allowed differences** as listed.
 3. **Accept the reconstructed 011.**
 4. Confirm that **P1** (adding the 11 history rows to production) stays a separate, later approval.
+
+## 5. Applied (2026-11-19, after C1 approval)
+
+Option A steps A1–A9 were carried out in the repo and on staging only.
+- **A3:** 8 files renamed to production's versions; SHA-256 unchanged.
+- **A4–A6:** 7 files created from production's recorded SQL, each md5-checked against `supabase_migrations.schema_migrations` (read-only). Two of them were rebuilt without retyping: `messaging_no_contact` (former 016 with comments removed and the `is_blocked_between` revoke as it was before 20261112154910) and `purple_requests` (former 020 up to the reports index, plus production's original `protect_report()`). The md5 check confirmed both.
+- **A7/A8:** 3 merged files and the 004–006 SQL-editor bundle moved to `docs/legacy/`.
+- **A9:** staging reset and rebuilt from the 26 files: **470/470 objects, 453 identical, 17 allowed, 0 unexplained**; `escalate_report()` now identical. Evidence: `docs/schema/STAGING-REBUILD-2026-11-19.md`.
+
+Final layout (26 files): 001–011 (applied by hand in production; history rows are added only under **P1**) + 15 files whose versions equal production's 15 history rows one-to-one.

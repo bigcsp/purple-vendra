@@ -76,3 +76,19 @@ Findings from the trial:
 
 ### 1.7 Housekeeping
 - The branch `trial/w8-deno-check` still exists on GitHub. Owner to delete it, because the agent proxy can't delete branches. It was never merged.
+
+---
+
+## 2. Checkpoint C1 and Option A (W3/W5)
+
+**Approved by owner:** 19 Nov 2026 (Option A; allowed differences; reconstructed 011; P1 separate). Repo and staging only.
+
+| Item | Evidence |
+|---|---|
+| Layout applied | Commit `002311a0c0e0325e9a732783a6221e4159e6234d`: 8 renames (content unchanged), 7 files from production's recorded SQL (md5-verified), 4 files moved to `docs/legacy/` |
+| Staging reset + rebuild | All 26 files applied (runner HTTP 200, `ok: true`), see `docs/schema/STAGING-REBUILD-2026-11-19.md` |
+| Schema comparison | 470/470 present; 453 identical; 17 allowed; **0 unexplained** |
+| Real gap closed | `escalate_report()` identical to production |
+| Production | Not changed. Read-only queries only (recorded migration SQL, function definitions) |
+
+Acceptance criterion B4.1 (rebuild matches production apart from listed differences) is **met**. B4.2 (mapping) is **met**: every production history row has a repo file with the same version, and 001–011 are marked "applied by hand (P1)".

@@ -1,4 +1,4 @@
-# kind	ident	reason (staging vs production) — reviewed at checkpoint C1
+# kind	ident	reason (staging vs production) — approved at checkpoint C1 (2026-11-19); 6 rows removed after the Option A rebuild made them identical
 extension_version	supabase_vault	Platform-managed extension; new projects get the current version (staging 0.3.2, production 0.3.1)
 function	public.enforce_home_service_verification()	Line endings only: production body has Windows CRLF (pasted into SQL editor); identical after CRLF→LF
 function	public.protect_review()	Line endings only (CRLF); identical after CRLF→LF
@@ -6,19 +6,13 @@ function	public.refresh_seller_rating()	Line endings only (CRLF); identical afte
 function	public.set_updated_at()	Line endings only (CRLF); identical after CRLF→LF
 function	public.validate_review()	Line endings only (CRLF); identical after CRLF→LF
 function	private.track_seller_profile()	Comments/whitespace only: production copy has comments stripped; identical after removing -- comments and whitespace
-function	public.accept_offer(p_offer uuid)	Comments/whitespace only
-function	public.block_contact_details()	Comments/whitespace only
 function	public.check_listing_risk()	Comments/whitespace only
 function	public.check_message_risk()	Comments/whitespace only
-function	public.close_request(p_request uuid)	Comments/whitespace only
-function	public.contact_problem(t text)	Comments/whitespace only
 function	public.guard_pro_fields()	Comments/whitespace only
-function	public.log_search(p_query text, p_category smallint, p_results integer)	Comments/whitespace only
 function	public.protect_listing_fields()	Comments/whitespace only
 function	public.protect_profile_fields()	Comments/whitespace only
-function	public.protect_report()	Comments/whitespace only
+function	public.protect_report()	Line endings only: production body has Windows CRLF; identical after CRLF→LF (re-checked 2026-11-19 after C1)
 function	public.protect_seller_verification()	Comments/whitespace only
 function	public.protect_story_video()	Comments/whitespace only
 function	public.record_story_event(p_video uuid, p_type story_event_type, p_listing uuid, p_campaign uuid)	Comments/whitespace only
 function	public.search_suggest(p_query text, p_limit integer)	Comments/whitespace only
-function	public.send_offer(p_request uuid, p_price_kobo bigint, p_delivery_days integer, p_message text, p_listing uuid)	Comments/whitespace only
