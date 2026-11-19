@@ -111,9 +111,10 @@ select 'seed', 'S22 reviews only from completed orders or bookings by the custom
 union all
 select 'seed', 'S23 seller ratings equal the average of visible reviews',
   count(*) = 0, count(*)::text from public.profiles p
+  cross join lateral (select round(avg(r.rating)::numeric, 1) a, count(*)::int n
+                      from public.reviews r where r.seller_id = p.id and not r.is_hidden) s
   where exists (select 1 from public.reviews r where r.seller_id = p.id)
-    and (p.rating_avg, p.rating_count) is distinct from
-        (select round(avg(rating)::numeric, 1), count(*)::int from public.reviews r where r.seller_id = p.id and not r.is_hidden)
+    and (p.rating_avg is distinct from s.a or p.rating_count is distinct from s.n)
 union all
 select 'seed', 'S24 every completed order has a payout of the seller''s share',
   count(*) = 0, count(*)::text from public.orders o
