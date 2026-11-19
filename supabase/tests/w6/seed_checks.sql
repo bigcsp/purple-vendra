@@ -1,5 +1,5 @@
 -- =====================================================================
--- W6 seed checks. Read-only: run after supabase/seed.sql on staging or local.
+-- W6 seed checks (S01-S32). Read-only: run after supabase/seed.sql on staging or local.
 -- Writes one row per check into the session temp table w6_results
 -- (name, ok, detail). Every row must have ok = true.
 -- =====================================================================
@@ -163,4 +163,15 @@ select 'seed', 'S29 no email addresses outside the .test domains anywhere in see
   ) x where t ~* '[a-z0-9._%+-]+@[a-z0-9-]+\.[a-z]{2,}' and t !~* '@[a-z.]*purple\.test'
 union all
 select 'seed', 'S30 checkout phone numbers are the zero test range',
-  count(*) = 0, count(*)::text from public.checkouts where delivery_phone !~ '^\+2340000000[0-9]{3}$';
+  count(*) = 0, count(*)::text from public.checkouts where delivery_phone !~ '^\+2340000000[0-9]{3}$'
+union all
+-- Completion marker and password hashing (seed generator w6-2)
+select 'seed', 'S31 completion marker present: status complete, generator w6-2, 32 accounts, 64-hex digest',
+  count(*) = 1 and bool_and(m ->> 'status' = 'complete' and m ->> 'generator' = 'w6-2' and (m ->> 'accounts')::int = 32
+                            and m ->> 'digest' ~ '^[0-9a-f]{64}$'),
+  coalesce(max(m ->> 'digest'), 'no marker')
+from (select decrypted_secret::jsonb m from vault.decrypted_secrets where name = 'purple_seed_marker') x
+union all
+select 'seed', 'S32 every password hash is bcrypt cost 10',
+  count(*) = 32 and bool_and(encrypted_password like '$2a$10$%'), string_agg(distinct left(encrypted_password, 7), ',')
+from auth.users where email like '%@seed.purple.test';

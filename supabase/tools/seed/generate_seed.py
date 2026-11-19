@@ -9,14 +9,22 @@ Everything here is invented. No production data is read or copied.
 - IDs are fixed UUIDs derived from a key (md5("purple-seed/<key>")), so every run produces the same file.
 - Email addresses use the reserved .test domain (seed.purple.test): they can never receive mail.
 - Display names and shop names carry "(seed)" so synthetic accounts are recognisable on screen.
-- Passwords are not in the file. seed.sql reads `purple.seed_password` if it is set for the session;
-  otherwise every account gets a random, unknown password (nobody can sign in).
+- Passwords are not in the file. Test accounts use `purple.seed_password` if it is set for the session,
+  otherwise a random, unknown password. The admin account ALWAYS gets a random, unknown password.
+  Hashes use bcrypt cost 10.
 - Media paths point at files that do not exist yet (see docs/W6-SEED-AND-ANONYMIZER.md).
 
-The SQL refuses to run on a database that has any non-seed user (so never on production),
-and refuses to run twice.
+The whole seed is ONE `do` block, so it is atomic in psql (autocommit), the Supabase CLI and the
+SQL editor: it either completes or changes nothing. Its guard is an allowlist and fails closed:
+  - `purple.seed_target` must be set to 'local' or an approved staging project ref;
+  - Vault `project_url` must exist, be readable, and match that target (a local address for 'local');
+  - any production reference, any real (non-seed) account, any existing seed account or seed-ID row,
+    or an existing completion marker stops it.
+On success it writes the Vault secret `purple_seed_marker` (status, generator digest, time).
+Seed data without that marker means a partial or legacy run: reset the database (see docs).
 """
 import hashlib
+import re
 import random
 import sys
 from pathlib import Path
@@ -25,6 +33,8 @@ ROOT = Path(__file__).resolve().parents[3]
 OUT = ROOT / "supabase" / "seed.sql"
 DOMAIN = "seed.purple.test"
 PROD_REF = "nozxxxldfthbwhjwbsmy"
+STAGING_REFS = ["fwyviexwregngnqtwcra"]   # approved staging projects
+GENERATOR_VERSION = "w6-2"
 RNG = random.Random(20261119)
 
 CAT = {"fashion-adire": 1, "art-crafts": 2, "digital-design": 3, "photo-video-talent": 4,
@@ -190,28 +200,6 @@ def build():
     out = []
     w = out.append
 
-    w("-- =====================================================================")
-    w("-- Purple Shop synthetic seed. GENERATED FILE: do not edit by hand.")
-    w("-- Source: supabase/tools/seed/generate_seed.py (run it to regenerate).")
-    w("-- Every name, message and figure below is invented. Staging and local only.")
-    w("-- Docs: docs/W6-SEED-AND-ANONYMIZER.md")
-    w("-- =====================================================================")
-    w("")
-    w("-- Guards: never production, never twice.")
-    w("do $guard$")
-    w("begin")
-    w(f"  if exists (select 1 from vault.decrypted_secrets where name = 'project_url' and decrypted_secret like '%{PROD_REF}%') then")
-    w("    raise exception 'seed.sql refused: this is the production project';")
-    w("  end if;")
-    w(f"  if exists (select 1 from auth.users where email is null or email not like '%@{DOMAIN}') then")
-    w("    raise exception 'seed.sql refused: this database has real (non-seed) users';")
-    w("  end if;")
-    w(f"  if exists (select 1 from auth.users where id = {q(uid('user/admin'))}) then")
-    w("    raise exception 'seed.sql: this database is already seeded';")
-    w("  end if;")
-    w("end $guard$;")
-    w("")
-
     people = []  # (key, email_local, display, username, state, city, joined_days)
     people.append(("admin", "admin", "Seed Admin", "seed_admin", "Lagos", "Ikeja", 60))
     for k, name, st, city, d in BUYERS:
@@ -229,7 +217,10 @@ def build():
         w("  raw_app_meta_data, raw_user_meta_data, created_at, updated_at,")
         w("  confirmation_token, recovery_token, email_change_token_new, email_change, email_change_token_current, reauthentication_token)")
         w(f"values ('00000000-0000-0000-0000-000000000000', {q(u)}, 'authenticated', 'authenticated', {q(email)},")
-        w("  extensions.crypt(coalesce(nullif(current_setting('purple.seed_password', true), ''), encode(extensions.gen_random_bytes(24), 'hex')), extensions.gen_salt('bf')),")
+        if k == "admin":
+            w("  extensions.crypt(encode(extensions.gen_random_bytes(24), 'hex'), extensions.gen_salt('bf', 10)),  -- admin: never the shared test password")
+        else:
+            w("  extensions.crypt(coalesce(v_pw, encode(extensions.gen_random_bytes(24), 'hex')), extensions.gen_salt('bf', 10)),")
         w(f"  {created}, '{{\"provider\": \"email\", \"providers\": [\"email\"]}}'::jsonb, {q(meta)}::jsonb, {created}, {created},")
         w("  '', '', '', '', '', '');")
         w("insert into auth.identities (id, user_id, provider_id, provider, identity_data, created_at, updated_at)")
@@ -247,7 +238,7 @@ def build():
         w(f"update public.profiles set role = 'seller', business_name = {q(shop)}, headline = {q(headline)}, bio = {q(bio)},")
         w(f"  years_experience = {years}, is_available = {q(avail)}, skills = {q(skills)}, languages = {q(langs)},")
         w(f"  pro_mode = {q(mode)}::public.pro_mode, pro_public = {q(public)} where id = {q(u)};")
-        w(f"select private.ensure_seller_register({q(u)});")
+        w(f"perform private.ensure_seller_register({q(u)});")
     w("")
 
     w("-- 3. ID verification (approved ones turn on the verified badge; required before home-service listings)")
@@ -516,8 +507,112 @@ def build():
     w(f"update public.profiles set account_status = 'suspended', status_reason = 'Seed: suspended test shop', suspended_until = now() + interval '14 days' where id = {q(uid('user/canvas_corner'))};")
     w(f"update public.profiles set deletion_requested_at = now() - interval '2 days' where id = {q(B('kelechi'))};")
     w("")
-    w("-- End of seed.")
-    return "\n".join(out) + "\n"
+    body = "\n".join("  " + line if line else "" for line in out)
+    digest = hashlib.sha256(body.encode()).hexdigest()
+    seed_ids = sorted(set(re.findall(r"'([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})'", body)) - {"00000000-0000-0000-0000-000000000000"})
+    ids_sql = "array[\n    " + ",\n    ".join(", ".join(q(x) for x in seed_ids[i:i + 4]) for i in range(0, len(seed_ids), 4)) + "]::uuid[]"
+    staging = ", ".join(q(r) for r in STAGING_REFS)
+    head = f"""-- =====================================================================
+-- Purple Shop synthetic seed. GENERATED FILE: do not edit by hand.
+-- Source: supabase/tools/seed/generate_seed.py (run it to regenerate).
+-- Every name, message and figure below is invented. Staging and local only.
+-- Docs: docs/W6-SEED-AND-ANONYMIZER.md
+--
+-- ONE statement (a single DO block): it completes fully or changes nothing,
+-- in psql autocommit, the Supabase CLI and the SQL editor alike.
+-- Before running, name the target (it must match this database's Vault project_url):
+--   staging:  set purple.seed_target = 'fwyviexwregngnqtwcra';
+--   local:    set purple.seed_target = 'local';   (project_url must be a local address)
+-- Optional test password for the non-admin accounts: set purple.seed_password = '...';
+-- Generator {GENERATOR_VERSION}, body digest {digest}
+-- =====================================================================
+do $seed$
+declare
+  c_prod_ref     constant text   := {q(PROD_REF)};
+  c_staging_refs constant text[] := array[{staging}];
+  c_seed_ids     constant uuid[] := {ids_sql};
+  v_target text := nullif(btrim(coalesce(current_setting('purple.seed_target', true), '')), '');
+  v_pw     text := nullif(current_setting('purple.seed_password', true), '');
+  v_url    text;
+  v_ref    text;
+  v_marker text;
+  v_found  bigint;
+begin
+  -- ---------------------------------------------------------------- guard (allowlist, fails closed)
+  if v_target is null then
+    raise exception 'seed refused: purple.seed_target is not set (use ''local'' or an approved staging ref)';
+  end if;
+  if position(c_prod_ref in lower(v_target)) > 0 then
+    raise exception 'seed refused: the target is the production project';
+  end if;
+  begin
+    select decrypted_secret into strict v_url from vault.decrypted_secrets where name = 'project_url';
+  exception
+    when no_data_found then raise exception 'seed refused: Vault project_url is missing, so this database cannot be verified';
+    when too_many_rows then raise exception 'seed refused: more than one Vault project_url';
+    when others then raise exception 'seed refused: Vault project_url cannot be read (%)', sqlerrm;
+  end;
+  if v_url is null or btrim(v_url) = '' then
+    raise exception 'seed refused: Vault project_url is empty';
+  end if;
+  if position(c_prod_ref in lower(v_url)) > 0 then
+    raise exception 'seed refused: this database is the production project';
+  end if;
+  if v_target = 'local' then
+    if v_url !~ '^https?://(127\\.0\\.0\\.1|localhost|kong|host\\.docker\\.internal)(:[0-9]+)?/?$' then
+      raise exception 'seed refused: target is local but project_url (%) is not a local address', v_url;
+    end if;
+  else
+    v_ref := substring(v_url from '^https://([a-z0-9]{{20}})\\.supabase\\.co/?$');
+    if v_ref is null or v_ref <> v_target then
+      raise exception 'seed refused: target % does not match this database (%)', v_target, v_url;
+    end if;
+    if not (v_ref = any (c_staging_refs)) then
+      raise exception 'seed refused: % is not an approved staging project', v_ref;
+    end if;
+  end if;
+  if exists (select 1 from auth.users where email is null or email not like '%@{DOMAIN}') then
+    raise exception 'seed refused: this database has real (non-seed) accounts';
+  end if;
+  select decrypted_secret into v_marker from vault.decrypted_secrets where name = 'purple_seed_marker' limit 1;
+  if v_marker is not null then
+    raise exception 'seed refused: this database is already seeded (completion marker: %)', v_marker;
+  end if;
+  select (select count(*) from auth.users where email like '%@{DOMAIN}' or id = any (c_seed_ids))
+       + (select count(*) from auth.identities where id = any (c_seed_ids))
+       + (select count(*) from public.profiles where id = any (c_seed_ids))
+       + (select count(*) from public.listings where id = any (c_seed_ids))
+       + (select count(*) from public.story_videos where id = any (c_seed_ids))
+       + (select count(*) from public.story_comments where id = any (c_seed_ids))
+       + (select count(*) from public.buyer_requests where id = any (c_seed_ids))
+       + (select count(*) from public.request_offers where id = any (c_seed_ids))
+       + (select count(*) from public.conversations where id = any (c_seed_ids))
+       + (select count(*) from public.messages where id = any (c_seed_ids))
+       + (select count(*) from public.checkouts where id = any (c_seed_ids))
+       + (select count(*) from public.orders where id = any (c_seed_ids))
+       + (select count(*) from public.bookings where id = any (c_seed_ids))
+       + (select count(*) from public.reviews where id = any (c_seed_ids))
+       + (select count(*) from public.reports where id = any (c_seed_ids))
+       + (select count(*) from public.notifications where id = any (c_seed_ids))
+       + (select count(*) from public.pro_entries where id = any (c_seed_ids))
+       + (select count(*) from public.share_links where id = any (c_seed_ids))
+    into v_found;
+  if v_found > 0 then
+    raise exception 'seed refused: % seed rows already exist without a completion marker (partial or older run); reset the database first', v_found;
+  end if;
+
+  -- ---------------------------------------------------------------- data
+"""
+    tail = f"""
+
+  -- ---------------------------------------------------------------- completion marker (last step)
+  perform vault.create_secret(
+    jsonb_build_object('status', 'complete', 'generator', {q(GENERATOR_VERSION)}, 'digest', {q(digest)},
+                       'accounts', 32, 'target', v_target, 'completed_at', now())::text,
+    'purple_seed_marker', 'W6 synthetic seed: completion marker (written only when the whole seed succeeded)');
+end $seed$;
+"""
+    return head + body + tail
 
 
 def main():
@@ -527,7 +622,11 @@ def main():
         if current != sql:
             print("supabase/seed.sql is out of date: run python3 supabase/tools/seed/generate_seed.py")
             sys.exit(1)
-        print("supabase/seed.sql is up to date")
+        stripped = "\n".join(l for l in current.splitlines() if not l.startswith("--")).strip()
+        if not (stripped.startswith("do $seed$") and stripped.endswith("end $seed$;") and stripped.count("$seed$") == 2):
+            print("supabase/seed.sql is not a single DO block")
+            sys.exit(1)
+        print("supabase/seed.sql is up to date (single atomic DO block)")
         return
     OUT.write_text(sql, encoding="utf-8", newline="\n")
     print(f"wrote {OUT.relative_to(ROOT)} ({len(sql.encode())} bytes)")
