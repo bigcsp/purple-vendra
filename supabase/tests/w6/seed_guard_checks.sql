@@ -39,7 +39,7 @@ begin
   end if;
 
   -- G00: the file is a single statement (one DO block) => atomic in psql, CLI and SQL editor
-  stripped := btrim(array_to_string(array(select l from unnest(string_to_array(seed, E'\n')) l where l !~ '^\s*--'), E'\n'));
+  stripped := btrim(array_to_string(array(select l from unnest(string_to_array(seed, E'\n')) l where l !~ '^\s*--'), E'\n'), E' \n\r\t');
   res := res || ('G00|' || (left(stripped, 9) = 'do $seed$' and right(stripped, 11) = 'end $seed$;'
                             and (length(seed) - length(replace(seed, '$seed$', ''))) / 6 = 2)::text
                  || '|seed.sql is exactly one DO block (one statement)');
