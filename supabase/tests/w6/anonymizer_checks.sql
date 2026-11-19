@@ -111,8 +111,8 @@ begin
                    || '|seller register snapshot anonymised');
     res := res || ('A14|' || ((select count(*) from auth.mfa_factors) + (select count(*) from auth.sessions)
                               + (select count(*) from auth.refresh_tokens) = 0)::text || '|sessions, refresh tokens and 2FA factors removed');
-    res := res || ('A15|' || (select bool_and(tgenabled = 'O') from pg_trigger
-                              where tgname in ('reviews_protect', 'security_events_append_only'))::text || '|protective triggers re-enabled afterwards');
+    res := res || ('A15|' || (select count(*) = 3 and bool_and(tgenabled = 'O') from pg_trigger
+                              where tgname in ('reviews_protect', 'security_events_append_only', 'seller_status_history_append_only'))::text || '|protective triggers re-enabled afterwards');
     select count(*) into search_after from public.search_listings(null::text, null::smallint, null::text, null::public.listing_type, null::bigint, null::bigint, 'relevance', 60, 0);
     res := res || ('A16|' || (search_before = search_after and search_after > 0)::text || '|public search returns the same listings (' || search_after || ')');
     res := res || ('A17|' || (select count(*) = 0 from public.security_events where details is not null and details <> '{"anonymised": true}'::jsonb)::text

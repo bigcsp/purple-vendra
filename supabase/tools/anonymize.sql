@@ -35,6 +35,7 @@ begin
   -- Audit and review triggers block edits on purpose; pause them for this transaction only.
   alter table public.reviews disable trigger reviews_protect;
   alter table public.security_events disable trigger security_events_append_only;
+  alter table public.seller_status_history disable trigger seller_status_history_append_only;
 
   -- 1. Sign-in data
   update auth.users u set
@@ -115,6 +116,7 @@ begin
 
   alter table public.reviews enable trigger reviews_protect;
   alter table public.security_events enable trigger security_events_append_only;
+  alter table public.seller_status_history enable trigger seller_status_history_append_only;
 
   raise notice 'anonymize: done for %', target;
 end $anonymize$;
