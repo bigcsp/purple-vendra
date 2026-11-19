@@ -1,0 +1,78 @@
+# Phase 1b Report
+
+**Status: draft, running evidence log.** Evidence is added as each item completes. Finalised at W12 (summary, acceptance criteria B4 1–11, known issues, pending approvals).
+
+---
+
+## 1. CI fix: Edge Functions excluded from the Next.js type check
+
+**Approved by owner:** 19 Nov 2026. Scope: CI configuration only. No application code and no production change.
+
+### 1.1 Failure
+| Run | Commit | Push | Result |
+|---|---|---|---|
+| [43980555556](https://github.com/bigcsp/purple-vendra/actions/runs/43980555556) | `242196a` | W1+W2 | ❌ Type check |
+| [43981268000](https://github.com/bigcsp/purple-vendra/actions/runs/43981268000) | `d4f1560` | W3 | ❌ Type check |
+| [43982423992](https://github.com/bigcsp/purple-vendra/actions/runs/43982423992) | `884493c` | W5 + C1 evidence | ❌ Type check |
+
+Errors (identical in all three):
+```
+supabase/functions/storage-cleanup/index.ts(12,30): error TS2307: Cannot find module 'jsr:@supabase/supabase-js@2'
+supabase/functions/storage-cleanup/index.ts(16,1): error TS2304: Cannot find name 'Deno'.  (also 18,5 and 19,5)
+```
+Cause: `tsconfig.json` includes `**/*.ts`, which pulled the Deno-only Edge Function into the Node/Next.js type check.
+
+### 1.2 Fix
+Commit **`fc3832ba08ffe2e42b6879a63867e52e9d08aa05`**: `tsconfig.json` `exclude` → `["node_modules", "supabase/functions"]`.
+
+### 1.3 Successful CI run
+**Run [44409640426](https://github.com/bigcsp/purple-vendra/actions/runs/44409640426)**, commit `fc3832b`, branch `phase-1b-foundation`, 18 Nov 2026 22:14 UTC, **success** (1m45s).
+
+| Step | Result | Detail |
+|---|---|---|
+| Install (`npm ci`) | ✅ | |
+| Lint (`eslint`) | ✅ | no findings |
+| Type check (`next typegen && tsc --noEmit`) | ✅ | 0 errors |
+| Build (`next build`) | ✅ | compiled successfully; 48/48 static pages generated |
+| Security audit (`npm audit --omit=dev --audit-level=high`) | ✅ | 0 vulnerabilities |
+
+The same five steps also passed locally before the push. Automated tests: none exist yet (W7).
+
+### 1.4 Application build and deployment unaffected
+- **Vercel:** the preview deployment for `fc3832b` completed successfully (GitHub commit status "Vercel — Deployment has completed"). The Vercel build runs `next build`, which passed with the same pages generated.
+- **App code:** `git diff 884493c fc3832b` changes only `tsconfig.json`. No file under `src/` changed, so the existing marketplace functionality is unchanged.
+
+### 1.5 Edge Function still deployable
+- The Supabase CLI bundles functions with its own Deno toolchain and does **not** read the root `tsconfig.json`, so the exclusion can't affect deployment.
+- **Deno type check and bundle passed** on GitHub runners (trial run [44515968678](https://github.com/bigcsp/purple-vendra/actions/runs/44515968678), commit `ba64123`, throwaway branch `trial/w8-deno-check`, not merged): `deno check` ✅. `deno bundle` resolved and bundled 58 modules into `storage-cleanup.js` (779 KB) ✅. The Next.js `check` job passed in the same run as a separate job.
+- **Production untouched** (read-only check, 19 Nov 2026, under O2a): `storage-cleanup` is still version 1, ACTIVE, with `ezbr_sha256` `1f038da0…f4a5`, identical to the 16 Nov capture in `supabase/functions/storage-cleanup/DEPLOYED.md`. Nothing was deployed anywhere.
+
+### 1.6 W8 requirement: separate Deno check (approved; added when W8 starts)
+The job below is added to `.github/workflows/ci.yml` in W8. It is independent of the `check` job: separate runner, no `needs:`, so each passes or fails on its own.
+
+```yaml
+  # Supabase Edge Functions run on Deno, not Node, so they are excluded from
+  # the Next.js type check (tsconfig.json) and checked here instead.
+  edge-functions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Deno type check
+        run: deno check --node-modules-dir=auto supabase/functions/*/index.ts
+      - name: Bundle (proves imports resolve, as a deploy would)
+        run: |
+          for f in supabase/functions/*/index.ts; do
+            deno bundle --node-modules-dir=auto --output "/tmp/$(basename "$(dirname "$f")").js" "$f"
+          done
+```
+
+Findings from the trial:
+- **`--node-modules-dir=auto` is required.** Without it the first trial run ([44515674017](https://github.com/bigcsp/purple-vendra/actions/runs/44515674017)) failed. Because of the root `package.json`, Deno expects npm packages in `node_modules`, and the Supabase runtime types reference `npm:openai`. The flag is used in CI only. A `deno.json` beside the function was deliberately **not** added, because the Supabase CLI reads it at deploy time and adding one would change how the function deploys.
+- The glob covers future functions automatically (for example the W10 verifier).
+
+### 1.7 Housekeeping
+- The branch `trial/w8-deno-check` still exists on GitHub. Owner to delete it, because the agent proxy can't delete branches. It was never merged.
