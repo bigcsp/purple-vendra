@@ -9,7 +9,7 @@ Approvals and conditions: [`docs/decisions/ADR-002-phase-1b-approvals.md`](docs/
 Production change freeze: [`docs/decisions/ADR-001-production-change-freeze.md`](docs/decisions/ADR-001-production-change-freeze.md).
 
 ## Next approved task
-**W6 done: ⏸ WAITING FOR OWNER REVIEW.** Evidence: `docs/W6-SEED-AND-ANONYMIZER.md` (seed checks 30/30, anonymizer tests 19/19). **W7** starts only after W6 is accepted.
+**W6 remediation done: ⏸ WAITING FOR OWNER ACCEPTANCE.** Final run at `959ec52`: **83/83** (guard 19, load 1, seed 32, anonymizer 31); staging fingerprint identical before and after. Evidence: `docs/W6-SEED-AND-ANONYMIZER.md` §4. **W7 not started.**
 
 ## Workstream tracker (Phase 1b)
 | # | Workstream | Status |
@@ -20,7 +20,7 @@ Production change freeze: [`docs/decisions/ADR-001-production-change-freeze.md`]
 | W4 | Staging environment | ◐ Staging DB project created; Vercel/GitHub settings pending (owner) |
 | W5 | Clean rebuild + schema diff | ✅ Done. After C1: 453/470 identical, 17 allowed, **0 unexplained** |
 | C1 | Owner review of mapping + diff | ✅ Approved 19 Nov 2026 (Option A) |
-| W6 | Synthetic seed + anonymizer | ✅ Done; **awaiting owner review** |
+| W6 | Synthetic seed + anonymizer | ✅ Remediated (seed w6-2, anonymizer F1–F7 + N1); **awaiting owner acceptance** |
 | W7 | Test harness | After W6 acceptance |
 | W8 | CI/CD pipeline (now includes the Deno check for Edge Functions, see below) | Blocked by W7 |
 | W9 | Staging trial of P2/P3 | Blocked by W7 |
@@ -47,6 +47,7 @@ Production change freeze: [`docs/decisions/ADR-001-production-change-freeze.md`]
 | 16 Nov 2026 | O14 break-glass admin account (design) | Approved |
 | 16 Nov 2026 | O15 prepare repo to go private after secrets review | Approved |
 | 19 Nov 2026 | Exclude `supabase/functions` from the Next.js type check (`tsconfig.json`); add a separate Deno check job in W8 | Approved |
+| 19 Nov 2026 | W6 security remediation: seed allowlist guard, atomic seed, completion marker, admin password, bcrypt 10; anonymizer F1–F7; rollback-only staging tests with snapshot | Approved (owner) |
 | 19 Nov 2026 | C1 accepted (acceptance criteria B4.1, B4.2 met); W6 then W7 approved, each after review; P1 still separate | Approved |
 | 19 Nov 2026 | **C1:** Option A (A1–A9, repo + staging only), the allowed differences, reconstructed 011; P1 stays a separate approval | Approved |
 | 16 Nov 2026 | P1 history alignment, P2 limit_saves revoke, P3 leaked-password protection | **Not approved**; present separately |
@@ -56,6 +57,7 @@ Production change freeze: [`docs/decisions/ADR-001-production-change-freeze.md`]
 - 16 Nov 2026: Phase 1 audit delivered (`docs/PHASE-1-AUDIT.md`).
 - 16 Nov 2026: Plan v1.1, then v1.2 (`docs/PHASE-1B-PLAN.md`), mapping (`docs/MIGRATION-MAPPING.md`), cost model (`docs/cost-model.py`).
 - 16 Nov 2026: Phase 1b approved with conditions (ADR-002). Freeze in force (ADR-001).
+- 19 Nov 2026: W6 security review (owner): seed guard FAIL, admin / atomicity / duplicates NEEDS ATTENTION, integrations PASS; anonymizer F1–F7. Remediation approved and done (`f558ab6`, `959ec52`); final run 83/83; staging unchanged (fingerprint). N1 (anonymizer substring target match) found and fixed during remediation.
 - 19 Nov 2026: W6 delivered: synthetic seed loaded on staging, anonymizer built; tests 30/30 and 19/19. Staging runner token deleted.
 - 19 Nov 2026: C1 approved; Option A applied (`002311a`); staging rebuilt, 0 unexplained differences; `escalate_report` gap closed in the repo.
 - 18 Nov 2026: CI fixed (`fc3832b`): Edge Functions excluded from the Next.js type check. Approved by owner 19 Nov; Deno check added to W8.
@@ -78,13 +80,16 @@ This fix does not widen Phase 1b scope and authorises no production change.
 Production: none applied in Phase 1b. Staging: rebuilt from the 26-file C1 layout on 19 Nov (`docs/schema/STAGING-REBUILD-2026-11-19.md`), then loaded with the synthetic seed (W6). Log: [`docs/DB-CHANGELOG.md`](docs/DB-CHANGELOG.md).
 
 ## Tests
-W6 SQL checks (run on staging): seed 30/30, anonymizer 19/19, see `docs/W6-SEED-AND-ANONYMIZER.md`. Automated CI tests come in W7/W8. Before W6: CI runs lint, type check, build and npm audit only (green since `fc3832b`). Edge Functions currently have no CI type check; added in W8.
+W6 SQL suites (run on staging in one rolled-back block, `959ec52`): guard/atomicity G00–G15 19/19, seed S01–S32 32/32, anonymizer A01–A29 31/31; staging fingerprint unchanged (`a4390035…`). See `docs/W6-SEED-AND-ANONYMIZER.md` §4. Automated CI tests come in W7/W8. Before W6: CI runs lint, type check, build and npm audit only (green since `fc3832b`). Edge Functions currently have no CI type check; added in W8.
 
 ## Known issues
 - Production migration history has no rows for 001–011 (applied by hand). Adding them is **P1**, not approved.
 - `storage-cleanup` Edge Function is publicly callable (`verify_jwt: false`); low risk; P4 (Phase 2).
 - Leaked-password protection requires Supabase Pro.
 - Leftover branch `trial/w8-deno-check` (W8 job trial, not for merge): owner asked for deletion 19 Nov; the agent's git proxy refuses branch deletion, so the owner deletes it on GitHub.
+- Staging holds the **w6-1** seed (16 Nov: no completion marker, bcrypt cost 6, random passwords). The w6-2 guard refuses to load over it by design. Replacing it with w6-2 means removing staging's seed data: **needs owner approval** (recovery path: rebuild from repo).
+- The Supabase CLI seeding path (`supabase db reset` with `alter database ... set purple.seed_target = 'local'`) is documented but not yet exercised (no local Docker in this workspace); W8 covers it.
+- Pre-existing (not W6): `anon` holds SELECT grants on 7 private tables, protected by row-level security only (0 rows visible, checked). Cover with pgTAP in W7.
 - Staging media files (listing images, story videos) are placeholders until W7/W10.
 - `staging-migration-runner` Edge Function is now inert (its token was deleted 19 Nov); remove it in W8 when the pipeline replaces it.
 - See audit §5 (R1–R9).

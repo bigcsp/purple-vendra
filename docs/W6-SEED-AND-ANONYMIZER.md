@@ -1,118 +1,143 @@
 # W6: Synthetic seed and anonymizer
 
-**Status:** complete, awaiting owner review (W6 checkpoint). **Date:** 19 Nov 2026.
-**Scope:** staging and local databases only. Production was not read for data and not changed.
+**Status:** remediation complete (19 Nov 2026), awaiting owner acceptance. Seed generator **w6-2**.
+**Scope:** staging and local databases only. Production is never written to; it was only read for counts and catalog checks.
 
 | Deliverable | File |
 |---|---|
 | Seed generator (deterministic) | `supabase/tools/seed/generate_seed.py` |
-| Generated seed | `supabase/seed.sql` (182 KB, 473 inserts) |
-| Anonymizer | `supabase/tools/anonymize.sql` |
-| Seed checks (30) | `supabase/tests/w6/seed_checks.sql` |
-| Anonymizer tests (19) | `supabase/tests/w6/anonymizer_checks.sql` |
+| Generated seed (one atomic statement) | `supabase/seed.sql` |
+| Anonymizer (one atomic statement) | `supabase/tools/anonymize.sql` |
+| Seed checks S01–S32 | `supabase/tests/w6/seed_checks.sql` |
+| Seed guard / atomicity / duplicate tests G00–G15 | `supabase/tests/w6/seed_guard_checks.sql` |
+| Anonymizer tests A01–A29 | `supabase/tests/w6/anonymizer_checks.sql` |
+| Run everything in one rolled-back block | `supabase/tests/w6/run_all_in_rollback.sql` |
+| Before/after snapshot (read-only) | `supabase/tests/w6/staging_fingerprint.sql` |
 
 ## 1. The seed
 
-### 1.1 Safety rules built into the file
-- **Invented data only.** Names carry "(seed)", e.g. "Adaeze (seed buyer)" and "Adire House (seed)". Emails use the reserved `.test` domain (`seed.purple.test`), which can never receive mail. Phone numbers are `+2340000000NNN`. References look like `SEED-CHECKOUT-0001`.
-- **Never on production.** The seed refuses to run if the database has any account outside `@seed.purple.test`, or if the Vault `project_url` is the production project.
-- **Never twice.** It refuses to run if the seed admin already exists.
-- **No passwords in the repo.** Each account's password comes from the session setting `purple.seed_password` if one is set. Otherwise every account gets a random password that nobody knows, so nobody can sign in. W7 will set this from a GitHub secret.
-- **Deterministic.** IDs are fixed (md5 of a key) and the random choices use a fixed seed, so the generator always writes the same file. `generate_seed.py --check` fails if `seed.sql` is out of date. Timestamps are relative to when the seed runs, such as "3 days ago", so the data always looks recent.
+### 1.1 Safety rules
+- **Invented data only.**
+  - Names carry "(seed)".
+  - Emails use the reserved `.test` domain (`seed.purple.test`), which can never receive mail.
+  - Phone numbers are `+2340000000NNN`, references `SEED-…`, and the bank is "Seed Test Bank", code `000`.
+- **One statement, atomic everywhere.** `seed.sql` is a single `DO` block, so in psql autocommit, the Supabase CLI and the SQL editor it either completes or changes nothing. `generate_seed.py --check` and test G00 enforce this structure, and G10 proves it: a failure forced in the messages section left 0 rows behind.
+- **The guard is an allowlist and fails closed.** All of these must hold, or nothing happens:
+  1. `purple.seed_target` is set, to `local` or an approved staging ref (today only `fwyviexwregngnqtwcra`).
+  2. The target is not the production ref.
+  3. Vault `project_url` exists, is readable and is not empty. A missing record (G06) and an unreadable one (G07) are both refusals.
+  4. `project_url` is not the production URL (G08).
+  5. `project_url` matches the target **exactly**: `https://<ref>.supabase.co` for staging, or a local address (`127.0.0.1`, `localhost`, `kong`, `host.docker.internal`) for `local`. Partial refs and mismatches are refused (G03–G05).
+  6. There are no real accounts, meaning any email outside `@seed.purple.test` (G09).
+  7. There is no completion marker. Otherwise the error is "already seeded" (G14).
+  8. There is no seed data at all: no seed-domain account and none of the 219 seed IDs in 18 tables. Otherwise the error is "partial or older run, reset first" (G15, G15b).
+- **Completion marker.** The last step writes the Vault secret `purple_seed_marker` with status, generator version, body digest, account count, target and time. Because the seed is atomic, the marker exists only if everything succeeded. Seed data without a marker means a partial or legacy run.
+- **Passwords:**
+  - None are stored in the repo.
+  - The 31 test accounts use `purple.seed_password` if it is set, otherwise a random, unknown password.
+  - **The admin always gets a random, unknown password and never the shared one** (G12).
+  - Hashes are bcrypt **cost 10**, all distinct (G13).
+  - The test password is not stored anywhere (G13b).
+- **Deterministic.** IDs are fixed (md5 of a key), random choices use a fixed seed, and timestamps are relative to the run time.
 
-### 1.2 What it contains (counts on staging after loading)
+### 1.2 What it contains
+Unchanged from w6-1 (see S01–S30):
+- 32 accounts: 1 admin, 12 buyers, 19 sellers covering product, freelance, home-service and creative personas, plus test-case accounts.
+- 36 listings covering every type, status, category and delivery mode.
+- 10 stories, 8 requests with 10 offers, 8 conversations with 21 messages.
+- 4 orders, 3 bookings, 3 reviews, plus saves, follows, carts, reports and notifications.
+- No promotions, campaigns or featured purchases (Phase 3).
 
-| Area | Content |
-|---|---|
-| Accounts | 32: 1 admin, 12 buyers, 19 sellers |
-| Seller personas | product sellers (6: fashion/adire, art and crafts), freelancers (5: tech, digital design), home-service pros (4), creatives and talent (4) |
-| Test-case accounts | banned buyer, suspended buyer, suspended shop, buyer with deletion requested, seller with ID check pending (draft listings only), seller with ID check rejected, seller without a public pro page |
-| Listings | 36: every type (product 15, service 15, talent 6), every status (draft, pending, approved, rejected with reason, removed), every category, all 5 delivery modes, quote-on-request; 51 image paths |
-| Seller details | 18 ID checks (approved, pending, rejected), 8 service areas, 24 working-hour rows, 23 professional-page entries (6 public pages, both modes) |
-| Purple Stories | 10 (8 published, 1 draft, 1 hidden), 8 tagged products, 25 likes, 16 comments, 868 anonymous events |
-| Purple Requests | 8 (open, closed with an accepted offer, closed without, expired), 10 offers in all four statuses |
-| Messaging | 8 conversations, 21 messages, read and unread, one from an accepted request offer |
-| Orders and bookings | 4 checkouts and orders (completed, shipped, delivered), 5 items, 2 payouts, 3 bookings (completed, scheduled, requested), 3 reviews (one with a seller reply) |
-| Other | 36 saves, 27 follows, 3 cart items, 1 block, 3 reports (listing, request, user), 5 notifications, 10 searches, 61 listing views, 1 referral, 1 share link |
-
-The admin account also appears in the seller register (20 rows). This is existing app behaviour: the register tracks the `admin` role as well as `seller`.
-
-### 1.3 Known limits (for later workstreams)
-- **Media files are placeholders.** The listing-image and story paths follow the real folder rules, but the files don't exist yet, so pictures and videos show as missing on staging. Uploading sample media needs the staging service key in CI: **W7** for images, **W10** for videos.
-- **No 2FA factors are seeded.** Seller-only pages need 2FA. W7 will enrol a TOTP factor for the test seller during the test run, with its secret held in GitHub secrets.
-- Promotions, campaigns and featured purchases are **not seeded**, because Phase 3 work is out of scope.
+### 1.3 Known limits
+- Media files are placeholders (W7 for images, W10 for videos).
+- No 2FA factors are seeded (W7).
+- The admin cannot sign in by design. If W7 needs an admin session, that needs its own approved secret and setup.
 
 ## 2. Running it
 
-**Staging** (how it was loaded on 19 Nov). The workspace can't connect to the staging database directly, so staging fetches the committed file itself with `pg_net`, checks its SHA-256 and runs it in one transaction:
+**Staging:**
 ```sql
-select net.http_get('https://raw.githubusercontent.com/bigcsp/purple-vendra/<commit>/supabase/seed.sql');  -- returns an id
-do $$ declare s text; begin
-  select content into s from net._http_response where id = <id> and status_code = 200;
-  if encode(extensions.digest(convert_to(s, 'UTF8'), 'sha256'), 'hex') <> '<sha256 of the file>' then raise exception 'sha mismatch'; end if;
-  execute s;
-end $$;
+set purple.seed_target = 'fwyviexwregngnqtwcra';
+-- optional, for the 31 test accounts only: set purple.seed_password = '<from a secret store>';
+\i supabase/seed.sql
 ```
-**Local:** `supabase db reset` loads `supabase/seed.sql` automatically. To be able to sign in, run `set purple.seed_password = '...'` first in the same session.
+How it was loaded on 16/19 Nov: the workspace can't connect to the database directly, so staging fetched the committed file itself with `pg_net`, checked its SHA-256 and ran it. That method is described in §4.
+
+**Local:**
+1. Create the Vault record once: `select vault.create_secret('http://127.0.0.1:54321', 'project_url');`
+2. Allow seeding once: `alter database postgres set purple.seed_target = 'local';`
+3. Run `supabase db reset`; the seed then loads automatically.
+
+**Recovery from a partial or legacy seed:** seeded accounts can't simply be deleted, because orders, verifications and other records block it and the seller register is append-only. Rebuild the database from the repo instead: migrations, then seed. See `docs/schema/STAGING-REBUILD-2026-11-19.md`.
 
 **Regenerate after editing the generator:** `python3 supabase/tools/seed/generate_seed.py`, then commit both files.
 
 ## 3. The anonymizer
 
-**Purpose:** if a copy of real data is ever needed for testing, it must be anonymized first. It is never run on production. Phase 1b staging uses synthetic data only (B4.4), so the anonymizer has only ever run against the seed, inside a test that is rolled back.
+**Purpose:** if a copy of real data is ever needed for testing, it must be anonymized first. It is never run on production. Phase 1b staging uses synthetic data only.
 
-**Guards:**
-- You must set `purple.anonymize_target` to the project ref.
-- The ref must match the database's Vault `project_url`.
-- The production ref is always refused.
+**Guard:** the same allowlist as the seed, using `purple.anonymize_target`. Since remediation it requires an **exact** ref match. Before, a fragment of the URL such as `supabase` was accepted (N1, fixed; tests A20 and A20b). It also refuses an unreadable or missing Vault record (A21, A22) and `local` on a hosted project (A23). Production is refused by its ref (A02) and because production has no `project_url`.
 
-The script creates no database objects. It pauses three protective triggers (`reviews_protect`, `security_events_append_only`, `seller_status_history_append_only`) and turns them back on before it finishes, all within one transaction.
+**Atomicity:** it is one `DO` block. It pauses three guards (`reviews_protect`, `security_events_append_only`, `seller_status_history_append_only`) only inside its own transaction. If anything fails, PostgreSQL undoes the pause along with every change (review check I4). The header warns never to run its statements one by one.
 
-| Replaced (deterministic pseudonyms from md5 of the row id) | Kept |
+| Replaced (deterministic pseudonyms from md5 of the row id) | Kept on purpose |
 |---|---|
-| Emails, phone, sign-in metadata, passwords (random), identity data | Account ids, roles, account status, created dates |
-| Display names, usernames, shop names, headlines, bios, avatars, covers, status reasons | State and city (coarse location, needed for search tests) |
+| Emails, phone, sign-in metadata, passwords (random, bcrypt 10), identity data | Account ids, roles, account status, dates |
+| Display names, usernames, shop names, headlines, bios, avatars, covers, status reasons, **referral codes (F1)** | State and city (coarse; needed for search tests); skills and languages (professional tags) |
 | Seller register snapshot, status-history reasons | Seller numbers, milestones, statuses |
-| ID document paths, bank account name/last 4/codes | Verification status and dates |
+| **Professional-page entry titles → "Experience entry" etc. (F2)**, organisations, locations, descriptions | Entry kind, years, order |
+| ID document paths, bank account name/last 4/codes, **verification rejection notes (F4)** | Verification status and dates; bank name |
 | Delivery names/phones/addresses, payment and payout references | Amounts, order and booking statuses |
-| Messages, story comments, review text and replies, offer messages, request descriptions, report and dispute notes, notification text, booking details | Ratings, request titles, listing and story content (public marketplace content) |
+| Messages, story comments, review text and replies, offer messages, request descriptions, report and dispute notes, notification text, booking details, **listing rejection reasons and story moderation notes (F4)** | Ratings; listing, story and request titles and descriptions (public marketplace content); search queries (anonymous) |
 | Security-event and risk-flag details | Event and flag types |
-| Removed: sessions, refresh tokens, 2FA factors, one-time tokens, auth audit log, non-email identities | Search queries (anonymous already) |
+| **Storage: ID-document rows removed; uploader metadata cleared on all rows (F3)** | Other storage rows: random names under the user's id folder (see `src/lib/upload.ts`) |
+| Removed: sessions, refresh tokens, 2FA factors, one-time tokens, auth audit log, non-email identities | |
 
-## 4. Test evidence (staging, 19 Nov 2026)
+Files in Storage are never part of a database copy and must never be copied into a test project.
 
-All results come from staging (`fwyviexwregngnqtwcra`). Each script was fetched from its commit and its SHA-256 checked before running.
+## 4. Test method and evidence (19 Nov 2026, staging `fwyviexwregngnqtwcra`)
 
-| Suite | Script commit | Result |
+**Method** (no lasting change to staging):
+1. Fingerprint staging, read-only (`staging_fingerprint.sql`): a row count and checksum for every table in `public`, `private`, `auth` and `storage`, plus `vault.secrets` (encrypted values, never decrypted), `cron.job`, and a catalog checksum covering functions, triggers and their enabled state, policies and constraints. That is 87 objects.
+2. `run_all_in_rollback.sql` runs, inside one block that always ends in a forced rollback:
+   - the guard suite
+   - removing the existing seed and loading the **current** seed fresh
+   - the seed checks
+   - the anonymizer suite
+
+   Only the results are copied out before the rollback.
+3. Fingerprint again, in the same session and in a fresh session. It must be identical.
+4. Fallback if ever needed: rebuild staging from the repo.
+
+Every script was fetched by staging from its commit and SHA-256 checked before running.
+
+| Run | Commit | Result |
 |---|---|---|
-| Seed load | `supabase/seed.sql` @ `f44835f` (sha256 `6a58e5b2…7c0f`) | ✅ loaded in one transaction, no errors |
-| Seed checks S01–S30 | `seed_checks.sql` @ `7195e33` (sha256 `7bd8645c…04e9`) | ✅ **30/30** (run before and after the anonymizer test) |
-| Second-seed guard G01 | seed @ `f44835f` | ✅ refused: "this database is already seeded" |
-| Anonymizer A01–A19 | `anonymize.sql` + `anonymizer_checks.sql` @ `9085ced` | ✅ **19/19** |
+| First full run | `f558ab6` | anonymizer 31/31, seed 32/32, guard 18/19. The G00 failure was a **test bug**: `btrim()` doesn't remove newlines. The read-only re-check confirmed the seed file is one block |
+| **Final full run** | **`959ec52`** | **83/83 pass**: guard 19/19 (G00–G15, incl. G00b, G13b, G15b), fresh load 1/1, seed 32/32, anonymizer 31/31 (A01–A29, incl. A20b, A24b) |
+| Fingerprint | before / after / fresh session | **`a4390035f4c6be1d97a6e4e17b663df7`** all three times, 87 objects, **0 differences** |
 
-**Seed checks** cover:
-- accounts and personas (S01–S05)
-- listing coverage and rules (S06–S13)
-- pro pages (S14)
-- stories and counters (S15–S17)
-- requests and offers (S18–S20)
-- messaging (S21)
-- reviews, ratings and payouts (S22–S24)
-- **no seeded text trips the contact-details rule** (S25)
-- test-case accounts (S26)
-- public search and the request board behaving correctly on the seed (S27–S28)
-- no real-looking emails or phone numbers (S29–S30)
+SHA-256 of the tested files (`959ec52`):
 
-**Anonymizer tests** cover:
-- the three refusal guards (A01–A03)
-- row counts unchanged in 19 tables (A04)
-- every personal field replaced (A05–A10, A12–A14, A17)
-- ratings and links kept (A11)
-- protective triggers back on (A15)
-- public search unchanged, 28 listings (A16)
-- a second run gives an identical result (A18)
-- the database is unchanged after the test rolls back (A19)
+| File | SHA-256 |
+|---|---|
+| `seed.sql` | `debbb321…f6e1d` |
+| `anonymize.sql` | `bfb14792…529c3` |
+| `seed_checks.sql` | `f4a4a0fb…8e22a` |
+| `anonymizer_checks.sql` | `d5ea3453…6238d` |
+| `seed_guard_checks.sql` | `856a72ee…a9877` |
+| `run_all_in_rollback.sql` | `c86b15c1…ff5` |
+| `staging_fingerprint.sql` | `38ce7f9f…78e40` |
 
-The first anonymizer run stopped on the `seller_status_history` append-only guard. The run rolled back and nothing changed. The anonymizer now pauses that guard inside its own transaction, as it already did for the review and audit-log guards (fix in `9085ced`).
+**Notable results:**
+- **Admin and passwords:** the admin hash does not match the shared test password, while the 31 test accounts do (G12). All 32 hashes are `$2a$10$` and distinct (G13).
+- **Guard refusals:** missing Vault (G06), unreadable Vault (G07), production URL (G08), real account (G09), second run (G14), unmarked seed data (G15) and a single leftover seed ID (G15b) were all refused with their specific messages.
+- **Atomicity:** a forced mid-seed failure left 0 rows (G10). A clean retry afterwards succeeded (G11).
+- **Anonymizer:** the full sweep of every column in `public`, `private`, `auth` and `storage` found **no surviving original value** (A28). 128 foreign keys were checked with 0 broken (A29). F1–F4 each have their own test (A24–A27).
 
-**Production:** read-only check after W6: 7 users, 0 seed accounts, 15 migration-history rows (unchanged).
+**Production** (read-only, after the runs): 7 users, 0 seed or anonymized accounts, 15 history rows, no `project_url` and no marker, all triggers enabled.
+
+**Staging's stored seed** is still the w6-1 version from 16 Nov: no marker, bcrypt cost 6, random passwords. The w6-2 guard correctly refuses to load over it ("unmarked seed data"). Replacing it means removing that data, which needs owner approval.
+
+### Earlier evidence (w6-1, 16–19 Nov)
+Seed checks 30/30 and anonymizer A01–A19 at `113a950`, plus the W6 review report: superseded by the run above.

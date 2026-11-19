@@ -110,3 +110,16 @@ Acceptance criterion B4.1 (rebuild matches production apart from listed differen
 | Production | Unchanged (read-only check: 7 users, 0 seed accounts, 15 history rows) |
 
 Acceptance criterion B4.4 (staging holds synthetic data only, no production personal data or files): **met**.
+
+### 3.1 W6 security review and remediation (19 Nov 2026)
+
+| Review item | Before | After remediation | Evidence |
+|---|---|---|---|
+| Production guard fails closed | FAIL (missing Vault record let the seed run) | Allowlist: explicit target plus exact Vault `project_url` match; missing or unreadable Vault, production, real accounts all refused | G01–G09 |
+| Synthetic admin | NEEDS ATTENTION (shared password possible; bcrypt 6) | Admin always random/unknown; bcrypt 10 for all | G12, G13, G13b |
+| Partial execution | NEEDS ATTENTION (not atomic under psql autocommit) | One DO block; forced mid-way failure leaves 0 rows; clean retry works | G00, G10, G11 |
+| External integrations | PASS | Unchanged (none exist) | review §4 |
+| Duplicate protection | NEEDS ATTENTION (one marker account) | Completion marker + any seed account + 219 seed IDs | G14, G15, G15b |
+| Anonymizer F1–F7 | open | Fixed; full-column sweep finds nothing; 128 FKs intact; N1 found and fixed | A20–A29 |
+
+Final run at `959ec52`: **83/83**. Staging fingerprint identical before and after (`a4390035…`, 87 objects). Production read-only check unchanged.
