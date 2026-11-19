@@ -1,6 +1,6 @@
 # W6: Synthetic seed and anonymizer
 
-**Status:** remediation complete (19 Nov 2026), awaiting owner acceptance. Seed generator **w6-2**.
+**Status:** **accepted by the owner, 19 Nov 2026.** Seed generator **w6-2**; staging now holds the w6-2 seed (replaced 19 Nov, see §5).
 **Scope:** staging and local databases only. Production is never written to; it was only read for counts and catalog checks.
 
 | Deliverable | File |
@@ -13,6 +13,8 @@
 | Anonymizer tests A01–A29 | `supabase/tests/w6/anonymizer_checks.sql` |
 | Run everything in one rolled-back block | `supabase/tests/w6/run_all_in_rollback.sql` |
 | Before/after snapshot (read-only) | `supabase/tests/w6/staging_fingerprint.sql` |
+| Verified staging backup | `supabase/tools/seed/backup_staging_data.sql` |
+| Scoped seed replacement (staging) | `supabase/tools/seed/replace_staging_seed.sql` |
 
 ## 1. The seed
 
@@ -137,7 +139,37 @@ SHA-256 of the tested files (`959ec52`):
 
 **Production** (read-only, after the runs): 7 users, 0 seed or anonymized accounts, 15 history rows, no `project_url` and no marker, all triggers enabled.
 
-**Staging's stored seed** is still the w6-1 version from 16 Nov: no marker, bcrypt cost 6, random passwords. The w6-2 guard correctly refuses to load over it ("unmarked seed data"). Replacing it means removing that data, which needs owner approval.
+**Staging's stored seed** was replaced with w6-2 on 19 Nov (owner-approved); see §5.
 
 ### Earlier evidence (w6-1, 16–19 Nov)
 Seed checks 30/30 and anonymizer A01–A19 at `113a950`, plus the W6 review report: superseded by the run above.
+
+## 5. Staging seed replacement, w6-1 → w6-2 (19 Nov 2026, owner-approved)
+
+| Step | What | Result |
+|---|---|---|
+| 1 | Fresh fingerprint, immediately before | `a4390035f4c6be1d97a6e4e17b663df7` (87 objects). Saved as `w6_backup_20261119.fingerprint_before` |
+| 2 | Verified backup (`backup_staging_data.sql` @ `1d8e522`) | Schema **`w6_backup_20261119`**: copies of all **46** non-empty tables, **1,838** rows; each copy's md5 equals its source (**0 mismatches**); no access for `anon`/`authenticated` |
+| 3 | Dry run of the deletion, rolled back | Deletes **only** old-seed rows: 34 seed tables to 0 (32 accounts, 36 listings, 21 messages …, 10 seed search rows). **Unchanged:** reference data (categories, sections, synonyms), platform tables, Vault, cron, storage buckets, append-only history. Status history +20 (its own "deleted" entries) |
+| 4 | Replacement (`replace_staging_seed.sql` @ `1d8e522`), one transaction | Guarded: approved staging ref, verified backup, only seed accounts, no marker. Scoped delete, then load seed w6-2, then **S01–S32 inside the same transaction (32/32)**; any failure would have rolled everything back |
+| 5 | Fingerprint after | `9d41b4197eb837644a52bb5a7569a901`. Catalog (functions, triggers + enabled, policies, constraints) **unchanged** |
+| 6 | Full suites on the live w6-2 seed | seed 32/32, guard 19/19, anonymizer 31/31, live re-run refused 1/1. Fingerprint identical before and after the suites |
+
+**What changed (rows before → after):**
+- The 34 seed tables keep the same counts with new content (fresh timestamps, new salted cost-10 hashes, same 32 seed IDs). Two are byte-identical: `story_video_products` and `working_hours`.
+- `vault.secrets` 1 → 2 (completion marker: digest `b10f52cb…`, generator w6-2, 32 accounts).
+- Append-only history kept, not deleted: `security_events` 59 → 118, `seller_milestones` 116 → 232, `seller_register` 20 → 40 (the 20 old rows have `seller_id` null), `seller_status_history` 21 → 62.
+
+**After the replacement:**
+- 32 accounts: 1 admin, 12 buyers, 19 sellers.
+- All hashes are bcrypt 10 and distinct, with 0 reused from the old seed.
+- The admin has never signed in; there are no 2FA factors and no sessions.
+- The storage cleanup queue is empty.
+
+**Production** (read-only, afterwards): 7 users, 0 seed accounts, 15 history rows, no `project_url` or marker, no `w6_` schema, all triggers enabled.
+
+**Recovery options:**
+- **(a) Rebuild:** run migrations, then `seed.sql` (verified in the rollback runs: wipe, load, all checks pass).
+- **(b) Backup:** `w6_backup_20261119` holds an exact copy of the old state. Restoring from it means removing the current seed rows (`replace_staging_seed.sql` deletion part) and inserting the backup tables back in foreign-key order, with the sign-up trigger in mind (profiles already exist after auth inserts).
+
+**Keep or drop the backup schema:** owner decision. The suggestion is to keep it until W8 and then drop it with approval.

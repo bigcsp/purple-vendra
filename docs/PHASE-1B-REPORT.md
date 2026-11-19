@@ -123,3 +123,15 @@ Acceptance criterion B4.4 (staging holds synthetic data only, no production pers
 | Anonymizer F1–F7 | open | Fixed; full-column sweep finds nothing; 128 FKs intact; N1 found and fixed | A20–A29 |
 
 Final run at `959ec52`: **83/83**. Staging fingerprint identical before and after (`a4390035…`, 87 objects). Production read-only check unchanged.
+
+### 3.2 W6 accepted; staging seed replaced (19 Nov 2026)
+
+W6 accepted by the owner. Staging's w6-1 seed was replaced by w6-2 under owner safeguards:
+- fresh fingerprint (`a4390035…`)
+- verified backup (46 tables, 1,838 rows, 0 mismatches)
+- rolled-back dry run proving only old-seed rows are deleted
+- replacement with S01–S32 verified inside the same transaction
+- fingerprint after (`9d41b419…`, catalog unchanged)
+- full suites 83/83 on the live seed
+
+Production unchanged. Details: `docs/W6-SEED-AND-ANONYMIZER.md` §5.
