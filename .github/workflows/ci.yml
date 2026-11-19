@@ -56,11 +56,11 @@ jobs:
           deno-version: v2.x
 
       - name: Deno type check
-        run: deno check supabase/functions/*/index.ts
+        run: deno check --node-modules-dir=auto supabase/functions/*/index.ts
 
       - name: Bundle (proves imports resolve, as a deploy would)
         run: |
           for f in supabase/functions/*/index.ts; do
-            deno bundle --output "/tmp/$(basename "$(dirname "$f")").js" "$f"
+            deno bundle --node-modules-dir=auto --output "/tmp/$(basename "$(dirname "$f")").js" "$f"
           done
           ls -l /tmp/*.js
