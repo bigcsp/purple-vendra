@@ -11,6 +11,23 @@ Production change freeze: [`docs/decisions/ADR-001-production-change-freeze.md`]
 ## Next approved task
 **W6 accepted (19 Nov 2026). Staging seed replaced with w6-2 and verified.** Next: **W7** automated test harness. Not started; it begins only on the owner's go-ahead, as a separate scope.
 
+## Product expansion plan (proposed 23 Nov 2026, awaiting review)
+Directive: *Purple Shop Product Expansion & Project Integration Directive* (23 Nov 2026). **Docs only; no implementation, no DB or dependency changes. Phase 1b stays the immediate priority.**
+- Plan: [`docs/EXPANSION-INTEGRATION-PLAN.md`](docs/EXPANSION-INTEGRATION-PLAN.md) — what exists, what to upgrade/add, where each module belongs, connections, priorities, decisions D-E1–D-E9.
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) · [`docs/FEATURE-MAP.md`](docs/FEATURE-MAP.md) · [`docs/ROADMAP.md`](docs/ROADMAP.md) (proposed single roadmap S1–S8) · [`docs/decisions/ADR-003-product-expansion-integration.md`](docs/decisions/ADR-003-product-expansion-integration.md)
+
+| Module | Today | Proposed stage |
+|---|---|---|
+| Purple Stories · Purple Request | Live; upgrades planned | S2 / S5 / S6 |
+| Purple Professional | Step 1 live | Steps 2–3 at S6 |
+| Purple Discover · Business Studio · My Purple World | Partly built (homepage/search, Seller hub, `/account`) | S4 |
+| Purple Business Spotlight | Partly built (schema + A10 design) | S5 with Phase 3 |
+| Purple Match | New, built inside Requests | S6 |
+| Purple Deals · Purple Rewards | New / schema only; need checkout | S7 |
+| Purple Community · Purple Live | New; highest risk | S8 (Live: spike first) |
+
+Shared foundations first: notification centre, events model (S2), checkout & escrow (S3).
+
 ## Workstream tracker (Phase 1b)
 | # | Workstream | Status |
 |---|---|---|
@@ -37,6 +54,7 @@ Production change freeze: [`docs/decisions/ADR-001-production-change-freeze.md`]
 | 3 Featured Promotions | Not started; needs separate approval |
 | 4 Purple Business Campaigns | Not started; needs separate approval |
 | 5 Marketing ecosystem | Not started |
+| Expansion modules (ADR-003) | **Plan proposed 23 Nov 2026**; maps onto Phases 2–5 via `docs/ROADMAP.md` S2–S8 if D-E1 is approved |
 
 ## Decisions
 | Date | Decision | Status |
@@ -53,8 +71,10 @@ Production change freeze: [`docs/decisions/ADR-001-production-change-freeze.md`]
 | 19 Nov 2026 | **C1:** Option A (A1–A9, repo + staging only), the allowed differences, reconstructed 011; P1 stays a separate approval | Approved |
 | 16 Nov 2026 | P1 history alignment, P2 limit_saves revoke, P3 leaked-password protection | **Not approved**; present separately |
 | — | O4–O13 | Before Phase 2/3 |
+| 23 Nov 2026 | ADR-003 expansion integration plan; D-E1–D-E9 (single roadmap, notification channels, personalisation data, follower privacy, keep URLs, non-cash rewards, bookings after escrow, Live spike, cleanup X1–X2) | **Proposed**, awaiting owner |
 
 ## History
+- 23 Nov 2026: Product expansion directive received. Repo inspected (`main` `d7a0011`, `phase-1b-foundation` `c72978a`); integration plan, architecture, feature map, roadmap and ADR-003 written. No code, DB or dependency changes.
 - 16 Nov 2026: Phase 1 audit delivered (`docs/PHASE-1-AUDIT.md`).
 - 16 Nov 2026: Plan v1.1, then v1.2 (`docs/PHASE-1B-PLAN.md`), mapping (`docs/MIGRATION-MAPPING.md`), cost model (`docs/cost-model.py`).
 - 16 Nov 2026: Phase 1b approved with conditions (ADR-002). Freeze in force (ADR-001).
@@ -95,4 +115,5 @@ On the live w6-2 seed (19 Nov, after replacement): seed 32/32, guard 19/19, anon
 - Pre-existing (not W6): `anon` holds SELECT grants on 7 private tables, protected by row-level security only (0 rows visible, checked). Cover with pgTAP in W7.
 - Staging media files (listing images, story videos) are placeholders until W7/W10.
 - `staging-migration-runner` Edge Function is now inert (its token was deleted 19 Nov); remove it in W8 when the pipeline replaces it.
+- Dead duplicate code: `src/app/actions/*.ts` (12 files) and `src/lib/{auth,catalog,messages,requests,search,stories,verification,seller}.ts` are older copies of `src/server/*` that nothing imports. Removal proposed as X1–X2 (after W7), not done.
 - See audit §5 (R1–R9).
