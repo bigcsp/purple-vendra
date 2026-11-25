@@ -11,6 +11,31 @@ Production change freeze: [`docs/decisions/ADR-001-production-change-freeze.md`]
 ## Next approved task
 **W6 accepted (19 Nov 2026). Staging seed replaced with w6-2 and verified.** Next: **W7** automated test harness. Not started; it begins only on the owner's go-ahead, as a separate scope.
 
+## Purple Ecosystem direction (proposed 24 Nov 2026, awaiting review)
+Brief: *Purple Ecosystem — Product Direction & Smart Marketing Project Guide* (24 Nov 2026), kept at [`docs/briefs/2026-11-24-purple-ecosystem-direction-guide.md`](docs/briefs/2026-11-24-purple-ecosystem-direction-guide.md).
+**No feature implementation was authorised by this planning task.** No application code, schema, migrations, RLS, storage, auth, navigation, dependencies, environments or data were changed. **Phase 1b stays the immediate priority (W7 next); its scope is not expanded or delayed.**
+
+Direction: one parent, **Purple**, with three divisions, **Purple Shop** (products), **Purple Handy Pro** (hands-on and local services) and **Purple Professionals** (freelance, tech, creative), plus **Purple Marketing Intelligence** inside Business Studio.
+
+The direction umbrellas the expansion plan below, which stays valid with its modules re-homed under the divisions.
+
+| Document | Purpose |
+|---|---|
+| [`docs/PURPLE-ECOSYSTEM-DIRECTION.md`](docs/PURPLE-ECOSYSTEM-DIRECTION.md) | Vision, structure, principles, relation to earlier plans |
+| [`docs/PURPLE-DIVISIONS-AND-CATEGORIES.md`](docs/PURPLE-DIVISIONS-AND-CATEGORIES.md) | Divisions vs today's sections, categories and listing types; division model; onboarding; verification |
+| [`docs/PURPLE-MARKETING-INTELLIGENCE.md`](docs/PURPLE-MARKETING-INTELLIGENCE.md) | Insights, Coach, Growth Assistants, Customer Connection, Campaigns; event taxonomy; guardrails; AI cost controls |
+| [`docs/PURPLE-FEATURE-INTEGRATION-MAP.md`](docs/PURPLE-FEATURE-INTEGRATION-MAP.md) | Every brief capability classified (implemented / partial / needs improvement / new / future) with evidence |
+| [`docs/ROADMAP.md`](docs/ROADMAP.md) v0.2 | Single roadmap with the ecosystem overlay and acceptance criteria |
+| [`docs/decisions/ADR-004-purple-ecosystem-direction.md`](docs/decisions/ADR-004-purple-ecosystem-direction.md) | Decision record; owner decisions ECO-D1–ECO-D12 |
+
+Key findings:
+- The existing `sections` (Creative / Freelance / Home Services) don't line up with the divisions. Divisions are therefore **derived** from listing type + category, with no schema change.
+- "Purple Shop" is today's whole-site brand (ECO-D1).
+- Listing events and notifications are never written, so MI starts with the S2 events model.
+- There's no consent model, and "sellers cannot contact buyers first" constrains the Customer Connection Assistant (ECO-D7).
+
+Open questions: ECO-D1–ECO-D12 (ADR-004), to be answered together with D-E1–D-E9 (ADR-003).
+
 ## Product expansion plan (proposed 23 Nov 2026, awaiting review)
 Directive: *Purple Shop Product Expansion & Project Integration Directive* (23 Nov 2026). **Docs only; no implementation, no DB or dependency changes. Phase 1b stays the immediate priority.**
 - Plan: [`docs/EXPANSION-INTEGRATION-PLAN.md`](docs/EXPANSION-INTEGRATION-PLAN.md) — what exists, what to upgrade/add, where each module belongs, connections, priorities, decisions D-E1–D-E9.
@@ -55,6 +80,7 @@ Shared foundations first: notification centre, events model (S2), checkout & esc
 | 4 Purple Business Campaigns | Not started; needs separate approval |
 | 5 Marketing ecosystem | Not started |
 | Expansion modules (ADR-003) | **Plan proposed 23 Nov 2026**; maps onto Phases 2–5 via `docs/ROADMAP.md` S2–S8 if D-E1 is approved |
+| Purple Ecosystem direction (ADR-004) | **Proposed 24 Nov 2026**; mapping and docs done; overlays `docs/ROADMAP.md` v0.2 if ECO-D2 is approved. No implementation authorised |
 
 ## Decisions
 | Date | Decision | Status |
@@ -72,8 +98,10 @@ Shared foundations first: notification centre, events model (S2), checkout & esc
 | 16 Nov 2026 | P1 history alignment, P2 limit_saves revoke, P3 leaked-password protection | **Not approved**; present separately |
 | — | O4–O13 | Before Phase 2/3 |
 | 23 Nov 2026 | ADR-003 expansion integration plan; D-E1–D-E9 (single roadmap, notification channels, personalisation data, follower privacy, keep URLs, non-cash rewards, bookings after escrow, Live spike, cleanup X1–X2) | **Proposed**, awaiting owner |
+| 24 Nov 2026 | ADR-004 Purple Ecosystem direction; ECO-D1–ECO-D12 (brand timing, adopt direction + roadmap v0.2, new Shop categories, talent division, ratings, onboarding placement, customer-connection consent, verification per division, AI provider/budget, Handy Pro media, testimonials, answer D-E1–D-E9 + O15) | **Proposed**, awaiting owner |
 
 ## History
+- 24 Nov 2026: Purple Ecosystem direction brief received. Repo inspected (`phase-1b-foundation` `c72978a`, `docs/expansion-integration-plan` `ecc9c31`; migrations, sections and categories, listing types, signup, Studio, events, notifications, bookings). Five planning docs + ADR-004 written; `ROADMAP.md` updated to v0.2. No code, DB, auth, storage or dependency changes; no feature implementation authorised.
 - 23 Nov 2026: Product expansion directive received. Repo inspected (`main` `d7a0011`, `phase-1b-foundation` `c72978a`); integration plan, architecture, feature map, roadmap and ADR-003 written. No code, DB or dependency changes.
 - 16 Nov 2026: Phase 1 audit delivered (`docs/PHASE-1-AUDIT.md`).
 - 16 Nov 2026: Plan v1.1, then v1.2 (`docs/PHASE-1B-PLAN.md`), mapping (`docs/MIGRATION-MAPPING.md`), cost model (`docs/cost-model.py`).
